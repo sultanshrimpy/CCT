@@ -1,0 +1,82 @@
+Only in /root/client: CategoryButton.tsx
+Only in /root/client: CCT_patch.patch
+Common subdirectories: /root/clientfresh/clientfresh/doc and /root/client/doc
+Common subdirectories: /root/clientfresh/clientfresh/docker and /root/client/docker
+diff -u /root/clientfresh/clientfresh/Dockerfile /root/client/Dockerfile
+--- /root/clientfresh/clientfresh/Dockerfile	2026-04-21 20:54:45.936801706 +0000
++++ /root/client/Dockerfile	2026-04-21 16:49:03.082869829 +0000
+@@ -18,7 +18,6 @@
+ COPY packages/solid-livekit-components/package.json packages/solid-livekit-components/
+ COPY packages/js-lingui-solid/packages/babel-plugin-lingui-macro/package.json packages/js-lingui-solid/packages/babel-plugin-lingui-macro/
+ COPY packages/js-lingui-solid/packages/babel-plugin-extract-messages/package.json packages/js-lingui-solid/packages/babel-plugin-extract-messages/
+-COPY packages/js-lingui-solid/packages/jest-mocks/package.json packages/js-lingui-solid/packages/jest-mocks/
+ COPY packages/client/package.json packages/client/
+ 
+ # Copy panda config needed by client's "prepare" lifecycle script (panda codegen)
+@@ -49,11 +48,8 @@
+ ENV VITE_PROXY_URL=__VITE_PROXY_URL__
+ ENV VITE_HCAPTCHA_SITEKEY=__VITE_HCAPTCHA_SITEKEY__
+ ENV VITE_CFG_ENABLE_VIDEO=__VITE_CFG_ENABLE_VIDEO__
+-ENV VITE_GIFBOX_URL=__VITE_GIFBOX_URL__
+-ENV VITE_RNNOISE_WORKLET_CDN_URL=__VITE_RNNOISE_WORKLET_CDN_URL__
+-
+-ARG BASE_PATH=/
+-ENV BASE_PATH=${BASE_PATH}
++ENV VITE_CFG_MAX_FILE_SIZE=__VITE_CFG_MAX_FILE_SIZE__
++ENV BASE_PATH=/
+ 
+ RUN pnpm --filter client exec vite build
+ 
+@@ -80,7 +76,7 @@
+ ENV VITE_PROXY_URL=""
+ ENV VITE_HCAPTCHA_SITEKEY=""
+ ENV VITE_CFG_ENABLE_VIDEO=""
+-ENV VITE_GIFBOX_URL=""
+-ENV VITE_RNNOISE_WORKLET_CDN_URL=""
++ENV VITE_CFG_MAX_FILE_SIZE=""
++ENV REVOLT_PUBLIC_URL=""
+ 
+ CMD ["npm", "start"]
+Common subdirectories: /root/clientfresh/clientfresh/.git and /root/client/.git
+Common subdirectories: /root/clientfresh/clientfresh/.github and /root/client/.github
+Common subdirectories: /root/clientfresh/clientfresh/lifecycle and /root/client/lifecycle
+Common subdirectories: /root/clientfresh/clientfresh/.mise and /root/client/.mise
+Only in /root/client: node_modules
+Only in /root/client: ordmark
+Common subdirectories: /root/clientfresh/clientfresh/packages and /root/client/packages
+diff -u /root/clientfresh/clientfresh/pnpm-lock.yaml /root/client/pnpm-lock.yaml
+--- /root/clientfresh/clientfresh/pnpm-lock.yaml	2026-04-21 20:54:45.990804362 +0000
++++ /root/client/pnpm-lock.yaml	2026-04-21 18:08:16.380645151 +0000
+@@ -636,8 +636,8 @@
+         specifier: ^1.9.6
+         version: 1.9.6
+       stoat-api:
+-        specifier: 0.12.0
+-        version: 0.12.0
++        specifier: 0.8.9-4
++        version: 0.8.9-4
+       ulid:
+         specifier: ^3.0.2
+         version: 3.0.2
+@@ -6898,8 +6898,8 @@
+     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
+     engines: {node: '>= 0.8'}
+ 
+-  stoat-api@0.12.0:
+-    resolution: {integrity: sha512-gWNyth4pCWejIV2fFOw5i0/AHcEyncTdMadlEtVwbucZyHW/+Va79/0b+38jksD+IIOFY/F/4E6GzhujS6ZoTQ==}
++  stoat-api@0.8.9-4:
++    resolution: {integrity: sha512-6N4kfE1x+j/XYVaBuvYqzbWxjgqbxSarvNjMv8GEcBaqbkiyPzUwsCj12NJsNNp4uyZmsqoUYUj2jIq018uqiA==}
+ 
+   stop-iteration-iterator@1.1.0:
+     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
+@@ -14750,7 +14750,7 @@
+ 
+   statuses@2.0.1: {}
+ 
+-  stoat-api@0.12.0:
++  stoat-api@0.8.9-4:
+     dependencies:
+       json-with-bigint: 3.4.4
+ 
+Only in /root/client: VoiceProcessingOptions.tsx
+Common subdirectories: /root/clientfresh/clientfresh/.vscode and /root/client/.vscode
