@@ -202,11 +202,7 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
                 channel={(state() as { channel: Channel }).channel}
               />
             </Match>
-            <Match when={state().type === "floating"}>
-              <InRoom>
-                <VoiceCallCardPiP />
-              </InRoom>
-            </Match>
+            {/* Floating PiP hidden — replaced by SidebarVoicePanel */}
           </Switch>
         </div>
       </Portal>
@@ -279,16 +275,13 @@ function VoiceCallCard(props: { channel: Channel }) {
   const inCall = () => voice.channel()?.id === props.channel.id;
 
   return (
-    <Base>
-      <Card active={inCall()}>
-        <Show
-          when={inCall()}
-          fallback={<VoiceCallCardPreview channel={props.channel} />}
-        >
+    <Show when={inCall()}>
+      <Base>
+        <Card active={inCall()}>
           <VoiceCallCardActiveRoom />
-        </Show>
-      </Card>
-    </Base>
+        </Card>
+      </Base>
+    </Show>
   );
 }
 

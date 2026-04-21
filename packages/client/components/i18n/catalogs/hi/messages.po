@@ -390,6 +390,15 @@ msgstr "भूमिकाएँ असाइन करें"
 msgid "Authenticator App"
 msgstr "ऑथेंटिकटर ऍप"
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.autoReconnect"
+msgstr ""
+
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Automatic Gain Control"
+msgstr ""
+
 #: components/app/interface/settings/user/profile/UserProfileEditor.tsx
 msgid "Avatar"
 msgstr "अवतार"
@@ -400,6 +409,7 @@ msgstr "अवतार"
 #: components/auth/src/flows/FlowLogin.tsx
 #: components/auth/src/flows/FlowCreate.tsx
 #: components/auth/src/flows/FlowCheck.tsx
+#: components/app/interface/settings/user/_AccountCard.tsx
 msgid "Back"
 msgstr ""
 
@@ -465,12 +475,17 @@ msgid "Bot"
 msgstr "बौट"
 
 #: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Browser"
+msgstr ""
+
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
 msgid "Browser Echo Cancellation"
 msgstr ""
 
 #: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
-msgid "Browser Noise Supression"
-msgstr ""
+#~ msgid "Browser Noise Supression"
+#~ msgstr ""
 
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Bug Tracker"
@@ -627,6 +642,10 @@ msgstr "स्पष्ट स्थिति"
 msgid "Click on the items below to learn more about different changes!"
 msgstr ""
 
+#: components/ui/components/features/profiles/ProfileBanner.tsx
+msgid "Click to copy username"
+msgstr ""
+
 #: src/interface/channels/ChannelHeader.tsx
 msgid "Click to show full description"
 msgstr ""
@@ -642,6 +661,7 @@ msgstr "ग्राहक सेटिंग्स"
 #: components/modal/modals/UserProfileRoles.tsx
 #: components/modal/modals/UserProfileMutualGroups.tsx
 #: components/modal/modals/UserProfileMutualFriends.tsx
+#: components/modal/modals/TryPWA.tsx
 #: components/modal/modals/ServerInfo.tsx
 #: components/modal/modals/PolicyChange.tsx
 #: components/modal/modals/LinkWarning.tsx
@@ -713,6 +733,11 @@ msgstr ""
 msgid "Connecting"
 msgstr ""
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.connection"
+msgstr ""
+
 #: components/modal/modals/ReportContent.tsx
 msgid "Content breaks one or more laws"
 msgstr "सामग्री एक या अधिक कानूनों को तोड़ती है"
@@ -733,6 +758,10 @@ msgstr ""
 #: src/interface/navigation/channels/HomeSidebar.tsx
 msgid "Conversations"
 msgstr "बात चिट"
+
+#: components/ui/components/features/profiles/ProfileBanner.tsx
+msgid "Copied!"
+msgstr ""
 
 #: components/app/menus/CategoryContextMenu.tsx
 msgid "Copy category ID"
@@ -945,6 +974,11 @@ msgstr "सदस्य को बहरे करे"
 msgid "Default"
 msgstr "चूक जाना"
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.defaultHold"
+msgstr ""
+
 #: components/app/interface/settings/ServerSettings.tsx
 #: components/app/interface/settings/ChannelSettings.tsx
 #: components/app/interface/settings/server/roles/ServerRoleOverview.tsx
@@ -1030,6 +1064,10 @@ msgstr ""
 msgid "Developer Documentation"
 msgstr ""
 
+#: components/modal/modals/TryPWA.tsx
+msgid "Did you know?"
+msgstr ""
+
 #: components/app/interface/settings/user/Account.tsx
 msgid "Disable Account"
 msgstr "खाता अक्षम करें"
@@ -1038,6 +1076,8 @@ msgstr "खाता अक्षम करें"
 msgid "Disable one-time password authenticator"
 msgstr ""
 
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
 #: components/app/interface/settings/server/Overview.tsx
 #: components/app/interface/settings/server/Overview.tsx
 #: components/app/interface/settings/server/Overview.tsx
@@ -1047,6 +1087,11 @@ msgstr ""
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardStatus.tsx
 msgid "Disconnected"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.disconnect"
 msgstr ""
 
 #: components/app/interface/settings/user/Native.tsx
@@ -1171,8 +1216,8 @@ msgid "Emoji Name"
 msgstr ""
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
-msgid "Emoji Pack (affects your messages only)"
-msgstr ""
+#~ msgid "Emoji Pack (affects your messages only)"
+#~ msgstr ""
 
 #: components/app/interface/settings/ServerSettings.tsx
 msgid "Emojis"
@@ -1190,8 +1235,31 @@ msgstr "प्रमाणक अनुप्रयोग सक्षम कर
 msgid "Enable Desktop Notifications"
 msgstr "डेस्कटॉप सूचनाएं सक्षम करें."
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.enable"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.enable"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.toggleMode"
+msgstr ""
+
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Enable transparency glass/blur effects (slow on older machines)"
+msgstr ""
+
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Enhanced"
+msgstr ""
+
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Enhanced (RNNoise)"
 msgstr ""
 
 #: components/modal/modals/RenameSession.tsx
@@ -1219,6 +1287,10 @@ msgstr "अपना वर्तमान पासवर्ड डालें
 #: components/modal/modals/EditPassword.tsx
 #: components/modal/modals/EditEmail.tsx
 msgid "Enter your current password..."
+msgstr ""
+
+#: components/auth/src/flows/Form.tsx
+msgid "Enter your invite code."
 msgstr ""
 
 #: components/auth/src/flows/Form.tsx
@@ -1433,13 +1505,27 @@ msgstr ""
 msgid "Impersonation"
 msgstr ""
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.incomingCall"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.individual"
+msgstr ""
+
+#: components/modal/modals/TryPWA.tsx
+msgid "Install"
+msgstr ""
+
 #: components/app/interface/settings/user/Native.tsx
 msgid "Instead of closing, Stoat will hide in your tray."
 msgstr ""
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
-msgid "Interface Font"
-msgstr ""
+#~ msgid "Interface Font"
+#~ msgstr ""
 
 #: src/interface/navigation/servers/UserMenu.tsx
 msgid "Invisible"
@@ -1453,6 +1539,7 @@ msgstr "अपने सभी दोस्तों, कुछ अच्छे 
 msgid "Invite Bot"
 msgstr ""
 
+#: components/auth/src/flows/Form.tsx
 #: components/app/interface/settings/server/invites/ListServerInvites.tsx
 msgid "Invite Code"
 msgstr "कोड आमंत्रित"
@@ -1495,12 +1582,17 @@ msgstr ""
 #~ msgid "Join call"
 #~ msgstr ""
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.joinCall"
+msgstr ""
+
 #: src/interface/Home.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Join the Stoat Lounge"
 msgstr ""
 
-#: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
+#: src/interface/channels/ChannelHeader.tsx
 msgid "Join the voice channel"
 msgstr ""
 
@@ -1572,6 +1664,11 @@ msgstr "छोड़ना"
 #: components/modal/modals/LeaveServer.tsx
 #: components/modal/modals/DeleteChannel.tsx
 msgid "Leave {0}?"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.leaveCall"
 msgstr ""
 
 #: components/app/menus/ChannelContextMenu.tsx
@@ -1691,6 +1788,11 @@ msgstr ""
 msgid "Masquerade"
 msgstr "छद्मवेष-समारोह"
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.volume"
+msgstr ""
+
 #: components/app/interface/settings/ServerSettings.tsx
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Members"
@@ -1774,13 +1876,18 @@ msgstr ""
 msgid "Missing permission"
 msgstr ""
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.mode"
+msgstr ""
+
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Monochrome"
 msgstr ""
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
-msgid "Monospace Font"
-msgstr ""
+#~ msgid "Monospace Font"
+#~ msgstr ""
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "More Contrast"
@@ -1801,6 +1908,11 @@ msgstr ""
 
 #: components/app/menus/UserContextMenu.tsx
 msgid "Mute"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.mute"
 msgstr ""
 
 #: components/app/menus/shared/NotificationContextMenu.tsx
@@ -1889,6 +2001,14 @@ msgstr ""
 msgid "Nobody here right now!"
 msgstr ""
 
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Noise Gate"
+msgstr ""
+
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Noise Gate Threshold"
+msgstr ""
+
 #: components/app/menus/ServerContextMenu.tsx
 #: components/app/menus/shared/NotificationContextMenu.tsx
 #: components/app/menus/shared/NotificationContextMenu.tsx
@@ -1901,6 +2021,21 @@ msgstr ""
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Not of minimum age to use the platform"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/UserSettings.tsx
+msgid "notifications.tab.title"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.notifications"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.title"
 msgstr ""
 
 #: components/app/menus/ServerContextMenu.tsx
@@ -1978,6 +2113,10 @@ msgstr ""
 msgid "Open channel settings"
 msgstr ""
 
+#: components/app/menus/ChannelContextMenu.tsx
+msgid "Open Chat"
+msgstr ""
+
 #: components/app/menus/MessageContextMenu.tsx
 msgid "Open file"
 msgstr ""
@@ -2034,6 +2173,16 @@ msgstr ""
 msgid "Platform Moderator"
 msgstr ""
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.playMuteSounds"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.muteSoundsDescription"
+msgstr ""
+
 #: components/modal/modals/MFAFlow.tsx
 msgid "Please confirm this action using the selected method."
 msgstr "कृपया चयनित विधि का उपयोग करके पुष्टि करें."
@@ -2062,6 +2211,10 @@ msgstr "कृपया अपने अनुरोध को प्रमा�
 msgid "Please select a reason"
 msgstr ""
 
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Powered by RNNoise"
+msgstr ""
+
 #: components/auth/src/AuthPage.tsx
 msgid "Privacy Policy"
 msgstr "गोपनीयता नीति"
@@ -2086,10 +2239,26 @@ msgstr ""
 msgid "Provided email or password is wrong."
 msgstr ""
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/UserSettings.tsx
+msgid "ptt.tab.title"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.title"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.keybind"
+msgstr ""
+
 #: components/modal/modals/ReportContent.tsx
 msgid "Raid or spam attack"
 msgstr ""
 
+#: components/app/menus/MessageContextMenu.tsx
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "React"
 msgstr ""
@@ -2124,6 +2293,11 @@ msgstr "कारण"
 msgid "Reason for report"
 msgstr ""
 
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.receiveMessage"
+msgstr ""
+
 #: components/app/interface/settings/user/Notifications.tsx
 msgid "Receive notifications while the app is open and in the background."
 msgstr ""
@@ -2155,6 +2329,11 @@ msgstr ""
 
 #: components/app/menus/UserContextMenu.tsx
 msgid "Reject friend request"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/PushToTalkSettings.tsx
+msgid "ptt.settings.releaseDelay"
 msgstr ""
 
 #: src/interface/channels/text/TextSearchSidebar.tsx
@@ -2349,6 +2528,10 @@ msgstr ""
 msgid "Select members to add"
 msgstr ""
 
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Select noise suppression"
+msgstr ""
+
 #: components/app/interface/settings/user/Language.tsx
 msgid "Select your language"
 msgstr "अपनी भाषा का चयन करें"
@@ -2408,6 +2591,10 @@ msgstr "एक अनुलग्नक भेजा"
 #: components/ui/components/features/messaging/elements/MessageReply.tsx
 msgid "Sent multiple attachments"
 msgstr "कई अटैचमेंट भेजे"
+
+#: components/modal/modals/AddFriend.tsx
+msgid "Sent!"
+msgstr ""
 
 #: components/modal/modals/ServerIdentity.tsx
 msgid "Server Avatar"
@@ -2487,8 +2674,22 @@ msgstr ""
 msgid "Sign Up"
 msgstr ""
 
+#: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
+msgid "Silence your mic when you're not speaking"
+msgstr ""
+
 #: components/app/interface/channels/text/Message.tsx
 msgid "Silent"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.someoneJoined"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.someoneLeft"
 msgstr ""
 
 #: components/modal/modals/EditEmail.tsx
@@ -2537,8 +2738,8 @@ msgid "Start Minimised to Tray"
 msgstr ""
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
-msgid "Start the call"
-msgstr ""
+#~ msgid "Start the call"
+#~ msgstr ""
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Start with Computer"
@@ -2597,8 +2798,8 @@ msgid "Support the project by donating - thank you!"
 msgstr "दान करके परियोजना को समर्थन दें - आपका धन्यवाद!"
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
-msgid "Switch to this voice channel"
-msgstr ""
+#~ msgid "Switch to this voice channel"
+#~ msgstr ""
 
 #: components/app/interface/settings/user/Sync.tsx
 msgid "Sync appearance options, such as chosen emoji pack and message density."
@@ -2790,6 +2991,11 @@ msgstr ""
 
 #: components/modal/modals/ChannelToggleMature.tsx
 msgid "Unmark this channel as mature?"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: components/app/interface/settings/user/voice/NotificationSoundsSettings.tsx
+msgid "notifications.sounds.unmute"
 msgstr ""
 
 #: components/app/menus/shared/NotificationContextMenu.tsx
@@ -3007,10 +3213,9 @@ msgstr "आपका स्वागत है!"
 msgid "Whether other users can edit these settings"
 msgstr ""
 
-#. placeholder {0}: names.join(", ")
 #: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
-msgid "With {0}"
-msgstr ""
+#~ msgid "With {0}"
+#~ msgstr ""
 
 #: components/modal/modals/CreateGroupOrServer.tsx
 msgid "Would you like to create a new group or server?"
@@ -3038,6 +3243,10 @@ msgstr ""
 
 #: components/i18n/errors.ts
 msgid "You are banned from this server."
+msgstr ""
+
+#: components/modal/modals/TryPWA.tsx
+msgid "You can <0>install</0> this Web App on your devive for conveient access from the Home Screen, just like a real app. It even hides the huge menu bar!<1/><2/>To install, tap the button below or open your browser's menu and choose<3> Add to Home Screen</3>."
 msgstr ""
 
 #: src/interface/Home.tsx

@@ -31,7 +31,13 @@ export default defineConfig({
       filename: "serviceWorker.ts",
       strategies: "injectManifest",
       injectManifest: {
-        maximumFileSizeToCacheInBytes: 4000000,
+        maximumFileSizeToCacheInBytes: 5000000,
+      },
+      devOptions: {
+        enabled: true,
+      },
+      devOptions: {
+        enabled: true,
       },
       manifest: {
         name: "Stoat",
@@ -39,7 +45,7 @@ export default defineConfig({
         description: "User-first open source chat platform.",
         categories: ["communication", "chat", "messaging"],
         start_url: base,
-        orientation: "portrait",
+        orientation: "any",
         display_override: ["window-controls-overlay"],
         display: "standalone",
         background_color: "#101823",

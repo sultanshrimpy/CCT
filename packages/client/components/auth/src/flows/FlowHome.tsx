@@ -29,8 +29,9 @@ export default function FlowHome() {
           <Column gap="xl">
             <Wordmark
               class={css({
-                width: "60%",
+                width: "80%",
                 margin: "auto",
+		display: "block",
                 fill: "var(--md-sys-color-on-surface)",
               })}
             />
@@ -47,20 +48,11 @@ export default function FlowHome() {
                 }}
               >
                 <span>
-                  <Trans>
-                    Find your com
-                    <wbr />
-                    munity,
-                    <br />
-                    connect with the world.
-                  </Trans>
+                  Chaos Cult Tacticians
                 </span>
               </b>
               <span style={{ "text-align": "center", opacity: "0.5" }}>
-                <Trans>
-                  Stoat is one of the best ways to stay connected with your
-                  friends and community, anywhere, anytime.
-                </Trans>
+                  Join the Cult!
               </span>
             </Column>
 

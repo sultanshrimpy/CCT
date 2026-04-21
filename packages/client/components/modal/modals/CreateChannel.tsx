@@ -1,4 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
+import { createSignal, createMemo, Show } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
 
@@ -7,6 +8,8 @@ import { Column, Dialog, DialogProps, Form2, Radio2 } from "@revolt/ui";
 
 import { useModals } from "..";
 import { Modals } from "../types";
+
+import { StageBridgeLinks, saveStageBridgeLinks } from "./StageBridgeLinks";
 
 /**
  * Modal to create a new server channel
@@ -23,6 +26,8 @@ export function CreateChannelModal(
     type: createFormControl("Text"),
   });
 
+const [audienceLinks, setAudienceLinks] = createSignal<string[]>([]);
+const isVoice = createMemo(() => group.controls.type.value === "Voice");
   async function onSubmit() {
     try {
       const channel = await props.server.createChannel({
@@ -30,11 +35,16 @@ export function CreateChannelModal(
         name: group.controls.name.value,
       });
 
-      if (props.cb) {
+       if (group.controls.type.value === "Voice" && audienceLinks().length > 0) {
+	 await saveStageBridgeLinks(channel.id, audienceLinks());
+       }
+
+       if (props.cb) {
         props.cb(channel);
-      } else {
+       } else {
         navigate(`/server/${props.server.id}/channel/${channel.id}`);
-      }
+       }
+
 
       props.onClose();
     } catch (error) {
@@ -78,6 +88,13 @@ export function CreateChannelModal(
               <Trans>Voice Channel</Trans>
             </Radio2.Option>
           </Form2.Radio>
+	  <div style={group.controls.type.value === "Voice" ? {} : { display: "none" }}>
+	    <StageBridgeLinks
+	      server={props.server}
+	      selected={audienceLinks()}
+	      onChange={setAudienceLinks}
+	    />
+	  </div>
         </Column>
       </form>
     </Dialog>

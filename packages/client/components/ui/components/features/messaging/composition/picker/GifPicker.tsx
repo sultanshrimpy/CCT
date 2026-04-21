@@ -21,6 +21,7 @@ import {
   typography,
 } from "@revolt/ui/components/design";
 
+import { useState } from "@revolt/state";
 import { CompositionMediaPickerContext } from "./CompositionMediaPicker";
 
 type GifCategory = { title: string; image: string };
@@ -33,22 +34,17 @@ type GifResult = {
 const FilterContext = createContext<(value: string) => void>();
 
 export function GifPicker() {
+  const { isMobile } = useState();
   const [filter, setFilter] = createSignal("");
-
   const fliterLowercase = () => filter().toLowerCase();
 
   return (
     <Stack>
       <TextField
-        autoFocus
+        autoFocus={!isMobile}
         variant="filled"
         placeholder="Search for GIFs..."
         value={filter()}
-        onMouseDown={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-        }}
         onChange={(e) => setFilter(e.currentTarget.value)}
       />
       <Suspense fallback={<CircularProgress />}>
@@ -102,7 +98,7 @@ function Categories() {
     queryFn: () => {
       const [authHeader, authHeaderValue] = client()!.authenticationHeader;
 
-      return fetch(`${env.DEFAULT_GIFBOX_URL}/categories?locale=en_US`, {
+      return fetch(`https://api.klipy.com/api/v1/gifs/categories? api_key${env.VITE_KLIPY_API_KEY}`, {
         headers: {
           [authHeader]: authHeaderValue,
         },
@@ -117,7 +113,7 @@ function Categories() {
     queryFn: () => {
       const [authHeader, authHeaderValue] = client()!.authenticationHeader;
 
-      return fetch(`${env.DEFAULT_GIFBOX_URL}/trending?locale=en_US&limit=1`, {
+      return fetch(`https://api.klipy.com/api/v1/gifs/trending? api_key=${env.VITE_KLIPY_API_KEY}&limit=1`, {
         headers: {
           [authHeader]: authHeaderValue,
         },
@@ -146,10 +142,11 @@ function Categories() {
       <VirtualContainer
         items={items()}
         scrollTarget={targetElement}
-        itemSize={{ height: 120, width: 200 }}
-        crossAxisCount={(measurements) =>
-          Math.floor(measurements.container.cross / measurements.itemSize.cross)
-        }
+        itemSize={(contWidth) => ({
+          width: contWidth / 2,
+          height: Math.floor((contWidth * 3) / 10),
+        })}
+        crossAxisCount={() => 2}
       >
         {CategoryItem}
       </VirtualContainer>
@@ -221,7 +218,7 @@ function GifSearch(props: { query: string }) {
       const [authHeader, authHeaderValue] = client()!.authenticationHeader;
 
       return fetch(
-        `${env.DEFAULT_GIFBOX_URL}/` +
+        `https://api.klipy.com/api/v1/gifs/trending? ${env.VITE_KLIPY_API_KEY}/` +
           (props.query === "trending"
             ? `trending?locale=en_US`
             : `search?locale=en_US&query=${encodeURIComponent(props.query)}`),
@@ -243,10 +240,11 @@ function GifSearch(props: { query: string }) {
       <VirtualContainer
         items={search.data as never /* resource */}
         scrollTarget={targetElement}
-        itemSize={{ height: 120, width: 200 }}
-        crossAxisCount={(measurements) =>
-          Math.floor(measurements.container.cross / measurements.itemSize.cross)
-        }
+        itemSize={(contWidth) => ({
+          width: contWidth / 2,
+          height: Math.floor((contWidth * 3) / 10),
+        })}
+        crossAxisCount={() => 2}
       >
         {GifItem}
       </VirtualContainer>

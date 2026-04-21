@@ -25,7 +25,9 @@ import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import MdClose from "@material-design-icons/svg/outlined/close.svg?component-solid";
 
+import { useState } from "@revolt/state";
 import { SidebarBase } from "./common";
+import { SidebarVoicePanel } from "./SidebarVoicePanel";
 
 interface Props {
   /**
@@ -55,6 +57,7 @@ export const HomeSidebar = (props: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { openModal } = useModals();
+  const { isMobile } = useState();
 
   const savedNotesChannelId = createMemo(() => props.openSavedNotes());
 
@@ -66,44 +69,40 @@ export const HomeSidebar = (props: Props) => {
   });
 
   return (
-    <SidebarBase>
-      <div ref={scrollTargetElement} use:invisibleScrollable>
+    <SidebarBase class="channel_bar home">
+      <div ref={scrollTargetElement} use:invisibleScrollable style={{ "flex-grow": 1, "min-height": 0 }}>
         <List>
           <SidebarTitle>
             <Trans>Conversations</Trans>
           </SidebarTitle>
 
-          <a href="/app">
-            <MenuButton
-              size="normal"
-              icon={<Symbol>home</Symbol>}
-              attention={location.pathname === "/app" ? "selected" : "normal"}
-            >
-              <ButtonTitle>
-                <Trans>Home</Trans>
-              </ButtonTitle>
-            </MenuButton>
-          </a>
+          <MenuButton
+            href="/app"
+            size="normal"
+            icon={<Symbol>home</Symbol>}
+            attention={location.pathname === "/app" ? "selected" : "normal"}
+          >
+            <ButtonTitle>
+              <Trans>Home</Trans>
+            </ButtonTitle>
+          </MenuButton>
 
           <div style={{ height: "5px" }} />
 
-          <a href="/friends">
-            <MenuButton
-              size="normal"
-              icon={<Symbol>group</Symbol>}
-              attention={
-                location.pathname === "/friends" ? "selected" : "normal"
-              }
-            >
-              <ButtonTitle>
-                <Trans>Friends</Trans>
-                <div style={{ flex: "1 1 auto" }} />
-                <Show when={pendingRequests()}>
-                  <PendingBadge>{pendingRequests()} requests</PendingBadge>
-                </Show>
-              </ButtonTitle>
-            </MenuButton>
-          </a>
+          <MenuButton
+            href="/friends"
+            size="normal"
+            icon={<Symbol>group</Symbol>}
+            attention={location.pathname === "/friends" ? "selected" : "normal"}
+          >
+            <ButtonTitle>
+              <Trans>Friends</Trans>
+              <div style={{ flex: "1 1 auto" }} />
+              <Show when={pendingRequests()}>
+                <PendingBadge>{pendingRequests()} requests</PendingBadge>
+              </Show>
+            </ButtonTitle>
+          </MenuButton>
 
           <div style={{ height: "5px" }} />
 
@@ -122,30 +121,27 @@ export const HomeSidebar = (props: Props) => {
             }
           >
             <Match when={savedNotesChannelId()}>
-              <a href={`/channel/${savedNotesChannelId()}`}>
-                <MenuButton
-                  size="normal"
-                  icon={<Symbol>note_stack</Symbol>}
-                  attention={
-                    props.channelId && savedNotesChannelId() === props.channelId
-                      ? "selected"
-                      : "normal"
-                  }
-                >
-                  <ButtonTitle>
-                    <Trans>Saved Notes</Trans>
-                  </ButtonTitle>
-                </MenuButton>
-              </a>
+              <MenuButton
+                href={`/channel/${savedNotesChannelId()}`}
+                size="normal"
+                icon={<Symbol>note_stack</Symbol>}
+                attention={
+                  props.channelId && savedNotesChannelId() === props.channelId
+                    ? "selected"
+                    : "normal"
+                }
+              >
+                <ButtonTitle>
+                  <Trans>Saved Notes</Trans>
+                </ButtonTitle>
+              </MenuButton>
             </Match>
           </Switch>
 
           <Category>
             Direct Messages
             <a
-              class={css({
-                cursor: "pointer",
-              })}
+              class={css({ cursor: "pointer" })}
               onClick={() =>
                 openModal({
                   type: "create_group",
@@ -183,9 +179,9 @@ export const HomeSidebar = (props: Props) => {
                     // @ts-expect-error missing type on Entry
                     role="listitem"
                     tabIndex={item.tabIndex}
-                    style={item.style}
                     channel={item.item}
                     active={item.item.id === props.channelId}
+                    isMobile={isMobile}
                   />
                 </div>
               )}
@@ -193,6 +189,7 @@ export const HomeSidebar = (props: Props) => {
           </Deferred>
         </List>
       </div>
+      <SidebarVoicePanel />
     </SidebarBase>
   );
 };
@@ -261,12 +258,12 @@ const NameStatusStack = styled("div", {
  * Single conversation entry
  */
 function Entry(
-  props: { channel: Channel; active: boolean } /*& Omit<
+  props: { channel: Channel; active: boolean; isMobile: boolean } /*& Omit<
     ComponentProps<typeof Link>,
     "href"
   >*/,
 ) {
-  const [local, remote] = splitProps(props, ["channel", "active"]);
+  const [local, remote] = splitProps(props, ["channel", "active", "isMobile"]);
 
   const { t } = useLingui();
   const { openModal } = useModals();
@@ -288,49 +285,51 @@ function Entry(
     );
 
   return (
-    <a {...remote} href={`/channel/${local.channel.id}`}>
-      <MenuButton
-        size="normal"
-        alert={
-          !local.active &&
-          local.channel.unread &&
-          (local.channel.mentions?.size || true)
-        }
-        attention={
-          local.active
-            ? "selected"
-            : local.channel.muted
-              ? "muted"
-              : local.channel.unread
-                ? "active"
-                : "normal"
-        }
-        icon={
-          <Switch>
-            <Match when={local.channel.type === "Group"}>
-              <Avatar
-                size={32}
-                shape="rounded-square"
-                fallback={local.channel.name}
-                src={local.channel.iconURL}
-                primaryContrast
-              />
-            </Match>
-            <Match when={local.channel.type === "DirectMessage"}>
-              <Avatar
-                size={32}
-                src={local.channel.iconURL}
-                holepunch="bottom-right"
-                overlay={
-                  <UserStatus.Graphic
-                    status={local.channel?.recipient?.presence}
-                  />
-                }
-              />
-            </Match>
-          </Switch>
-        }
-        actions={
+    <MenuButton
+      {...remote}
+      href={`/channel/${local.channel.id}`}
+      size="normal"
+      alert={
+        !local.active &&
+        local.channel.unread &&
+        (local.channel.mentions?.size || true)
+      }
+      attention={
+        local.active
+          ? "selected"
+          : local.channel.muted
+            ? "muted"
+            : local.channel.unread
+              ? "active"
+              : "normal"
+      }
+      icon={
+        <Switch>
+          <Match when={local.channel.type === "Group"}>
+            <Avatar
+              size={32}
+              shape="rounded-square"
+              fallback={local.channel.name}
+              src={local.channel.iconURL}
+              primaryContrast
+            />
+          </Match>
+          <Match when={local.channel.type === "DirectMessage"}>
+            <Avatar
+              size={32}
+              src={local.channel.iconURL}
+              holepunch="bottom-right"
+              overlay={
+                <UserStatus.Graphic
+                  status={local.channel?.recipient?.presence}
+                />
+              }
+            />
+          </Match>
+        </Switch>
+      }
+      actions={
+        <Show when={!local.isMobile}>
           <a
             onClick={(e) => {
               e.preventDefault();
@@ -342,19 +341,21 @@ function Entry(
           >
             <MdClose {...iconSize("18px")} />
           </a>
-        }
-        use:floating={{
-          contextMenu: () =>
-            local.channel.type === "DirectMessage" ? (
-              <UserContextMenu
-                user={local.channel.recipient!}
-                channel={local.channel}
-              />
-            ) : (
-              <ChannelContextMenu channel={local.channel} />
-            ),
-        }}
-      >
+        </Show>
+      }
+      use:floating={{
+        contextMenu: () =>
+          local.channel.type === "DirectMessage" ? (
+            <UserContextMenu
+              user={local.channel.recipient!}
+              channel={local.channel}
+            />
+          ) : (
+            <ChannelContextMenu channel={local.channel} />
+          ),
+      }}
+    >
+      <EntryRow>
         <NameStatusStack>
           <Switch>
             <Match when={local.channel.type === "Group"}>
@@ -389,10 +390,33 @@ function Entry(
             </Match>
           </Switch>
         </NameStatusStack>
-      </MenuButton>
-    </a>
+        <Show when={local.channel.voiceParticipants.size > 0}>
+          <Symbol
+            size={10}
+            style={{
+              color: "var(--brand-presence-online)",
+              "flex-shrink": "0",
+              "margin-left": "auto",
+            }}
+          >
+            call
+          </Symbol>
+        </Show>
+      </EntryRow>
+    </MenuButton>
   );
 }
+
+const EntryRow = styled("div", {
+  base: {
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    width: "100%",
+    height: "100%",
+    minWidth: 0,
+  },
+});
 
 /**
  * Inner scrollable list

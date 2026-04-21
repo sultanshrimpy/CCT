@@ -47,10 +47,8 @@ export default {
   /**
    * What gifbox server to connect to by default.
    */
-  DEFAULT_GIFBOX_URL:
-    (import.meta.env.DEV ? import.meta.env.VITE_DEV_GIFBOX_URL : undefined) ??
-    (import.meta.env.VITE_GIFBOX_URL as string) ??
-    "https://api.gifbox.me",
+  KLIPY_API_KEY:
+    (import.meta.env.VITE_KLIPY_API_KEY as string),
   /**
    * hCaptcha site key to use if enabled
    */
@@ -73,7 +71,7 @@ export default {
    * I kinda wonder if this should be a setting, or something fetched from the backend dynamically.
    */
   MAX_FILE_SIZE:
-    (import.meta.env.VITE_CFG_MAX_FILE_SIZE as number) ?? 20_000_000,
+    5_368_709_120,
   /**
    * RNNoise worklet CDN host location. Defaults to blank, which uses the url provided by the livekit-rnnoise-processor package.
    */

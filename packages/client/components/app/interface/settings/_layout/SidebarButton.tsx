@@ -1,15 +1,39 @@
+import { useState } from "@revolt/state";
+import { JSX, splitProps } from "solid-js";
 import { styled } from "styled-system/jsx";
 
 /**
  * Sidebar button
  */
-export const SidebarButton = styled("a", {
+export function SidebarButton(
+  props: JSX.HTMLAttributes<HTMLAnchorElement> & {
+    "aria-selected"?: boolean;
+    noDrawer?: boolean;
+  },
+) {
+  const { diagDrawer } = useState();
+  const [local, other] = splitProps(props, ["onClick", "noDrawer", "class"]);
+
+  function onClick(e: Event) {
+    if (!local.noDrawer) diagDrawer()?.setShown(true);
+    // @ts-expect-error callable listener
+    if (local.onClick) local.onClick(e);
+  }
+
+  return (
+    <SidebarButtonBase
+      {...other}
+      class={"button" + (local.class ? " " + local.class : "")}
+      onClick={onClick}
+    />
+  );
+}
+
+const SidebarButtonBase = styled("a", {
   base: {
     // for <Ripple />:
     position: "relative",
-
     minWidth: 0,
-
     display: "flex",
     alignItems: "center",
     padding: "6px 8px",

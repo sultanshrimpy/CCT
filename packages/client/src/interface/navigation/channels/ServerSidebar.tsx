@@ -41,6 +41,7 @@ import MdChevronRight from "@material-design-icons/svg/filled/chevron_right.svg?
 import MdSettings from "@material-symbols/svg-400/outlined/settings-fill.svg?component-solid";
 
 import { SidebarBase } from "./common";
+import { SidebarVoicePanel } from "./SidebarVoicePanel";
 
 interface Props {
   /**
@@ -112,9 +113,7 @@ export const ServerSidebar = (props: Props) => {
   // TODO: we want it to feel smooth when navigating through channels, so we'll want to select channels immediately but not actually navigate until we're done moving through them
   /** Navigates to the channel offset from the current one, wrapping around if needed */
   const _navigateChannel = (byOffset: number) => {
-    if (props.channelId == null) {
-      return;
-    }
+    if (props.channelId == null) return;
 
     const channels = visibleChannels();
 
@@ -192,7 +191,10 @@ export const ServerSidebar = (props: Props) => {
   }
 
   return (
-    <SidebarBase use:floating={props.menuGenerator(props.server)}>
+    <SidebarBase
+      class="channel_bar server"
+      use:floating={props.menuGenerator(props.server)}
+    >
       <Switch
         fallback={
           <Header placement="secondary">
@@ -248,6 +250,7 @@ export const ServerSidebar = (props: Props) => {
           )}
         </Draggable>
       </div>
+      <SidebarVoicePanel />
     </SidebarBase>
   );
 };
@@ -449,6 +452,7 @@ function Entry(
 ) {
   const state = useState();
   const voice = useVoice();
+  const navigate = useNavigate();
   const { openModal } = useModals();
 
   const canEditChannel = createMemo(() =>
@@ -483,7 +487,14 @@ function Entry(
   );
 
   return (
-    <a href={`/server/${props.channel.serverId}/channel/${props.channel.id}`}>
+    <a
+      href={`/server/${props.channel.serverId}/channel/${props.channel.id}`}
+      onClick={() => {
+        if (props.channel.isVoice && !inCall()) {
+          voice.connect(props.channel);
+        }
+      }}
+    >
       <Column gap="sm">
         <MenuButton
           use:floating={props.menuGenerator(props.channel)}
@@ -511,43 +522,62 @@ function Entry(
           }
           actions={
             <>
-              <Show when={canInvite()}>
+              <Show when={props.channel.isVoice}>
                 <a
                   use:floating={{
-                    tooltip: { placement: "top", content: "Create Invite" },
+                    tooltip: { placement: "top", content: "Open Chat" },
                   }}
                   onClick={(e) => {
                     e.preventDefault();
-                    openModal({
-                      type: "create_invite",
-                      channel: props.channel,
-                    });
+                    e.stopPropagation();
+                    navigate(
+                      `/server/${props.channel.serverId}/channel/${props.channel.id}`,
+                    );
                   }}
                 >
                   <Symbol size={16} fill>
-                    person_add
+                    chat
                   </Symbol>
                 </a>
               </Show>
-
-              <Show when={canEditChannel()}>
-                <a
-                  use:floating={{
-                    tooltip: { placement: "top", content: "Edit Channel" },
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openModal({
-                      type: "settings",
-                      config: "channel",
-                      context: props.channel,
-                    });
-                  }}
-                >
-                  <Symbol size={16} fill>
-                    settings
-                  </Symbol>
-                </a>
+              <Show when={!state.isMobile}>
+                <Show when={canInvite()}>
+                  <a
+                    use:floating={{
+                      tooltip: { placement: "top", content: "Create Invite" },
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openModal({
+                        type: "create_invite",
+                        channel: props.channel,
+                      });
+                    }}
+                  >
+                    <Symbol size={16} fill>
+                      person_add
+                    </Symbol>
+                  </a>
+                </Show>
+                <Show when={canEditChannel()}>
+                  <a
+                    use:floating={{
+                      tooltip: { placement: "top", content: "Edit Channel" },
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openModal({
+                        type: "settings",
+                        config: "channel",
+                        context: props.channel,
+                      });
+                    }}
+                  >
+                    <Symbol size={16} fill>
+                      settings
+                    </Symbol>
+                  </a>
+                </Show>
               </Show>
             </>
           }
