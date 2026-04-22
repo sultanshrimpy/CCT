@@ -11,7 +11,11 @@ import {
   onMount,
   useContext,
 } from "solid-js";
-import { RoomContext } from "solid-livekit-components";
+import {
+  RoomContext,
+  TrackReferenceOrPlaceholder,
+  useTracks,
+} from "solid-livekit-components";
 
 import { voiceNotifications } from "./VoiceNotifications";
 
@@ -59,26 +63,27 @@ declare global {
         notificationSounds?: boolean;
       }) => void;
     };
+    stoatRefreshVoice?: () => void;
   }
 }
 
-import { Room } from "livekit-client";
+import { Room, Track } from "livekit-client";
 import { DenoiseTrackProcessor } from "livekit-rnnoise-processor";
 import { Channel } from "stoat.js";
 
 import { NoiseGateProcessor } from "./NoiseGateProcessor";
 
 import { useClient } from "@revolt/client";
+import { CONFIGURATION } from "@revolt/common";
+import { ModalController, useModals } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
 import { useState } from "@revolt/state";
 import { Voice as VoiceSettings } from "@revolt/state/stores/Voice";
 import { VoiceCallCardContext } from "@revolt/ui/components/features/voice/callCard/VoiceCallCard";
 
-import { CONFIGURATION } from "@revolt/common";
 import { InRoom } from "./components/InRoom";
 import { IncomingCallPopup } from "./components/IncomingCallPopup";
 import { RoomAudioManager } from "./components/RoomAudioManager";
-import { StageAudioManager } from "./components/StageAudioManager";
 
 type State =
   | "READY"
@@ -86,6 +91,10 @@ type State =
   | "CONNECTING"
   | "CONNECTED"
   | "RECONNECTING";
+
+type MicrophonePublication = NonNullable<
+  Awaited<ReturnType<Room["localParticipant"]["setMicrophoneEnabled"]>>
+>;
 
 class Voice {
   #settings: VoiceSettings;
@@ -96,12 +105,12 @@ class Voice {
   room: Accessor<Room | undefined>;
   #setRoom: Setter<Room | undefined>;
 
+  vidTracks: Accessor<TrackReferenceOrPlaceholder[]>;
+
   state: Accessor<State>;
   #setState: Setter<State>;
 
   deafen: Accessor<boolean>;
-  #setDeafen: Setter<boolean>;
-
   microphone: Accessor<boolean>;
   #setMicrophone: Setter<boolean>;
 
@@ -119,16 +128,18 @@ class Voice {
   #noiseGateProcessor?: NoiseGateProcessor;
   #mutePromise: Promise<void> = Promise.resolve();
 
-<<<<<<< HEAD
-  #stageRoom?: Room;  
-  stageRoom: Accessor<Room | undefined>;
-  #setStageRoom: Setter<Room | undefined>;
-  stageFeedId: accessor<string | undefined>;
-  #setStageFeedId: Setter<string | undefined>;
+  fullscreen: Accessor<boolean>;
+  #setFullscreen: Setter<boolean>;
 
-=======
->>>>>>> trifall/main
-  constructor(voiceSettings: VoiceSettings) {
+  focusId: Accessor<string | undefined>;
+  #setFocus: Setter<string | undefined>;
+
+  showBar: Accessor<boolean>;
+  #setShowBar: Setter<boolean>;
+
+  private openModal;
+
+  constructor(voiceSettings: VoiceSettings, modals: ModalController) {
     this.#settings = voiceSettings;
 
     const [channel, setChannel] = createSignal<Channel>();
@@ -139,23 +150,15 @@ class Voice {
     this.room = room;
     this.#setRoom = setRoom;
 
-    const [stageRoom, setStageRoom] = createSignal<Room>();
-    this.stageRoom = stageRoom;
-    this.#setStageRoom = setStageRoom;
-
-    const [stageFeedId, setStageFeedId] = createSignal<string>();
-    this.stageFeedId = stageFeedId;
-    this.#setStageFeedId = setStageFeedId;
+    this.vidTracks = () => [];
 
     const [state, setState] = createSignal<State>("READY");
     this.state = state;
     this.#setState = setState;
 
-    const [deafen, setDeafen] = createSignal<boolean>(false);
-    this.deafen = deafen;
-    this.#setDeafen = setDeafen;
+    this.deafen = () => voiceSettings.deafen;
 
-    const [microphone, setMicrophone] = createSignal(false);
+    const [microphone, setMicrophone] = createSignal(voiceSettings.micOn);
     this.microphone = microphone;
     this.#setMicrophone = setMicrophone;
 
@@ -166,6 +169,96 @@ class Voice {
     const [screenshare, setScreenshare] = createSignal(false);
     this.screenshare = screenshare;
     this.#setScreenshare = setScreenshare;
+
+    const [fullscreen, setFullscreen] = createSignal(false);
+    this.fullscreen = fullscreen;
+    this.#setFullscreen = setFullscreen;
+
+    const [focus, setFocus] = createSignal<string>();
+    this.focusId = focus;
+    this.#setFocus = setFocus;
+
+    const [showBar, setShowBar] = createSignal(true);
+    this.showBar = showBar;
+    this.#setShowBar = setShowBar;
+
+    this.openModal = modals.openModal;
+  }
+
+  #resetVoiceProcessors() {
+    this.#noiseGateProcessor?.destroy();
+    this.#noiseGateProcessor = undefined;
+  }
+
+  #configureMicrophoneTrack(track?: MicrophonePublication) {
+    this.#resetVoiceProcessors();
+
+    const audioTrack = track?.audioTrack;
+    if (!audioTrack) return;
+
+    const settings = audioTrack.mediaStreamTrack.getSettings();
+    if (settings.channelCount && settings.channelCount > 1) {
+      console.warn(
+        "[Voice] Mic track is stereo (channelCount:",
+        settings.channelCount,
+        ") - remote participants may hear audio in one ear only.",
+      );
+    }
+
+    if (this.#settings.noiseGateEnabled) {
+      const upstream =
+        this.#settings.noiseSupression === "enhanced"
+          ? new DenoiseTrackProcessor({
+              workletCDNURL: CONFIGURATION.RNNOISE_WORKLET_CDN_URL,
+            })
+          : undefined;
+
+      this.#noiseGateProcessor = new NoiseGateProcessor({
+        threshold: this.#settings.noiseGateThreshold,
+        upstream,
+      });
+      console.info(
+        "[NoiseGate] Applying processor to audio track:",
+        audioTrack.sid,
+      );
+      audioTrack.setProcessor(this.#noiseGateProcessor as never);
+      return;
+    }
+
+    if (this.#settings.noiseSupression === "enhanced") {
+      audioTrack.setProcessor(
+        new DenoiseTrackProcessor({
+          workletCDNURL: CONFIGURATION.RNNOISE_WORKLET_CDN_URL,
+        }),
+      );
+    }
+  }
+
+  async #setMicrophoneEnabled(
+    enabled: boolean,
+    options: { persistPreference?: boolean } = {},
+  ) {
+    const room = this.room();
+    if (!room) throw "invalid state";
+
+    const track = await room.localParticipant.setMicrophoneEnabled(enabled);
+    const isEnabled = enabled && typeof track !== "undefined";
+
+    this.#setMicrophone(isEnabled);
+
+    if (options.persistPreference ?? true) {
+      this.#settings.micOn = isEnabled;
+    }
+
+    if (isEnabled) {
+      this.#configureMicrophoneTrack(
+        track as MicrophonePublication | undefined,
+      );
+    } else {
+      this.#resetVoiceProcessors();
+    }
+
+    return track;
   }
 
   async connect(channel: Channel, auth?: { url: string; token: string }) {
@@ -175,7 +268,7 @@ class Voice {
     this.#isManualDisconnect = false;
     this.#reconnectAttempts = 0;
 
-    this.disconnect();
+    this.disconnect(false);
 
     const room = new Room({
       audioCaptureDefaults: {
@@ -191,28 +284,18 @@ class Voice {
       },
     });
 
+    this.vidTracks = useTracks(
+      [
+        { source: Track.Source.Camera, withPlaceholder: true },
+        { source: Track.Source.ScreenShare, withPlaceholder: false },
+      ],
+      { room, onlySubscribed: false },
+    );
+
     batch(() => {
       this.#setRoom(room);
       this.#setChannel(channel);
       this.#setState("CONNECTING");
-
-      // only auto-mute when PTT is enabled
-      const pttEnabled = this.#settings.pushToTalkEnabled;
-      if (pttEnabled) {
-        debugLog(
-          "PTT-WEB",
-          "PTT enabled - Setting initial mic state to OFF (muted)",
-        );
-        this.#setMicrophone(false);
-<<<<<<< HEAD
-
-=======
->>>>>>> trifall/main
-      } else {
-        debugLog("PTT-WEB", "PTT disabled - Keeping mic state as-is");
-        this.#setMicrophone(true);
-      }
-      this.#setDeafen(false);
       this.#setVideo(false);
       this.#setScreenshare(false);
     });
@@ -223,95 +306,25 @@ class Voice {
       this.#reconnectAttempts = 0; // Reset on successful connection
       console.log("[VoiceNotifications] Playing self join sound");
       voiceNotifications.playSelfJoin();
-<<<<<<< HEAD
-      //Check if room already has stage feed metadata on connect
-      if (room.metadata) {
-        try {
-          const parsed = JSON.parse(room.metadata);
-	  if (parsed.stage_active && parsed.stage_feed) {
-	    console.log("[stage-bridge] Stage feed already active on connect:", parsed.stage_feed);
-	    const client = useClient()();
-	    void this.#connectStageFeed(auth.url, parsed.stage_feed, client);
-	  }
-	} catch {
-	  // ignore
-	}
-      }
-      
-=======
->>>>>>> trifall/main
-      if (this.speakingPermission)
-        room.localParticipant.setMicrophoneEnabled(true).then((track) => {
-          this.#setMicrophone(typeof track !== "undefined");
+      if (this.speakingPermission) {
+        const pttActive =
+          this.#settings.pushToTalkEnabled &&
+          !!window.pushToTalk?.getCurrentState().active;
+        const targetMicEnabled =
+          !this.#settings.deafen &&
+          (this.#settings.pushToTalkEnabled ? pttActive : this.#settings.micOn);
 
-          // verify the captured track is mono, if the device is still initializing it can return stereo
-          if (track?.audioTrack) {
-            const settings = track.audioTrack.mediaStreamTrack.getSettings();
-            if (settings.channelCount && settings.channelCount > 1) {
-              console.warn(
-                "[Voice] Mic track is stereo (channelCount:",
-                settings.channelCount,
-                ") — remote participants may hear audio in one ear only.",
-              );
-            }
-          }
-
-<<<<<<< HEAD
-     // Stage bridge: watch for stage feed metadata
-     room.addListener("roomMetadataChanged", (metadata: string) => {
-       try {
-	 const parsed = JSON.parse(metadata);
-	 if (parsed.stage_active && parsed.stage_feed) {
-	   const client = useClient()();
-	   console.log("[stage-bridge] client:", client, "channels:", client?.channels);
-	   void this.#connectStageFeed(auth.url, parsed.stage_feed, client);
-	 } else {
-	   this.#disconnectStageFeed();
-	 }
-       } catch {
-	 // ignore malformed metadata
-       }
-     });
-
-=======
->>>>>>> trifall/main
-          // Apply audio processors.
-          // When both noise gate and enhanced denoise are enabled the noise
-          // gate wraps the denoise processor so both run in a single chain:
-          //   Source → RNNoise → Noise Gate → Output
-          if (this.#settings.noiseGateEnabled) {
-            const upstream =
-              this.#settings.noiseSupression === "enhanced"
-                ? new DenoiseTrackProcessor({
-                    workletCDNURL: CONFIGURATION.RNNOISE_WORKLET_CDN_URL,
-                  })
-                : undefined;
-
-            this.#noiseGateProcessor = new NoiseGateProcessor({
-              threshold: this.#settings.noiseGateThreshold,
-              upstream,
-            });
-            const audioTrack = track?.audioTrack;
-            if (audioTrack) {
-              console.info(
-                "[NoiseGate] Applying processor to audio track:",
-                audioTrack.sid,
-              );
-              audioTrack.setProcessor(this.#noiseGateProcessor as any);
-            } else {
-              console.warn(
-                "[NoiseGate] No audio track found, processor not applied. track:",
-                track,
-              );
-            }
-          } else if (this.#settings.noiseSupression === "enhanced") {
-            track?.audioTrack?.setProcessor(
-              new DenoiseTrackProcessor({
-                workletCDNURL: CONFIGURATION.RNNOISE_WORKLET_CDN_URL,
-              }),
+        this.#setMicrophoneEnabled(targetMicEnabled, {
+          persistPreference:
+            !this.#settings.pushToTalkEnabled && !this.#settings.deafen,
+        }).then((track) => {
+          if (targetMicEnabled && !track?.audioTrack) {
+            console.warn(
+              "[Voice] Microphone enabled but no audio track was returned.",
             );
           }
         });
+      }
 
       // Send "started a call" message only when starting a new call (no existing participants)
       if (
@@ -375,113 +388,6 @@ class Voice {
       "Room connected successfully, mic state:",
       room.localParticipant.isMicrophoneEnabled,
     );
-
-    // Handle mic state based on PTT setting
-    if (this.#settings.pushToTalkEnabled) {
-      // PTT enabled - mute mic so user must press key to speak
-      if (room.localParticipant.isMicrophoneEnabled) {
-        debugLog(
-          "PTT-WEB",
-          "PTT enabled and mic was auto-enabled by LiveKit, explicitly muting...",
-        );
-        await room.localParticipant.setMicrophoneEnabled(false);
-        debugLog(
-          "PTT-WEB",
-          "Mic explicitly muted, state:",
-          room.localParticipant.isMicrophoneEnabled,
-        );
-      }
-    } else {
-      // PTT disabled - unmute mic so user can speak immediately
-      if (!room.localParticipant.isMicrophoneEnabled) {
-        debugLog(
-          "PTT-WEB",
-          "PTT disabled and mic is muted, explicitly unmuting...",
-        );
-        await room.localParticipant.setMicrophoneEnabled(true);
-        debugLog(
-          "PTT-WEB",
-          "Mic explicitly unmuted, state:",
-          room.localParticipant.isMicrophoneEnabled,
-        );
-      }
-    }
-<<<<<<< HEAD
-=======
-  }
-
-  async #handleReconnect() {
-    const channel = this.channel();
-    if (!channel) {
-      debugLog("PTT-WEB", "No channel to reconnect to");
-      this.#setState("DISCONNECTED");
-      if (this.#settings.soundDisconnect) {
-        voiceNotifications.playDisconnect();
-      }
-      return;
-    }
-
-    this.#reconnectAttempts++;
-    debugLog(
-      "PTT-WEB",
-      `Reconnect attempt ${this.#reconnectAttempts}/${this.#maxReconnectAttempts}`,
-    );
-
-    this.#setState("RECONNECTING");
-
-    try {
-      // Fetch a fresh token for reconnection
-      const auth = await channel.joinCall("worldwide");
-      const room = this.room();
-
-      if (!room) {
-        throw new Error("Room no longer exists");
-      }
-
-      debugLog("PTT-WEB", "Attempting to reconnect with new token...");
-      await room.connect(auth.url, auth.token, {
-        autoSubscribe: false,
-      });
-
-      debugLog("PTT-WEB", "Reconnection successful!");
-      this.#reconnectAttempts = 0;
-      this.#setState("CONNECTED");
-    } catch (error) {
-      debugLog("PTT-WEB", "Reconnection failed:", error);
-
-      if (this.#reconnectAttempts < this.#maxReconnectAttempts) {
-        // Try again with exponential backoff
-        const delay = Math.min(
-          1000 * Math.pow(2, this.#reconnectAttempts),
-          10000,
-        );
-        debugLog("PTT-WEB", `Retrying in ${delay}ms...`);
-
-        setTimeout(() => {
-          this.#handleReconnect();
-        }, delay);
-      } else {
-        // Max attempts reached, give up
-        debugLog("PTT-WEB", "Max reconnection attempts reached");
-        this.#setState("DISCONNECTED");
-        if (this.#settings.soundDisconnect) {
-          voiceNotifications.playDisconnect();
-        }
-      }
-    }
-  }
-
-  /** Update the noise gate threshold live (called from settings UI). */
-  updateNoiseGateThreshold(threshold: number) {
-    if (this.#noiseGateProcessor) {
-      this.#noiseGateProcessor.threshold = threshold;
-    }
-  }
-
-  /** Get the active noise gate processor (for the live level meter). */
-  get noiseGateProcessor(): NoiseGateProcessor | undefined {
-    return this.#noiseGateProcessor;
->>>>>>> trifall/main
   }
 
   async #handleReconnect() {
@@ -557,71 +463,40 @@ class Voice {
     return this.#noiseGateProcessor;
   }
 
-  async #connectStageFeed(livekitUrl: string, stageChannelId: string, client: any) {
-    if (this.stageFeedId() === stageChannelId) return;
-    await this.#disconnectStageFeed();
-    console.log("[stage-bridge] Connecting to stage feed:", stageChannelId);
+  disconnect(manual: boolean = true) {
     try {
-      const client = useClient();
-      const channel = client.channels.get(stageChannelId);
-      if (!channel) {
-	console.error("[stage-bridge] Stage channel not found:", stageChannelId);
-	return;
-      }
-      const auth = await channel.joinCall("worldwide");
+      const room = this.room();
+      if (!room) return;
 
-      const stageRoom = new Room();
-      await stageRoom.connect(auth.url, auth.token, { autoSubscribe: true });
-      this.#stageRoom = stageRoom;
-      this.#setStageRoom(stageRoom);
-      this.#setStageFeedId(stageChannelId);
-      console.log("[stage-bridge] Connected to stage feed, room:", stageRoom, "participants:", stageRoom.remoteParticipants);
+      // Internal disconnects during channel switches should not disable reconnects.
+      this.#isManualDisconnect = manual;
+      this.#reconnectAttempts = 0;
+
+      // Clean up noise gate processor
+      this.#noiseGateProcessor?.destroy();
+      this.#noiseGateProcessor = undefined;
+
+      voiceNotifications.playSelfLeave();
+
+      room.removeAllListeners();
+      room.disconnect();
+
+      batch(() => {
+        this.#setState("READY");
+        this.#setRoom();
+        this.#setChannel();
+        this.#setMicrophone(this.#settings.micOn);
+        this.#setFullscreen(false);
+        this.vidTracks = () => [];
+      });
     } catch (e) {
-      console.error("[stage-bridge] Failed to connect to stage feed:", e);
-   }
-  }
- 
-   async #disconnectStageFeed() {
-     if (this.#stageRoom) {
-       console.log("[stage-bridge] Disconnecting stage feed");
-       this.#stageRoom.removeAllListeners();
-       await this.#stageRoom.disconnect();
-       this.#stageRoom = undefined;
-       this.#setStageRoom(stageRoom);
-       this.#setStageFeedId(undefined);
-     }
-   }
-
-  disconnect() {
-    const room = this.room();
-    if (!room) return;
-
-    // Mark as manual disconnect to prevent auto-reconnect
-    this.#isManualDisconnect = true;
-    this.#reconnectAttempts = 0;
-
-    // Clean up noise gate processor
-    this.#noiseGateProcessor?.destroy();
-    this.#noiseGateProcessor = undefined;
-<<<<<<< HEAD
-    void this.#disconnectStageFeed();
-=======
->>>>>>> trifall/main
-
-    voiceNotifications.playSelfLeave();
-
-    room.removeAllListeners();
-    room.disconnect();
-
-    batch(() => {
-      this.#setState("READY");
-      this.#setRoom(undefined);
-      this.#setChannel(undefined);
-    });
+      this.onErr(e);
+    }
   }
 
   async toggleDeafen() {
-    const willDeafen = !this.deafen();
+    const willDeafen = !this.#settings.deafen;
+    this.#settings.deafen = willDeafen;
 
     if (willDeafen) {
       // Save current mic state so we can restore it on undeafen
@@ -630,50 +505,57 @@ class Voice {
       // Mute the mic when deafening
       const room = this.room();
       if (room && room.localParticipant.isMicrophoneEnabled) {
-        await room.localParticipant.setMicrophoneEnabled(false);
-        this.#setMicrophone(false);
+        await this.#setMicrophoneEnabled(false, { persistPreference: false });
       }
     } else {
       // Restore mic to its previous state when undeafening
       if (this.#micWasOnBeforeDeafen) {
+        const shouldRestoreMic =
+          !this.#settings.pushToTalkEnabled ||
+          !!window.pushToTalk?.getCurrentState().active;
+
+        if (!shouldRestoreMic) {
+          return;
+        }
+
         const room = this.room();
         if (room) {
-          await room.localParticipant.setMicrophoneEnabled(true);
-          this.#setMicrophone(true);
+          await this.#setMicrophoneEnabled(true, { persistPreference: false });
         }
       }
     }
-
-    this.#setDeafen(willDeafen);
   }
 
   async toggleMute() {
-    const room = this.room();
-    if (!room) throw "invalid state";
+    try {
+      const room = this.room();
+      if (!room) throw "invalid state";
 
-    // if user is deafened, don't allow them to unmute
-    if (this.deafen()) {
-      debugLog("PTT-WEB", "Cannot unmute while deafened");
-      return;
-    }
-
-    await room.localParticipant.setMicrophoneEnabled(
-      !room.localParticipant.isMicrophoneEnabled,
-    );
-
-    this.#setMicrophone(room.localParticipant.isMicrophoneEnabled);
-
-    // only play sounds if PTT is disabled, or if PTT is enabled with notification sounds on
-    const shouldPlaySound =
-      !this.#settings.pushToTalkEnabled ||
-      this.#settings.pushToTalkNotificationSounds;
-
-    if (shouldPlaySound) {
-      if (room.localParticipant.isMicrophoneEnabled) {
-        voiceNotifications.playUnmute();
-      } else {
-        voiceNotifications.playMute();
+      // if user is deafened, don't allow them to unmute
+      if (this.deafen()) {
+        debugLog("PTT-WEB", "Cannot unmute while deafened");
+        return;
       }
+
+      await this.#setMicrophoneEnabled(
+        !room.localParticipant.isMicrophoneEnabled,
+        { persistPreference: true },
+      );
+
+      // only play sounds if PTT is disabled, or if PTT is enabled with notification sounds on
+      const shouldPlaySound =
+        !this.#settings.pushToTalkEnabled ||
+        this.#settings.pushToTalkNotificationSounds;
+
+      if (shouldPlaySound) {
+        if (room.localParticipant.isMicrophoneEnabled) {
+          voiceNotifications.playUnmute();
+        } else {
+          voiceNotifications.playMute();
+        }
+      }
+    } catch (e) {
+      this.onErr(e);
     }
   }
 
@@ -703,7 +585,7 @@ class Voice {
         return;
       }
 
-      // Re-read state inside the mutex — it may have changed while we waited.
+      // Re-read state inside the mutex - it may have changed while we waited.
       const currentState = room.localParticipant.isMicrophoneEnabled;
       debugLog(
         "PTT-WEB",
@@ -720,8 +602,7 @@ class Voice {
           enabled,
           ")",
         );
-        await room.localParticipant.setMicrophoneEnabled(enabled);
-        this.#setMicrophone(enabled);
+        await this.#setMicrophoneEnabled(enabled, { persistPreference: false });
         debugLog("PTT-WEB", "setMute() - mic state updated to:", enabled);
 
         // only play sounds if PTT is disabled, or if PTT is enabled with notification sounds on
@@ -745,23 +626,61 @@ class Voice {
   }
 
   async toggleCamera() {
-    const room = this.room();
-    if (!room) throw "invalid state";
-    await room.localParticipant.setCameraEnabled(
-      !room.localParticipant.isCameraEnabled,
-    );
+    try {
+      const room = this.room();
+      if (!room) throw "invalid state";
+      await room.localParticipant.setCameraEnabled(
+        !room.localParticipant.isCameraEnabled,
+      );
 
-    this.#setVideo(room.localParticipant.isCameraEnabled);
+      this.#setVideo(room.localParticipant.isCameraEnabled);
+    } catch (e) {
+      this.onErr(e);
+    }
   }
 
   async toggleScreenshare() {
-    const room = this.room();
-    if (!room) throw "invalid state";
-    await room.localParticipant.setScreenShareEnabled(
-      !room.localParticipant.isScreenShareEnabled,
-    );
+    try {
+      const room = this.room();
+      if (!room) throw "invalid state";
+      await room.localParticipant.setScreenShareEnabled(
+        !room.localParticipant.isScreenShareEnabled,
+      );
 
-    this.#setScreenshare(room.localParticipant.isScreenShareEnabled);
+      this.#setScreenshare(room.localParticipant.isScreenShareEnabled);
+    } catch (e) {
+      this.onErr(e);
+    }
+  }
+
+  toggleFullscreen(fullscreen: boolean = !this.fullscreen()) {
+    this.#setFullscreen(fullscreen);
+  }
+
+  trackId(t: TrackReferenceOrPlaceholder) {
+    return `${t.source}_${t.participant.sid}`;
+  }
+
+  toggleFocus(t?: TrackReferenceOrPlaceholder) {
+    const id = t ? this.trackId(t) : undefined;
+    this.#setFocus(
+      this.focusId() === id || this.vidTracks().length < 2 ? undefined : id,
+    );
+  }
+
+  isFocus(t: TrackReferenceOrPlaceholder) {
+    return this.trackId(t) === this.focusId();
+  }
+
+  focusTrack() {
+    const id = this.focusId();
+    return id
+      ? this.vidTracks().find((t) => this.trackId(t) === id)
+      : undefined;
+  }
+
+  toggleShowBar() {
+    this.#setShowBar((s) => !s);
   }
 
   getConnectedUser(userId: string) {
@@ -774,6 +693,11 @@ class Voice {
 
   get speakingPermission() {
     return !!this.channel()?.havePermission("Speak");
+  }
+
+  private onErr(e: unknown) {
+    if ((e as Error).name !== "NotAllowedError")
+      this.openModal({ type: "error2", error: e });
   }
 }
 
@@ -790,7 +714,8 @@ type IncomingCall = {
 
 export function VoiceContext(props: { children: JSX.Element }) {
   const state = useState();
-  const voice = new Voice(state.voice);
+  const modals = useModals();
+  const voice = new Voice(state.voice, modals);
   const client = useClient();
   const navigate = useNavigate();
 
@@ -1040,6 +965,25 @@ export function VoiceContext(props: { children: JSX.Element }) {
     }
   });
 
+  // Periodically reconnect the WebSocket so the Ready event clears any ghost
+  // voice participants. Skip during active calls to avoid disrupting real-time
+  // events (messages, typing, presence).
+  const voiceRefreshInterval = setInterval(
+    () => {
+      if (voice.channel()) return;
+      client()?.events.disconnect();
+    },
+    10 * 60 * 1000,
+  );
+  onCleanup(() => clearInterval(voiceRefreshInterval));
+
+  // Manual reconnect for debugging ghost cleanup from DevTools:
+  //   stoatRefreshVoice()
+  window.stoatRefreshVoice = () => {
+    console.log("[VoiceState] Manual reconnect triggered");
+    client()?.events.disconnect();
+  };
+
   // sync notification settings reactively
   createEffect(() => {
     // track master settings
@@ -1092,7 +1036,6 @@ export function VoiceContext(props: { children: JSX.Element }) {
         <VoiceCallCardContext>{props.children}</VoiceCallCardContext>
         <InRoom>
           <RoomAudioManager />
-          <StageAudioManager />
         </InRoom>
         <Show when={incomingCall()}>
           {(call) => (
