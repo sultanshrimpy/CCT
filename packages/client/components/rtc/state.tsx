@@ -119,12 +119,15 @@ class Voice {
   #noiseGateProcessor?: NoiseGateProcessor;
   #mutePromise: Promise<void> = Promise.resolve();
 
+<<<<<<< HEAD
   #stageRoom?: Room;  
   stageRoom: Accessor<Room | undefined>;
   #setStageRoom: Setter<Room | undefined>;
   stageFeedId: accessor<string | undefined>;
   #setStageFeedId: Setter<string | undefined>;
 
+=======
+>>>>>>> trifall/main
   constructor(voiceSettings: VoiceSettings) {
     this.#settings = voiceSettings;
 
@@ -201,7 +204,10 @@ class Voice {
           "PTT enabled - Setting initial mic state to OFF (muted)",
         );
         this.#setMicrophone(false);
+<<<<<<< HEAD
 
+=======
+>>>>>>> trifall/main
       } else {
         debugLog("PTT-WEB", "PTT disabled - Keeping mic state as-is");
         this.#setMicrophone(true);
@@ -217,6 +223,7 @@ class Voice {
       this.#reconnectAttempts = 0; // Reset on successful connection
       console.log("[VoiceNotifications] Playing self join sound");
       voiceNotifications.playSelfJoin();
+<<<<<<< HEAD
       //Check if room already has stage feed metadata on connect
       if (room.metadata) {
         try {
@@ -231,6 +238,8 @@ class Voice {
 	}
       }
       
+=======
+>>>>>>> trifall/main
       if (this.speakingPermission)
         room.localParticipant.setMicrophoneEnabled(true).then((track) => {
           this.#setMicrophone(typeof track !== "undefined");
@@ -247,6 +256,7 @@ class Voice {
             }
           }
 
+<<<<<<< HEAD
      // Stage bridge: watch for stage feed metadata
      room.addListener("roomMetadataChanged", (metadata: string) => {
        try {
@@ -263,6 +273,8 @@ class Voice {
        }
      });
 
+=======
+>>>>>>> trifall/main
           // Apply audio processors.
           // When both noise gate and enhanced denoise are enabled the noise
           // gate wraps the denoise processor so both run in a single chain:
@@ -394,6 +406,82 @@ class Voice {
         );
       }
     }
+<<<<<<< HEAD
+=======
+  }
+
+  async #handleReconnect() {
+    const channel = this.channel();
+    if (!channel) {
+      debugLog("PTT-WEB", "No channel to reconnect to");
+      this.#setState("DISCONNECTED");
+      if (this.#settings.soundDisconnect) {
+        voiceNotifications.playDisconnect();
+      }
+      return;
+    }
+
+    this.#reconnectAttempts++;
+    debugLog(
+      "PTT-WEB",
+      `Reconnect attempt ${this.#reconnectAttempts}/${this.#maxReconnectAttempts}`,
+    );
+
+    this.#setState("RECONNECTING");
+
+    try {
+      // Fetch a fresh token for reconnection
+      const auth = await channel.joinCall("worldwide");
+      const room = this.room();
+
+      if (!room) {
+        throw new Error("Room no longer exists");
+      }
+
+      debugLog("PTT-WEB", "Attempting to reconnect with new token...");
+      await room.connect(auth.url, auth.token, {
+        autoSubscribe: false,
+      });
+
+      debugLog("PTT-WEB", "Reconnection successful!");
+      this.#reconnectAttempts = 0;
+      this.#setState("CONNECTED");
+    } catch (error) {
+      debugLog("PTT-WEB", "Reconnection failed:", error);
+
+      if (this.#reconnectAttempts < this.#maxReconnectAttempts) {
+        // Try again with exponential backoff
+        const delay = Math.min(
+          1000 * Math.pow(2, this.#reconnectAttempts),
+          10000,
+        );
+        debugLog("PTT-WEB", `Retrying in ${delay}ms...`);
+
+        setTimeout(() => {
+          this.#handleReconnect();
+        }, delay);
+      } else {
+        // Max attempts reached, give up
+        debugLog("PTT-WEB", "Max reconnection attempts reached");
+        this.#setState("DISCONNECTED");
+        if (this.#settings.soundDisconnect) {
+          voiceNotifications.playDisconnect();
+        }
+      }
+    }
+  }
+
+  /** Update the noise gate threshold live (called from settings UI). */
+  updateNoiseGateThreshold(threshold: number) {
+    if (this.#noiseGateProcessor) {
+      this.#noiseGateProcessor.threshold = threshold;
+    }
+  }
+
+  /** Get the active noise gate processor (for the live level meter). */
+  get noiseGateProcessor(): NoiseGateProcessor | undefined {
+    return this.#noiseGateProcessor;
+>>>>>>> trifall/main
   }
 
   async #handleReconnect() {
@@ -515,7 +603,10 @@ class Voice {
     // Clean up noise gate processor
     this.#noiseGateProcessor?.destroy();
     this.#noiseGateProcessor = undefined;
+<<<<<<< HEAD
     void this.#disconnectStageFeed();
+=======
+>>>>>>> trifall/main
 
     voiceNotifications.playSelfLeave();
 
