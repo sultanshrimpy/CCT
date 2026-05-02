@@ -84,6 +84,7 @@ import { VoiceCallCardContext } from "@revolt/ui/components/features/voice/callC
 import { InRoom } from "./components/InRoom";
 import { IncomingCallPopup } from "./components/IncomingCallPopup";
 import { RoomAudioManager } from "./components/RoomAudioManager";
+import { StageAudioManager } from "./components/StageAudioManager";
 
 type State =
   | "READY"
@@ -104,6 +105,10 @@ class Voice {
 
   room: Accessor<Room | undefined>;
   #setRoom: Setter<Room | undefined>;
+
+  stageRoom: Accessor<Room | undefined>;
+  #setStageRoom: Setter<Room | undefined>;
+  #stageRoomRef?: Room;
 
   vidTracks: Accessor<TrackReferenceOrPlaceholder[]>;
 
@@ -149,6 +154,10 @@ class Voice {
     const [room, setRoom] = createSignal<Room>();
     this.room = room;
     this.#setRoom = setRoom;
+
+    const [stageRoom, setStageRoom] = createSignal<Room>();
+    this.stageRoom = stageRoom;
+    this.#setStageRoom = setStageRoom;
 
     this.vidTracks = () => [];
 
@@ -337,7 +346,28 @@ class Voice {
           channel.sendMessage("> *Started a call*").catch(() => {});
         }
       }
-    });
+
+	const checkMetadata = (metadata: string | undefined) => {
+	  if (!metadata) return;
+	  try {
+	    const parsed = JSON.parse(metadata) as {
+	      stage_feed?: string;
+	      stage_active?: boolean;
+	    };
+	    if (parsed.stage_active && parsed.stage_feed) {
+	      this.#connectStageRoom(parsed.stage_feed, auth!.url);
+	    } else {
+	      this.#disconnectStageRoom();
+	    }
+	  } catch {
+	    // not JSON, ignore
+	  }
+	};
+	// check immediately (metadata may already be set)
+	checkMetadata(room.metadata);
+	// watch for future updates
+	room.addListener("roomMetadataChanged", checkMetadata);
+      });
 
     room.addListener("disconnected", (reason?) => {
       debugLog(
@@ -468,6 +498,7 @@ class Voice {
       const room = this.room();
       if (!room) return;
 
+      this.#disconnectStageRoom();
       // Internal disconnects during channel switches should not disable reconnects.
       this.#isManualDisconnect = manual;
       this.#reconnectAttempts = 0;
@@ -492,6 +523,51 @@ class Voice {
     } catch (e) {
       this.onErr(e);
     }
+  }
+
+  async #connectStageRoom(stageFeedChannelId: string, livekitUrl: string) {
+    // already connected to this stage room? skip
+    if (this.#stageRoomRef) return;
+    
+    const BRIDGE_URL = 
+      (import.meta.env.VITE_STAGE_BRIDGE_URL as string | undefined) ??
+      "/stage-bridge";
+
+    let token: string;
+    try {
+      const resp = await fetch(
+	'${BRIDGE_URL}/audience-token/${stageFeedChannelId}/${Date.now()}',
+      );
+      if (!resp.ok) {
+	console.warn("[stage-bridge] Failed to get audience token:", resp.status);
+	return;
+      }
+      const data = (await resp.json()) as { token: string };
+      token = data.token;
+    } catch (e) {
+      console.warn("[stage-bridge] Error fetching audience token:", e);
+      return;
+    }
+  
+    const stageRoom = new Room();
+    this.#stageRoomRef = stageRoom;
+    try {
+      await stageRoom.connect(livekitUrl, token, { autoSubscribe: true });
+      this.#setStageRoom(stageRoom)
+      console.log("[stage-bridge] Connected to stage feed room:", stageFeedChannelId);
+    } catch (e) {
+      console.warn("[stage-bridge] Failed to connect to stage feed room:", e);
+      this.#stageRoomRef = undefined;
+    }
+  }
+
+  #disconnectStageRoom() {
+    if (!this.#stageRoomRef) return;
+    console.log("[stage-bridge] Disconnecting from stage feed room");
+    this.#stageRoomRef.removeAllListeners();
+    this.#stageRoomRef.disconnect();
+    this.#stageRoomRef = undefined;
+    this.#setStageRoom(undefined);
   }
 
   async toggleDeafen() {
@@ -1036,6 +1112,7 @@ export function VoiceContext(props: { children: JSX.Element }) {
         <VoiceCallCardContext>{props.children}</VoiceCallCardContext>
         <InRoom>
           <RoomAudioManager />
+	  <StageAudioManager />
         </InRoom>
         <Show when={incomingCall()}>
           {(call) => (
