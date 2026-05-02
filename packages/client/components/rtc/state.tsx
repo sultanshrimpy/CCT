@@ -536,7 +536,7 @@ class Voice {
     let token: string;
     try {
       const resp = await fetch(
-	'${BRIDGE_URL}/audience-token/${stageFeedChannelId}/${Date.now()}',
+	`${BRIDGE_URL}/audience-token/${stageFeedChannelId}/${Date.now()}`,
       );
       if (!resp.ok) {
 	console.warn("[stage-bridge] Failed to get audience token:", resp.status);
