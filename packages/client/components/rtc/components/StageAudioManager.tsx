@@ -46,8 +46,7 @@ function StageAudioTracks() {
   const tracks = useTracks(
     [Track.Source.Microphone, Track.Source.ScreenShareAudio, Track.Source.Unknown],
     {
-      updateOnlyOn: [],
-      onlySubscribed: false,
+      onlySubscribed: true,
     }
   );
 
