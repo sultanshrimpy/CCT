@@ -66,12 +66,29 @@ export function MessageComposition(props: Props) {
     return state.draft.getDraft(props.channel.id);
   }
 
+  const messageLength = () => draft().content?.length ?? 0;
+
+  const maxMessageLength = () => {
+    const cl = client();
+    return cl.configured()
+      ? (cl.configuration?.features.limits.default.message_length ?? 2000)
+      : 2000;
+  };
+
+  const isAlmostTooLong = () => messageLength() > maxMessageLength() - 200;
+
+  const wayTooLong = () => messageLength() > maxMessageLength() + 9999;
+
   // Whether the send button should be active/clickable
   const canSend = createMemo(() => {
     const draftContent = draft()?.content ?? "";
     const draftFiles = draft()?.files ?? [];
 
-    return draftContent.trim().length > 0 || draftFiles.length > 0;
+    const tooLong = messageLength() > maxMessageLength();
+
+    return (
+      !tooLong && (draftContent.trim().length > 0 || draftFiles.length > 0)
+    );
   });
 
   // TEMP
@@ -158,6 +175,9 @@ export function MessageComposition(props: Props) {
    * @param useContent Content to send
    */
   async function sendMessage(useContent?: unknown) {
+    if (!canSend()) {
+      return;
+    }
     stopTyping();
     props.onMessageSend?.();
 
@@ -196,8 +216,13 @@ export function MessageComposition(props: Props) {
     const rejectedFiles: File[] = [];
     const validFiles: File[] = [];
 
+    const maxSize = client().configured()
+      ? (client().configuration?.features.limits.default.file_upload_size_limits
+          .attachments ?? CONFIGURATION.MAX_FILE_SIZE)
+      : CONFIGURATION.MAX_FILE_SIZE;
+
     for (const file of files) {
-      if (file.size > CONFIGURATION.MAX_FILE_SIZE) {
+      if (file.size > maxSize) {
         console.log("File too large:", file);
         rejectedFiles.push(file);
       } else {
@@ -206,7 +231,7 @@ export function MessageComposition(props: Props) {
     }
 
     if (rejectedFiles.length > 0) {
-      const maxSizeFormatted = humanFileSize(CONFIGURATION.MAX_FILE_SIZE);
+      const maxSizeFormatted = humanFileSize(maxSize);
 
       if (rejectedFiles.length === 1) {
         const file = rejectedFiles[0];
@@ -338,28 +363,43 @@ export function MessageComposition(props: Props) {
           </Show>
         }
         actionsEnd={
-          <CompositionMediaPicker
-            onMessage={sendMessage}
-            onTextReplacement={(text) => setNodeReplacement([text])}
-          >
-            {(triggerProps) => (
-              <>
-                <Show when={!canSend()}>
-                  <MessageBox.InlineIcon>
-                    <IconButton onPress={triggerProps.onClickGif}>
-                      <Symbol>gif</Symbol>
-                    </IconButton>
-                  </MessageBox.InlineIcon>
-                </Show>
-                <MessageBox.InlineIcon>
-                  <IconButton onPress={triggerProps.onClickEmoji}>
-                    <Symbol>emoticon</Symbol>
-                  </IconButton>
-                </MessageBox.InlineIcon>
-                <div ref={triggerProps.ref} />
-              </>
-            )}
-          </CompositionMediaPicker>
+          <MessageBox.ActionContainer column>
+            <Show when={isAlmostTooLong()}>
+              <MessageBox.FloatingAction
+                size="normal"
+                error={messageLength() > maxMessageLength()}
+              >
+                {wayTooLong()
+                  ? "Too Long"
+                  : maxMessageLength() - messageLength()}
+              </MessageBox.FloatingAction>
+            </Show>
+            <MessageBox.ActionContainer>
+              <CompositionMediaPicker
+                onMessage={sendMessage}
+                onTextReplacement={(text) => setNodeReplacement([text])}
+              >
+                {(triggerProps) => (
+                  <>
+                    <Show when={!canSend()}>
+                      <MessageBox.InlineIcon size="normal">
+                        <IconButton onPress={triggerProps.onClickGif}>
+                          <Symbol>gif</Symbol>
+                        </IconButton>
+                      </MessageBox.InlineIcon>
+                    </Show>
+                    <MessageBox.InlineIcon size="normal">
+                      <IconButton onPress={triggerProps.onClickEmoji}>
+                        <Symbol>emoticon</Symbol>
+                      </IconButton>
+                    </MessageBox.InlineIcon>
+
+                    <div ref={triggerProps.ref} />
+                  </>
+                )}
+              </CompositionMediaPicker>
+            </MessageBox.ActionContainer>
+          </MessageBox.ActionContainer>
         }
         placeholder={
           props.channel.type === "SavedMessages"
