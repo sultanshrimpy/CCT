@@ -294,7 +294,7 @@ export function UserContextMenu(props: {
       props.channel?.type === "Group" &&
       !props.user.self &&
       props.channel.havePermission("ManageChannel") &&
-      !props.channel.owner?.self
+      props.user.id !== props.channel.ownerId
     );
   }
 

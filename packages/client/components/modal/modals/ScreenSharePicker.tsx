@@ -30,6 +30,11 @@ export function ScreenSharePickerModal(
     props.onClose();
   }
 
+  function onCancel() {
+    props.onCancel();
+    props.onClose();
+  }
+
   const submit = Form2.useSubmitHandler(group, onSubmit);
 
   const sources = createMemo(() =>
@@ -42,13 +47,16 @@ export function ScreenSharePickerModal(
     <Dialog
       minWidth={420}
       show={props.show}
-      onClose={() => {
-        props.onCancel();
-        props.onClose();
-      }}
+      onClose={onCancel}
       title={t`Pick a Screen to Share`}
       actions={[
-        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Cancel</Trans>,
+          onClick: () => {
+            onCancel();
+            return false;
+          },
+        },
         {
           text: <Trans>Go</Trans>,
           onClick: () => {

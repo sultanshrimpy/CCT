@@ -789,7 +789,7 @@ class Voice {
                     ? undefined
                     : { max: quality.resolution.width },
                 height:
-                  quality.resolution.width === 0
+                  quality.resolution.height === 0
                     ? undefined
                     : { max: quality.resolution.height },
               });

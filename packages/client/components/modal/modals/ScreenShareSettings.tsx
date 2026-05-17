@@ -32,19 +32,27 @@ export function ScreenShareSettingsModal(
     props.onClose();
   }
 
+  function onCancel() {
+    props.onCancel();
+    props.onClose();
+  }
+
   const submit = Form2.useSubmitHandler(group, onSubmit);
 
   return (
     <Dialog
       minWidth={420}
       show={props.show}
-      onClose={() => {
-        props.onCancel();
-        props.onClose();
-      }}
+      onClose={onCancel}
       title={t`Screen Share Settings`}
       actions={[
-        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Cancel</Trans>,
+          onClick: () => {
+            onCancel();
+            return false;
+          },
+        },
         {
           text: <Trans>Go</Trans>,
           onClick: () => {
