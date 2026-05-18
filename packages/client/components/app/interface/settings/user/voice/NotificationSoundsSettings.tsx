@@ -3,15 +3,13 @@ import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
 import { useState } from "@revolt/state";
+import { Column, Row, Slider, Text } from "@revolt/ui";
+
+import { CompactNumberInput } from "./CompactNumberInput";
 import {
-  CategoryButton,
-  Checkbox,
-  Column,
-  Row,
-  Slider,
-  Text,
-  TextField,
-} from "@revolt/ui";
+  SettingsToggleButton,
+  SettingsToggleGroup,
+} from "./SettingsToggleButton";
 
 /**
  * Notification sounds settings configuration
@@ -24,18 +22,9 @@ export function NotificationSoundsSettings() {
   return (
     <Column gap="lg">
       <Column>
-        <Text class="title" size="small">
-          <Trans id="notifications.sounds.title">Notification Sounds</Trans>
-        </Text>
-
-        <CategoryButton.Group>
-          <CategoryButton
-            icon="blank"
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox checked={state.voice.notificationSoundsEnabled} />
-              </div>
-            }
+        <SettingsToggleGroup class={notificationToggleGroup}>
+          <SettingsToggleButton
+            checked={state.voice.notificationSoundsEnabled}
             onClick={() => {
               state.voice.notificationSoundsEnabled =
                 !state.voice.notificationSoundsEnabled;
@@ -44,15 +33,15 @@ export function NotificationSoundsSettings() {
             <Trans id="notifications.sounds.enable">
               Enable Notification Sounds
             </Trans>
-          </CategoryButton>
-        </CategoryButton.Group>
+          </SettingsToggleButton>
+        </SettingsToggleGroup>
       </Column>
 
       <Column gap="md">
-        <Text class="label">
+        <Text class="label" rootClass={sectionHeading}>
           <Trans id="notifications.sounds.volume">Master Volume</Trans>
         </Text>
-        <Row gap="md" align="center">
+        <Row gap="md" align={true}>
           <SliderContainer>
             <Slider
               min={0}
@@ -70,12 +59,14 @@ export function NotificationSoundsSettings() {
             />
           </SliderContainer>
           <TextFieldContainer>
-            <TextField
+            <CompactNumberInput
               type="text"
+              width="48px"
               disabled={individualSoundsDisabled()}
               value={Math.round(
                 state.voice.notificationVolume * 100,
               ).toString()}
+              inputMode="numeric"
               onChange={(event) => {
                 if (!individualSoundsDisabled()) {
                   const value = parseInt(event.currentTarget.value, 10);
@@ -84,10 +75,6 @@ export function NotificationSoundsSettings() {
                   }
                 }
               }}
-              class={css({
-                width: "60px",
-                textAlign: "center",
-              })}
             />
             <Text size="small" class="label">
               %
@@ -97,21 +84,13 @@ export function NotificationSoundsSettings() {
       </Column>
 
       <Column>
-        <Text class="label">
+        <Text class="label" rootClass={sectionHeading}>
           <Trans id="notifications.sounds.individual">Individual Sounds</Trans>
         </Text>
-        <CategoryButton.Group>
-          <CategoryButton
-            icon="blank"
+        <SettingsToggleGroup class={notificationToggleGroup}>
+          <SettingsToggleButton
+            checked={state.voice.soundJoinCall}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundJoinCall}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundJoinCall = !state.voice.soundJoinCall;
@@ -119,19 +98,11 @@ export function NotificationSoundsSettings() {
             }}
           >
             <Trans id="notifications.sounds.joinCall">Join Call</Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundLeaveCall}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundLeaveCall}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundLeaveCall = !state.voice.soundLeaveCall;
@@ -139,19 +110,11 @@ export function NotificationSoundsSettings() {
             }}
           >
             <Trans id="notifications.sounds.leaveCall">Leave Call</Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundSomeoneJoined}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundSomeoneJoined}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundSomeoneJoined =
@@ -162,19 +125,11 @@ export function NotificationSoundsSettings() {
             <Trans id="notifications.sounds.someoneJoined">
               Someone Joined
             </Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundSomeoneLeft}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundSomeoneLeft}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundSomeoneLeft = !state.voice.soundSomeoneLeft;
@@ -182,19 +137,11 @@ export function NotificationSoundsSettings() {
             }}
           >
             <Trans id="notifications.sounds.someoneLeft">Someone Left</Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundMute}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundMute}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundMute = !state.voice.soundMute;
@@ -202,19 +149,11 @@ export function NotificationSoundsSettings() {
             }}
           >
             <Trans id="notifications.sounds.mute">Mute</Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundUnmute}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundUnmute}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundUnmute = !state.voice.soundUnmute;
@@ -222,19 +161,11 @@ export function NotificationSoundsSettings() {
             }}
           >
             <Trans id="notifications.sounds.unmute">Unmute</Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundReceiveMessage}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundReceiveMessage}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundReceiveMessage =
@@ -245,19 +176,11 @@ export function NotificationSoundsSettings() {
             <Trans id="notifications.sounds.receiveMessage">
               Receive Message
             </Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundDisconnect}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundDisconnect}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundDisconnect = !state.voice.soundDisconnect;
@@ -265,19 +188,11 @@ export function NotificationSoundsSettings() {
             }}
           >
             <Trans id="notifications.sounds.disconnect">Disconnected</Trans>
-          </CategoryButton>
+          </SettingsToggleButton>
 
-          <CategoryButton
-            icon="blank"
+          <SettingsToggleButton
+            checked={state.voice.soundIncomingCall}
             disabled={individualSoundsDisabled()}
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox
-                  checked={state.voice.soundIncomingCall}
-                  disabled={individualSoundsDisabled()}
-                />
-              </div>
-            }
             onClick={() => {
               if (!individualSoundsDisabled()) {
                 state.voice.soundIncomingCall = !state.voice.soundIncomingCall;
@@ -285,22 +200,17 @@ export function NotificationSoundsSettings() {
             }}
           >
             <Trans id="notifications.sounds.incomingCall">Incoming Call</Trans>
-          </CategoryButton>
-        </CategoryButton.Group>
+          </SettingsToggleButton>
+        </SettingsToggleGroup>
       </Column>
 
       <Column>
-        <Text class="label">
+        <Text class="label" rootClass={sectionHeading}>
           <Trans id="notifications.sounds.connection">Connection</Trans>
         </Text>
-        <CategoryButton.Group>
-          <CategoryButton
-            icon="blank"
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox checked={state.voice.autoReconnect} />
-              </div>
-            }
+        <SettingsToggleGroup class={notificationToggleGroup}>
+          <SettingsToggleButton
+            checked={state.voice.autoReconnect}
             onClick={() => {
               state.voice.autoReconnect = !state.voice.autoReconnect;
             }}
@@ -308,17 +218,39 @@ export function NotificationSoundsSettings() {
             <Trans id="notifications.sounds.autoReconnect">
               Auto-reconnect
             </Trans>
-          </CategoryButton>
-        </CategoryButton.Group>
+          </SettingsToggleButton>
+        </SettingsToggleGroup>
       </Column>
     </Column>
   );
 }
 
+const notificationToggleGroup = css({
+  gap: "10px",
+});
+
+const pageHeading = css({
+  fontSize: "16px",
+  fontWeight: "700",
+  lineHeight: "1.3",
+  color: "var(--md-sys-color-on-surface)",
+  letterSpacing: "0.01em",
+});
+
+const sectionHeading = css({
+  fontSize: "15px",
+  fontWeight: "600",
+  lineHeight: "1.35",
+  color: "var(--md-sys-color-on-surface)",
+  marginBottom: "2px",
+});
+
 const SliderContainer = styled("div", {
   base: {
     flex: 1,
     minWidth: 0,
+    display: "flex",
+    alignItems: "center",
   },
 });
 
@@ -327,5 +259,6 @@ const TextFieldContainer = styled("div", {
     display: "flex",
     alignItems: "center",
     gap: "var(--gap-xs)",
+    minHeight: "32px",
   },
 });

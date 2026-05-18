@@ -1,19 +1,7 @@
-import { createEffect, Match, Show, Switch } from "solid-js";
-import {
-  isTrackReference,
-  TrackLoop,
-  TrackReference,
-  useEnsureParticipant,
-  useIsMuted,
-  useIsSpeaking,
-  useMaybeTrackRefContext,
-  useTrackRefContext,
-  useTracks,
-  VideoTrack,
-} from "solid-livekit-components";
-
-import { Track } from "livekit-client";
-import { cva } from "styled-system/css";
+import { useLingui } from "@lingui-solid/solid/macro";
+import { createResizeObserver } from "@solid-primitives/resize-observer";
+import { createEffect, For, onMount, Show } from "solid-js";
+import { TrackLoop } from "solid-livekit-components";
 import { styled } from "styled-system/jsx";
 
 import { UserContextMenu } from "@revolt/app";
@@ -43,6 +31,125 @@ export function VoiceCallCardActiveRoom() {
       <VoiceCallCardStatus />
       <VoiceCallCardActions size="sm" />
     </View>
+  );
+}
+
+function VoiceCallFullscreen() {
+  const voice = useVoice();
+  return (
+    <IconButton
+      size="sm"
+      variant={"standard"}
+      onPress={() => voice.toggleFullscreen()}
+    >
+      <Show when={voice.fullscreen()} fallback={<Symbol>fullscreen</Symbol>}>
+        <Symbol>fullscreen_exit</Symbol>
+      </Show>
+    </IconButton>
+  );
+}
+
+const TILE_MIN_WIDTH = "250px",
+  TILE_MIN_FOCUS_HEIGHT = "100px";
+
+/**
+ * Show a grid of participants
+ */
+function Participants() {
+  const voice = useVoice();
+  const { t } = useLingui();
+
+  // Modify this value to get test tracks
+  const testTrackCount = 0;
+
+  let callRef: HTMLDivElement | undefined;
+
+  const tileWidth = () => {
+    const vidWidth = Math.round(
+      100 / (voice.vidTracks().length + testTrackCount),
+    );
+    return `max(${TILE_MIN_WIDTH}, ${vidWidth}% - var(--gap-md))`;
+  };
+
+  // Clear out any focus when the track that was focused is no longer available.
+  createEffect(() => {
+    if (!voice.focusTrack()) voice.toggleFocus();
+  });
+
+  onMount(() => {
+    createResizeObserver(callRef, ({ width, height }, el) => {
+      if (el === callRef) {
+        el.style.setProperty("--vc-w", `${width}px`);
+        el.style.setProperty("--vc-h", `${height}px`);
+      }
+    });
+  });
+
+  return (
+    <Call ref={callRef} class={voice.focusId() ? "" : scrollableStyles()}>
+      <InRoom>
+        <FocusedParticipant />
+        <Show when={voice.focusId()}>
+          <ShowBarButtonHolder>
+            <div style={{ "margin-bottom": "10px" }}>
+              <IconButton
+                size="xs"
+                variant={"tonal"}
+                onPress={() => voice.toggleShowBar()}
+                use:floating={{
+                  tooltip: {
+                    placement: "top",
+                    content: voice.showBar() ? t`Hide Others` : t`Show Others`,
+                  },
+                }}
+              >
+                <Show
+                  when={voice.showBar()}
+                  fallback={<Symbol>keyboard_arrow_up</Symbol>}
+                >
+                  <Symbol>keyboard_arrow_down</Symbol>
+                </Show>
+              </IconButton>
+            </div>
+          </ShowBarButtonHolder>
+        </Show>
+        <Grid
+          focus={!!voice.focusId()}
+          show={voice.showBar()}
+          class={voice.focusId() ? scrollableStyles({ direction: "x" }) : ""}
+          style={{ "--vc-tile-width": tileWidth() }}
+        >
+          <TrackLoop
+            tracks={() => voice.vidTracks().filter((t) => !voice.isFocus(t))}
+          >
+            {() => <ParticipantTile />}
+          </TrackLoop>
+          <For each={Array(testTrackCount)}>
+            {() => (
+              <div
+                class={tile({ fullscreen: voice.fullscreen() }) + " vc_tile"}
+              />
+            )}
+          </For>
+        </Grid>
+      </InRoom>
+    </Call>
+  );
+}
+
+function FocusedParticipant() {
+  const voice = useVoice();
+
+  return (
+    <Show when={voice.focusTrack()}>
+      <TrackLoop tracks={() => [voice.focusTrack()!]}>
+        {() => (
+          <FocusBox>
+            <ParticipantTile focus />
+          </FocusBox>
+        )}
+      </TrackLoop>
+    </Show>
   );
 }
 

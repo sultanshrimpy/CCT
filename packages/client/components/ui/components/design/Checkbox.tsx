@@ -10,6 +10,8 @@ type Props = {
   disabled?: boolean;
   indeterminate?: boolean;
   class?: string;
+  style?: JSX.CSSProperties;
+  "touch-target"?: "none" | "wrapper";
   onChange?: (event: { currentTarget: { checked: boolean } }) => void;
 };
 

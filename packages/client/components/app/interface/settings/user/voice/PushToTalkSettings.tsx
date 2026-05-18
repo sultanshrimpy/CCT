@@ -5,16 +5,13 @@ import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
 import { useState } from "@revolt/state";
+import { Column, KeybindInput, Row, Slider, Text } from "@revolt/ui";
+
+import { CompactNumberInput } from "./CompactNumberInput";
 import {
-  CategoryButton,
-  Checkbox,
-  Column,
-  KeybindInput,
-  Row,
-  Slider,
-  Text,
-  TextField,
-} from "@revolt/ui";
+  SettingsToggleButton,
+  SettingsToggleGroup,
+} from "./SettingsToggleButton";
 
 /**
  * Sync PTT settings to desktop main process
@@ -40,18 +37,9 @@ export function PushToTalkSettings() {
   return (
     <Column gap="lg">
       <Column>
-        <Text class="title" size="small">
-          <Trans id="ptt.settings.title">Push to Talk</Trans>
-        </Text>
-
-        <CategoryButton.Group>
-          <CategoryButton
-            icon="blank"
-            action={
-              <div style={{ "pointer-events": "none" }}>
-                <Checkbox checked={state.voice.pushToTalkEnabled} />
-              </div>
-            }
+        <SettingsToggleGroup>
+          <SettingsToggleButton
+            checked={state.voice.pushToTalkEnabled}
             onClick={() => {
               const newValue = !state.voice.pushToTalkEnabled;
               state.voice.pushToTalkEnabled = newValue;
@@ -59,15 +47,16 @@ export function PushToTalkSettings() {
             }}
           >
             <Trans id="ptt.settings.enable">Enable Push to Talk</Trans>
-          </CategoryButton>
-        </CategoryButton.Group>
+          </SettingsToggleButton>
+        </SettingsToggleGroup>
       </Column>
 
       <Show when={state.voice.pushToTalkEnabled}>
         <Column gap="md">
-          <Text class="label">
+          <Text class="label" rootClass={sectionHeading}>
             <Trans id="ptt.settings.keybind">Push to Talk Keybind</Trans>
           </Text>
+
           <KeybindInput
             value={state.voice.pushToTalkKeybind}
             onChange={(value) => {
@@ -79,18 +68,16 @@ export function PushToTalkSettings() {
         </Column>
 
         <Column>
-          <Text class="label">
+          <Text class="label" rootClass={sectionHeading}>
             <Trans id="ptt.settings.notifications">Notification Sounds</Trans>
           </Text>
-          <CategoryButton.Group>
-            <CategoryButton
-              icon="blank"
-              action={
-                <div style={{ "pointer-events": "none" }}>
-                  <Checkbox
-                    checked={state.voice.pushToTalkNotificationSounds}
-                  />
-                </div>
+          <SettingsToggleGroup>
+            <SettingsToggleButton
+              checked={state.voice.pushToTalkNotificationSounds}
+              description={
+                <Trans id="ptt.settings.muteSoundsDescription">
+                  Play sounds when muting/unmuting with Push to Talk
+                </Trans>
               }
               onClick={() => {
                 const newValue = !state.voice.pushToTalkNotificationSounds;
@@ -101,26 +88,21 @@ export function PushToTalkSettings() {
               <Trans id="ptt.settings.playMuteSounds">
                 Play Mute/Unmute Sounds
               </Trans>
-            </CategoryButton>
-          </CategoryButton.Group>
-          <Text class="label" size="small">
-            <Trans id="ptt.settings.muteSoundsDescription">
-              Play sounds when muting/unmuting with Push to Talk
-            </Trans>
-          </Text>
+            </SettingsToggleButton>
+          </SettingsToggleGroup>
         </Column>
 
         <Column>
-          <Text class="label">
+          <Text class="label" rootClass={sectionHeading}>
             <Trans id="ptt.settings.mode">Mode</Trans>
           </Text>
-          <CategoryButton.Group>
-            <CategoryButton
-              icon="blank"
-              action={
-                <div style={{ "pointer-events": "none" }}>
-                  <Checkbox checked={state.voice.pushToTalkMode === "toggle"} />
-                </div>
+          <SettingsToggleGroup>
+            <SettingsToggleButton
+              checked={state.voice.pushToTalkMode === "toggle"}
+              description={
+                <Trans id="ptt.settings.defaultHold">
+                  Default is Hold mode
+                </Trans>
               }
               onClick={() => {
                 const newMode =
@@ -130,18 +112,15 @@ export function PushToTalkSettings() {
               }}
             >
               <Trans id="ptt.settings.toggleMode">Enable Toggle Mode</Trans>
-            </CategoryButton>
-          </CategoryButton.Group>
-          <Text class="label" size="small">
-            <Trans id="ptt.settings.defaultHold">Default is Hold mode</Trans>
-          </Text>
+            </SettingsToggleButton>
+          </SettingsToggleGroup>
         </Column>
 
         <Column gap="md">
-          <Text class="label">
+          <Text class="label" rootClass={sectionHeading}>
             <Trans id="ptt.settings.releaseDelay">Release Delay</Trans>
           </Text>
-          <Row gap="md">
+          <Row gap="md" align={true}>
             <SliderContainer>
               <Slider
                 min={0}
@@ -157,9 +136,11 @@ export function PushToTalkSettings() {
               />
             </SliderContainer>
             <TextFieldContainer>
-              <TextField
+              <CompactNumberInput
                 type="text"
+                width="64px"
                 value={state.voice.pushToTalkReleaseDelay.toString()}
+                inputMode="numeric"
                 onChange={(event) => {
                   const value = parseInt(event.currentTarget.value, 10);
                   if (!isNaN(value) && value >= 0 && value <= 5000) {
@@ -167,10 +148,6 @@ export function PushToTalkSettings() {
                     syncToDesktop({ releaseDelay: value });
                   }
                 }}
-                class={css({
-                  width: "80px",
-                  textAlign: "center",
-                })}
               />
               <Text size="small" class="label">
                 ms
@@ -183,10 +160,28 @@ export function PushToTalkSettings() {
   );
 }
 
+const pageHeading = css({
+  fontSize: "16px",
+  fontWeight: "700",
+  lineHeight: "1.3",
+  color: "var(--md-sys-color-on-surface)",
+  letterSpacing: "0.01em",
+});
+
+const sectionHeading = css({
+  fontSize: "15px",
+  fontWeight: "600",
+  lineHeight: "1.35",
+  color: "var(--md-sys-color-on-surface)",
+  marginBottom: "2px",
+});
+
 const SliderContainer = styled("div", {
   base: {
     flex: 1,
     minWidth: 0,
+    display: "flex",
+    alignItems: "center",
   },
 });
 
@@ -195,5 +190,6 @@ const TextFieldContainer = styled("div", {
     display: "flex",
     alignItems: "center",
     gap: "var(--gap-xs)",
+    minHeight: "32px",
   },
 });

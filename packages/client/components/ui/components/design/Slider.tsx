@@ -6,6 +6,7 @@ type Props = Omit<
   JSX.HTMLAttributes<HTMLInputElement>,
   "onChange" | "onInput"
 > & {
+  disabled?: boolean;
   min?: number;
   max?: number;
   step?: number;

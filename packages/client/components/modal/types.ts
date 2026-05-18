@@ -6,9 +6,9 @@ import {
   Emoji,
   File,
   ImageEmbed,
+  Message,
   MFA,
   MFATicket,
-  Message,
   PublicBot,
   PublicChannelInvite,
   Server,
@@ -308,4 +308,29 @@ export type Modals =
     }
   | {
       type: "try_pwa";
+
+    }
+  | {
+      type: "remove_member";
+      group: Channel;
+      user: User;
+    }
+  | {
+      type: "screen_share_settings";
+      trackReference: TrackReference;
+      qualities: { name: string; fullName: string }[];
+      callback: (qualityName: ScreenShareQualityName) => void;
+      onCancel: () => void;
+    }
+  | {
+      type: "screen_share_picker";
+      callback: (idx: number, qualityName: ScreenShareQualityName) => void;
+      qualities: { name: string; fullName: string }[];
+      sources: {
+        idx: number;
+        name: string;
+        isFullScreen: boolean;
+        image?: string;
+      }[];
+      onCancel: () => void;
     };

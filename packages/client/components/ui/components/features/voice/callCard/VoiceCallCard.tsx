@@ -18,10 +18,9 @@ import { Channel } from "stoat.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
-import { InRoom, useVoice } from "@revolt/rtc";
+import { useVoice } from "@revolt/rtc";
 
 import { VoiceCallCardActiveRoom } from "./VoiceCallCardActiveRoom";
-import { VoiceCallCardPiP } from "./VoiceCallCardPiP";
 import { VoiceCallCardPreview } from "./VoiceCallCardPreview";
 
 type State =
@@ -45,8 +44,6 @@ const callCardContext = createContext<(state?: NewState) => void>(null!);
  * Voice call card context
  */
 export function VoiceCallCardContext(props: { children: JSX.Element }) {
-  const voice = useVoice();
-
   const [state, setState] = createSignal<State>({
     type: "floating",
     corner: "bottom-right",
@@ -275,13 +272,16 @@ function VoiceCallCard(props: { channel: Channel }) {
   const inCall = () => voice.channel()?.id === props.channel.id;
 
   return (
-    <Show when={inCall()}>
-      <Base>
-        <Card active={inCall()}>
+    <Base>
+      <Card ref={viewRef} active={inCall()}>
+        <Show
+          when={inCall()}
+          fallback={<VoiceCallCardPreview channel={props.channel} />}
+        >
           <VoiceCallCardActiveRoom />
-        </Card>
-      </Base>
-    </Show>
+        </Show>
+      </Card>
+    </Base>
   );
 }
 
@@ -306,6 +306,8 @@ const Base = styled("div", {
 const Card = styled("div", {
   base: {
     pointerEvents: "all",
+    display: "flex",
+    flexDirection: "column",
 
     maxWidth: "100%",
     transition: "var(--transitions-fast) all",
@@ -313,6 +315,13 @@ const Card = styled("div", {
 
     borderRadius: "var(--borderRadius-lg)",
     background: "var(--md-sys-color-secondary-container)",
+
+    "&:fullscreen, &:-webkit-full-screen": {
+      width: "100vw",
+      height: "100vh",
+      maxWidth: "none",
+      borderRadius: "0px",
+    },
   },
   variants: {
     active: {

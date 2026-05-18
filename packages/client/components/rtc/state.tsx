@@ -80,6 +80,7 @@ import { useNavigate } from "@revolt/routing";
 import { useState } from "@revolt/state";
 import { Voice as VoiceSettings } from "@revolt/state/stores/Voice";
 import { VoiceCallCardContext } from "@revolt/ui/components/features/voice/callCard/VoiceCallCard";
+import { ScreenSharePresets, VideoResolution } from "livekit-client";
 
 import { InRoom } from "./components/InRoom";
 import { IncomingCallPopup } from "./components/IncomingCallPopup";
@@ -96,6 +97,13 @@ type State =
 type MicrophonePublication = NonNullable<
   Awaited<ReturnType<Room["localParticipant"]["setMicrophoneEnabled"]>>
 >;
+
+type ScreenShareQuality = {
+  name: ScreenShareQualityName;
+  resolution: VideoResolution;
+  fullName: string;
+  contentHint: string;
+};
 
 class Voice {
   #settings: VoiceSettings;
@@ -270,6 +278,82 @@ class Voice {
     return track;
   }
 
+  #resetVoiceProcessors() {
+    this.#noiseGateProcessor?.destroy();
+    this.#noiseGateProcessor = undefined;
+  }
+
+  #configureMicrophoneTrack(track?: MicrophonePublication) {
+    this.#resetVoiceProcessors();
+
+    const audioTrack = track?.audioTrack;
+    if (!audioTrack) return;
+
+    const settings = audioTrack.mediaStreamTrack.getSettings();
+    if (settings.channelCount && settings.channelCount > 1) {
+      console.warn(
+        "[Voice] Mic track is stereo (channelCount:",
+        settings.channelCount,
+        ") - remote participants may hear audio in one ear only.",
+      );
+    }
+
+    if (this.#settings.noiseGateEnabled) {
+      const upstream =
+        this.#settings.noiseSupression === "enhanced"
+          ? new DenoiseTrackProcessor({
+              workletCDNURL: CONFIGURATION.RNNOISE_WORKLET_CDN_URL,
+            })
+          : undefined;
+
+      this.#noiseGateProcessor = new NoiseGateProcessor({
+        threshold: this.#settings.noiseGateThreshold,
+        upstream,
+      });
+      console.info(
+        "[NoiseGate] Applying processor to audio track:",
+        audioTrack.sid,
+      );
+      audioTrack.setProcessor(this.#noiseGateProcessor as never);
+      return;
+    }
+
+    if (this.#settings.noiseSupression === "enhanced") {
+      audioTrack.setProcessor(
+        new DenoiseTrackProcessor({
+          workletCDNURL: CONFIGURATION.RNNOISE_WORKLET_CDN_URL,
+        }),
+      );
+    }
+  }
+
+  async #setMicrophoneEnabled(
+    enabled: boolean,
+    options: { persistPreference?: boolean } = {},
+  ) {
+    const room = this.room();
+    if (!room) throw "invalid state";
+
+    const track = await room.localParticipant.setMicrophoneEnabled(enabled);
+    const isEnabled = enabled && typeof track !== "undefined";
+
+    this.#setMicrophone(isEnabled);
+
+    if (options.persistPreference ?? true) {
+      this.#settings.micOn = isEnabled;
+    }
+
+    if (isEnabled) {
+      this.#configureMicrophoneTrack(
+        track as MicrophonePublication | undefined,
+      );
+    } else {
+      this.#resetVoiceProcessors();
+    }
+
+    return track;
+  }
+
   async connect(channel: Channel, auth?: { url: string; token: string }) {
     debugLog("PTT-WEB", "Voice.connect() called for channel:", channel.id);
 
@@ -346,6 +430,7 @@ class Voice {
           channel.sendMessage("> *Started a call*").catch(() => {});
         }
       }
+
 
 	const checkMetadata = (metadata: string | undefined) => {
 	  if (!metadata) return;
@@ -499,6 +584,7 @@ class Voice {
       if (!room) return;
 
       this.#disconnectStageRoom();
+
       // Internal disconnects during channel switches should not disable reconnects.
       this.#isManualDisconnect = manual;
       this.#reconnectAttempts = 0;
@@ -716,16 +802,111 @@ class Voice {
   }
 
   async toggleScreenshare() {
-    try {
-      const room = this.room();
-      if (!room) throw "invalid state";
-      await room.localParticipant.setScreenShareEnabled(
-        !room.localParticipant.isScreenShareEnabled,
-      );
+   const room = this.room();
+    if (!room) throw "invalid state";
+
+    if (this.screenshare()) {
+      await room.localParticipant.setScreenShareEnabled(false);
 
       this.#setScreenshare(room.localParticipant.isScreenShareEnabled);
-    } catch (e) {
-      this.onErr(e);
+    } else {
+      const qualities = this.getEnabledScreenShareQualities();
+      let screenPickerQualityName: ScreenShareQualityName | undefined;
+
+      // Register the modal on screen picker handler if it exists
+      if (window.native && window.native.onceScreenPicker) {
+        window.native.onceScreenPicker((sources) => {
+          this.openModal({
+            type: "screen_share_picker",
+            onCancel: () => {
+              window.native.screenPickerCallback(-1, false);
+            },
+            callback: (idx: number, qualityName: ScreenShareQualityName) => {
+              // TODO: Change this to true when enabling screen share audio.
+              window.native.screenPickerCallback(idx, false);
+              screenPickerQualityName = qualityName;
+            },
+            sources: sources,
+            qualities: Object.keys(qualities).map((k) => {
+              const v = qualities[k as ScreenShareQualityName]!;
+              return { name: k, fullName: v.fullName };
+            }),
+          });
+        });
+      }
+
+      try {
+        const localTrack = await room.localParticipant.setScreenShareEnabled(
+          true,
+          {
+            resolution:
+              this.getEnabledScreenShareQualities()[
+                this.#settings.screenShareQuality || "low"
+              ]?.resolution,
+            // TODO: Change this to true when enabling screen share audio.
+            audio: false,
+          },
+        );
+
+        this.#setScreenshare(room.localParticipant.isScreenShareEnabled);
+
+        if (localTrack) {
+          const callback = async (qualityName: ScreenShareQualityName) => {
+            const quality = qualities[qualityName] || qualities.low!;
+
+            if (localTrack.videoTrack) {
+              await localTrack.videoTrack.mediaStreamTrack.applyConstraints({
+                frameRate: { max: quality.resolution.frameRate },
+                width:
+                  quality.resolution.width === 0
+                    ? undefined
+                    : { max: quality.resolution.width },
+                height:
+                  quality.resolution.height === 0
+                    ? undefined
+                    : { max: quality.resolution.height },
+              });
+              localTrack.videoTrack.mediaStreamTrack.contentHint =
+                quality.contentHint;
+            }
+          };
+
+          if (screenPickerQualityName) {
+            callback(screenPickerQualityName || "low");
+          } else if (this.#settings.screenShareQualityAsk) {
+            if (Object.keys(qualities).length > 1) {
+              localTrack.pauseUpstream();
+              this.openModal({
+                onCancel: async () => {
+                  await room.localParticipant.setScreenShareEnabled(false);
+                  this.#setScreenshare(
+                    room.localParticipant.isScreenShareEnabled,
+                  );
+                },
+                type: "screen_share_settings",
+                trackReference: {
+                  participant: room.localParticipant,
+                  publication: localTrack,
+                  source: Track.Source.ScreenShare,
+                },
+                qualities: Object.keys(qualities).map((k) => {
+                  const v = qualities[k as ScreenShareQualityName]!;
+                  return { name: k, fullName: v.fullName };
+                }),
+                callback: async (qualityName) => {
+                  callback(qualityName);
+                  localTrack.resumeUpstream();
+                },
+              });
+            } else {
+              callback(this.#settings.screenShareQuality || "low");
+            }
+          }
+        }
+      } catch (e) {
+        this.onErr(e);
+      }
+
     }
   }
 

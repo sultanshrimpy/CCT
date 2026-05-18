@@ -3,16 +3,28 @@ import type { JSX } from "solid-js/jsx-runtime";
 
 import { cva } from "styled-system/css";
 
+type Props = Parameters<typeof typography>[0] & {
+  children: JSX.Element;
+  rootClass?: string;
+  style?: JSX.CSSProperties;
+};
+
 /**
  * Simple span Text wrapper to apply Typography styles
  *
  * @specification https://m3.material.io/styles/typography/type-scale-tokens
  */
-export function Text(
-  props: Parameters<typeof typography>[0] & { children: JSX.Element },
-) {
-  const [local, remote] = splitProps(props, ["children"]);
-  return <span class={typography(remote)}>{local.children}</span>;
+export function Text(props: Props) {
+  const [local, remote] = splitProps(props, ["children", "rootClass", "style"]);
+
+  return (
+    <span
+      class={[typography(remote), local.rootClass].filter(Boolean).join(" ")}
+      style={local.style}
+    >
+      {local.children}
+    </span>
+  );
 }
 
 /**
