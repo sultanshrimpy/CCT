@@ -3,6 +3,7 @@ import { createResizeObserver } from "@solid-primitives/resize-observer";
 import { createEffect, For, onMount, Show } from "solid-js";
 import { TrackLoop } from "solid-livekit-components";
 import { styled } from "styled-system/jsx";
+import { cva } from "styled-system/css";
 
 import { UserContextMenu } from "@revolt/app";
 import { useUser } from "@revolt/markdown/users";
