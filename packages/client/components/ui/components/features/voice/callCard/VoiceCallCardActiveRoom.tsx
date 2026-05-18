@@ -176,30 +176,6 @@ const Call = styled("div", {
   },
 });
 
-/**
- * Show a grid of participants
- */
-function Participants() {
-  const tracks = useTracks(
-    [
-      { source: Track.Source.Camera, withPlaceholder: true },
-      { source: Track.Source.ScreenShare, withPlaceholder: false },
-    ],
-    { onlySubscribed: false },
-  );
-
-  return (
-    <Grid>
-      <TrackLoop tracks={tracks}>{() => <ParticipantTile />}</TrackLoop>
-      {/* <div class={tile()} />
-      <div class={tile()} />
-      <div class={tile()} />
-      <div class={tile()} />
-      <div class={tile()} /> */}
-    </Grid>
-  );
-}
-
 const Grid = styled("div", {
   base: {
     display: "grid",
