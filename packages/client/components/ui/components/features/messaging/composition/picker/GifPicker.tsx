@@ -98,7 +98,7 @@ function Categories() {
     queryFn: () => {
       const [authHeader, authHeaderValue] = client()!.authenticationHeader;
 
-      return fetch(`https://api.klipy.com/api/v1/gifs/categories? api_key${env.VITE_KLIPY_API_KEY}`, {
+      return fetch(`https://api.klipy.com/api/v1/gifs/categories?api_key=${env.VITE_KLIPY_API_KEY}`, {
         headers: {
           [authHeader]: authHeaderValue,
         },
@@ -113,7 +113,7 @@ function Categories() {
     queryFn: () => {
       const [authHeader, authHeaderValue] = client()!.authenticationHeader;
 
-      return fetch(`https://api.klipy.com/api/v1/gifs/trending? api_key=${env.VITE_KLIPY_API_KEY}&limit=1`, {
+      return fetch(`https://api.klipy.com/api/v1/gifs/trending?api_key=${env.VITE_KLIPY_API_KEY}&limit=1`, {
         headers: {
           [authHeader]: authHeaderValue,
         },
@@ -212,16 +212,16 @@ function GifSearch(props: { query: string }) {
 
   const client = useClient();
 
-  const search = useQuery<GifResult[]>(() => ({
+  const search = useQuery<Array<GifResult>>(() => ({
     queryKey: ["gifs", props.query],
     queryFn: () => {
       const [authHeader, authHeaderValue] = client()!.authenticationHeader;
 
+      const gifUrl = props.query === "trending"
+            ? "https://api.klipy.com/api/v1/gifs/trending?api_key=" + env.VITE_KLIPY_API_KEY + "&locale=en_US"
+            : "https://api.klipy.com/api/v1/gifs/search?api_key=" + env.VITE_KLIPY_API_KEY + "&locale=en_US&query=" + encodeURIComponent(props.query);
       return fetch(
-        `https://api.klipy.com/api/v1/gifs/trending? ${env.VITE_KLIPY_API_KEY}/` +
-          (props.query === "trending"
-            ? `trending?locale=en_US`
-            : `search?locale=en_US&query=${encodeURIComponent(props.query)}`),
+        gifUrl,
         {
           headers: {
             [authHeader]: authHeaderValue,

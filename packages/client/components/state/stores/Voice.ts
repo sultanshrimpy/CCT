@@ -110,7 +110,6 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
       soundDisconnect: true,
       soundIncomingCall: true,
       autoReconnect: true,
-      micOn: true,
       screenShareQuality: "low",
       screenShareQualityAsk: false,
     };
@@ -427,11 +426,6 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
     return this.get().micOn;
   }
 
-  set micOn(value: boolean) {
-    this.set("micOn", value);
-  }
-
-  /** Set mic status */
   set micOn(value: boolean) {
     this.set("micOn", value);
   }
