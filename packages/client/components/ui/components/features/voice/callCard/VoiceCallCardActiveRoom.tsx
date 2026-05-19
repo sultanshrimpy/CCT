@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui-solid/solid/macro";
 import { createResizeObserver } from "@solid-primitives/resize-observer";
 import { createEffect, For, onMount, Show } from "solid-js";
-import { TrackLoop } from "solid-livekit-components";
+import { TrackLoop, useTrackRefContext } from "solid-livekit-components";
 import { styled } from "styled-system/jsx";
 import { cva } from "styled-system/css";
 

@@ -5,6 +5,8 @@ import { AbstractStore } from ".";
 /**
  * Possible noise suppresion states. Browser is browser noise suppresion and enhanced is machine learning suppression via RNNoise.
  */
+export type ScreenShareQualityName = "low" | "medium" | "high";
+
 export type NoiseSuppresionState = "disabled" | "browser" | "enhanced";
 
 const NoiseSuppresionStates: NoiseSuppresionState[] = [
@@ -51,6 +53,9 @@ export interface TypeVoice {
   soundIncomingCall: boolean;
 
   autoReconnect: boolean;
+  micOn: boolean;
+  screenShareQuality: ScreenShareQualityName;
+  screenShareQualityAsk: boolean;
 }
 
 /**
@@ -105,6 +110,9 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
       soundDisconnect: true,
       soundIncomingCall: true,
       autoReconnect: true,
+      micOn: true,
+      screenShareQuality: "low",
+      screenShareQualityAsk: false,
     };
   }
 
@@ -257,6 +265,15 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
     if (typeof input.autoReconnect === "boolean") {
       data.autoReconnect = input.autoReconnect;
     }
+    if (typeof input.micOn === "boolean") {
+      data.micOn = input.micOn;
+    }
+    if (input.screenShareQuality === "low" || input.screenShareQuality === "medium" || input.screenShareQuality === "high") {
+      data.screenShareQuality = input.screenShareQuality;
+    }
+    if (typeof input.screenShareQualityAsk === "boolean") {
+      data.screenShareQualityAsk = input.screenShareQualityAsk;
+    }
 
     return data;
   }
@@ -408,6 +425,15 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
    */
   get micOn(): boolean {
     return this.get().micOn;
+  }
+
+  set micOn(value: boolean) {
+    this.set("micOn", value);
+  }
+
+  /** Set mic status */
+  set micOn(value: boolean) {
+    this.set("micOn", value);
   }
 
   /**
@@ -704,5 +730,21 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
    */
   set autoReconnect(value: boolean) {
     this.set("autoReconnect", value);
+  }
+
+  get screenShareQuality(): ScreenShareQualityName {
+    return this.get().screenShareQuality;
+  }
+
+  set screenShareQuality(value: ScreenShareQualityName) {
+    this.set("screenShareQuality", value);
+  }
+
+  get screenShareQualityAsk(): boolean {
+    return this.get().screenShareQualityAsk;
+  }
+
+  set screenShareQualityAsk(value: boolean) {
+    this.set("screenShareQualityAsk", value);
   }
 }

@@ -726,6 +726,30 @@ class Voice {
     }
   }
 
+
+  getEnabledScreenShareQualities(): Record<string, ScreenShareQuality> {
+    return {
+      low: {
+        name: 'low',
+        fullName: 'Low (720p 15fps)',
+        contentHint: 'detail',
+        resolution: ScreenSharePresets.h720fps15.resolution,
+      },
+      medium: {
+        name: 'medium',
+        fullName: 'Medium (1080p 15fps)',
+        contentHint: 'detail',
+        resolution: ScreenSharePresets.h1080fps15.resolution,
+      },
+      high: {
+        name: 'high',
+        fullName: 'High (1080p 30fps)',
+        contentHint: 'motion',
+        resolution: ScreenSharePresets.h1080fps30.resolution,
+      },
+    };
+  }
+
   async toggleScreenshare() {
    const room = this.room();
     if (!room) throw "invalid state";
