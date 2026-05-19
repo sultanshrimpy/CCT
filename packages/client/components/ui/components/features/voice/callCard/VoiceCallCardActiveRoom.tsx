@@ -8,6 +8,7 @@ import { cva } from "styled-system/css";
 import { UserContextMenu } from "@revolt/app";
 import { useUser } from "@revolt/markdown/users";
 import { InRoom, useVoice } from "@revolt/rtc";
+import { scrollableStyles } from "@revolt/ui/directives/scrollable";
 import { Avatar } from "@revolt/ui/components/design";
 import { OverflowingText } from "@revolt/ui/components/utils";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
