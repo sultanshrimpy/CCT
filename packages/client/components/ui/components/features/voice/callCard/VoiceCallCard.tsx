@@ -269,6 +269,7 @@ export function VoiceChannelCallCardMount(props: { channel: Channel }) {
  * Call card
  */
 function VoiceCallCard(props: { channel: Channel }) {
+  let viewRef: HTMLElement | undefined;
   const voice = useVoice();
   const inCall = () => voice.channel()?.id === props.channel.id;
 
