@@ -1,23 +1,33 @@
 import { useLingui } from "@lingui-solid/solid/macro";
 import { createResizeObserver } from "@solid-primitives/resize-observer";
-import { createEffect, For, onMount, Show } from "solid-js";
-import { TrackLoop, useTrackRefContext } from "solid-livekit-components";
+import { createEffect, For, Match, onMount, Show, Switch } from "solid-js";
+import {
+  isTrackReference,
+  TrackLoop,
+  TrackReference,
+  useEnsureParticipant,
+  useIsMuted,
+  useIsSpeaking,
+  useMaybeTrackRefContext,
+  useTrackRefContext,
+  VideoTrack,
+} from "solid-livekit-components";
+import { Track } from "livekit-client";
 import { styled } from "styled-system/jsx";
 import { cva } from "styled-system/css";
 
 import { UserContextMenu } from "@revolt/app";
 import { useUser } from "@revolt/markdown/users";
 import { InRoom, useVoice } from "@revolt/rtc";
-import { scrollableStyles } from "@revolt/ui/directives/scrollable";
-import { Avatar } from "@revolt/ui/components/design";
+import { Avatar, IconButton } from "@revolt/ui/components/design";
 import { OverflowingText } from "@revolt/ui/components/utils";
+import { scrollableStyles } from "@revolt/ui/directives/scrollable";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import { VoiceStatefulUserIcons } from "../VoiceStatefulUserIcons";
 
 import { VoiceCallCardActions } from "./VoiceCallCardActions";
 import { VoiceCallCardStatus } from "./VoiceCallCardStatus";
-
 /**
  * Call card (active)
  */
