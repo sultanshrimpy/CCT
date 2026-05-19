@@ -9,6 +9,7 @@ import { css } from "styled-system/css";
 import { AutoCompleteSearchSpace } from "../../utils/autoComplete";
 
 import { useState } from "@revolt/state";
+import { scrollableStyles } from "@revolt/ui/directives/scrollable";
 import { codeMirrorAutoComplete } from "./codeMirrorAutoComplete";
 import { isInFencedCodeBlock } from "./codeMirrorCommon";
 import { smartLineWrapping } from "./codeMirrorLineWrap";
