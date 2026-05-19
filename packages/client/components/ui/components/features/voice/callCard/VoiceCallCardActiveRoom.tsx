@@ -7,7 +7,7 @@ import { cva } from "styled-system/css";
 
 import { UserContextMenu } from "@revolt/app";
 import { useUser } from "@revolt/markdown/users";
-import { InRoom } from "@revolt/rtc";
+import { InRoom, useVoice } from "@revolt/rtc";
 import { Avatar } from "@revolt/ui/components/design";
 import { OverflowingText } from "@revolt/ui/components/utils";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
@@ -21,6 +21,7 @@ import { VoiceCallCardStatus } from "./VoiceCallCardStatus";
  * Call card (active)
  */
 export function VoiceCallCardActiveRoom() {
+ const voice = useVoice();
   return (
     <View>
       <Call>
