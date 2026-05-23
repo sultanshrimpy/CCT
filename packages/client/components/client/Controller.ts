@@ -1,4 +1,4 @@
-import { Accessor, Setter, createSignal } from "solid-js";
+import { Accessor, Setter, createMemo, createSignal } from "solid-js";
 
 import { detect } from "detect-browser";
 import { API, Client, ConnectionState } from "stoat.js";
@@ -8,6 +8,7 @@ import { CONFIGURATION } from "@revolt/common";
 import { ModalControllerExtended } from "@revolt/modal";
 import type { State as ApplicationState } from "@revolt/state";
 import type { Session } from "@revolt/state/stores/Auth";
+import { killServiceWorkerSubscription } from "./NotificationsController";
 
 export enum State {
   Ready = "Ready",
@@ -446,6 +447,11 @@ export default class ClientController {
   readonly state: ApplicationState;
 
   /**
+   * A memo to prevent isLoggedIn from bouncing when reconnecting
+   */
+  private isLoggedInState: Accessor<boolean>;
+
+  /**
    * Construct new client controller
    */
   constructor(state: ApplicationState) {
@@ -462,6 +468,16 @@ export default class ClientController {
     this.isLoggedIn = this.isLoggedIn.bind(this);
     this.isError = this.isError.bind(this);
 
+    this.isLoggedInState = createMemo(() =>
+      [
+        State.Connecting,
+        State.Connected,
+        State.Disconnected,
+        State.Offline,
+        State.Reconnecting,
+      ].includes(this.lifecycle.state()),
+    );
+
     const session = state.auth.getSession();
     if (session) {
       this.lifecycle.transition({
@@ -476,13 +492,7 @@ export default class ClientController {
   }
 
   isLoggedIn() {
-    return [
-      State.Connecting,
-      State.Connected,
-      State.Disconnected,
-      State.Offline,
-      State.Reconnecting,
-    ].includes(this.lifecycle.state());
+    return this.isLoggedInState();
   }
 
   isError() {
@@ -586,6 +596,8 @@ export default class ClientController {
   }
 
   logout() {
+    this.state.settings.resetNotificationsState();
+    killServiceWorkerSubscription(this.getCurrentClient());
     this.state.auth.removeSession();
     this.lifecycle.transition({
       type: TransitionType.Logout,
