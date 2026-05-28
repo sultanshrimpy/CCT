@@ -54,6 +54,14 @@ export function ClientContext(props: { state: State; children: JSXElement }) {
             changelog,
           });
         });
+
+        //Show TryPWA modal
+        if (
+          props.state.isMobile &&
+          !props.state.settings.getValue("pwa:shown") &&
+          !isOpen("try_pwa")
+        )
+          openModal({ type: "try_pwa" });
       },
     ),
   );

@@ -15,7 +15,7 @@ import {
 import { useNavigate, useSmartParams } from "@revolt/routing";
 import { useState } from "@revolt/state";
 
-import { useClient } from ".";
+import { useClient, useNotifications } from ".";
 import { voiceNotifications } from "../rtc/VoiceNotifications";
 
 /**

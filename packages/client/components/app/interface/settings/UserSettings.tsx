@@ -105,6 +105,8 @@ const Config: SettingsConfiguration<{ server: Server }> = {
         return <PushToTalkSettings />;
       case "notification_sounds":
         return <NotificationSoundsSettings />;
+      case "notifications":
+        return <Notifications isDesktop={!!window.native} />;
       default:
         return null;
     }
@@ -117,7 +119,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
    * @returns List
    */
   list(_, onClose) {
-    const { pop } = useModals();
+    const { pop, openModal } = useModals();
     const { logout } = useClientLifecycle();
 
     return {
@@ -284,7 +286,9 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             {
               id: "notification_sounds",
               icon: <MdNotifications {...iconSize(20)} />,
-              title: <Trans id="notifications.tab.title">Notification Sounds</Trans>,
+              title: (
+                <Trans id="notifications.tab.title">Notification Sounds</Trans>
+              ),
             },
           ],
         },
