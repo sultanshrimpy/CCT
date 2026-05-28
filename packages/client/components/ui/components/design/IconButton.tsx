@@ -65,7 +65,7 @@ export function IconButton(props: Props) {
       <Show when={!buttonProps.disabled}>
         <Ripple />
       </Show>
-      {rest.children}
+      {props.children}
     </button>
   );
 }
