@@ -133,45 +133,18 @@ export function ChannelHeader(props: Props) {
 
       <Spacer />
 
-      <Show when={props.channel.isVoice}>
-        <Show
-          when={voice.channel()?.id === props.channel.id}
-          fallback={
-            <IconButton
-              onPress={() => voice.connect(props.channel)}
-              use:floating={{
-                tooltip: {
-                  placement: "bottom",
-                  content: t`Join the voice channel`,
-                },
-              }}
-            >
-              <Symbol
-                style={{
-                  color: props.channel.voiceParticipants.size > 0
-                    ? "var(--brand-presence-online)"
-                    : undefined,
-                }}
-              >
-                call
-              </Symbol>
-            </IconButton>
-          }
+      <Show when={props.channel.isVoice && !voice.showCard(props.channel)}>
+        <IconButton
+          onPress={() => voice.connect(props.channel)}
+          use:floating={{
+            tooltip: {
+              placement: "bottom",
+              content: t`Join the voice channel`,
+            },
+          }}
         >
-          <IconButton
-            onPress={() => voice.disconnect()}
-            use:floating={{
-              tooltip: {
-                placement: "bottom",
-                content: "Disconnect from voice",
-              },
-            }}
-          >
-            <Symbol style={{ color: "var(--md-sys-color-error)" }}>
-              call_end
-            </Symbol>
-          </IconButton>
-        </Show>
+          <Symbol>call</Symbol>
+        </IconButton>
       </Show>
 
       <Show

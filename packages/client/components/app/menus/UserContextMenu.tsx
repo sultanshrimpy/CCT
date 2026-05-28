@@ -44,6 +44,7 @@ export function UserContextMenu(props: {
   member?: ServerMember;
   contextMessage?: Message;
   inVoice?: boolean;
+  isScreenshare?: boolean;
 }) {
   // TODO: if we take serverId instead, we could dynamically fetch server member here
   // same for the floating menu I guess?
@@ -293,15 +294,16 @@ export function UserContextMenu(props: {
     return (
       props.channel?.type === "Group" &&
       !props.user.self &&
-      props.channel.havePermission("ManageChannel") &&
-      props.user.id !== props.channel.ownerId
+      props.channel.owner?.id !== props.user.id &&
+      (props.channel.havePermission("ManageChannel") ||
+        props.channel.owner?.self)
     );
   }
 
   return (
     <ContextMenu class="UserContextMenu">
       {/* Voice controls */}
-      <Show when={props.inVoice && !props.user.self}>
+      <Show when={props.inVoice && !props.user.self && !props.isScreenshare}>
         <ContextMenuButton
           onMouseDown={(e) => e.stopImmediatePropagation()}
           onClick={(e) => e.stopImmediatePropagation()}
@@ -337,6 +339,47 @@ export function UserContextMenu(props: {
         >
           <Trans>Mute</Trans>
         </ContextMenuButton>
+        <ContextMenuDivider />
+      </Show>
+      <Show when={props.isScreenshare && !props.user.self}>
+        <ContextMenuButton
+          onMouseDown={(e) => e.stopImmediatePropagation()}
+          onClick={(e) => e.stopImmediatePropagation()}
+        >
+          <Text class="label">
+            <Trans>Screen Share Volume</Trans>
+          </Text>
+          <Slider
+            min={0}
+            max={3}
+            step={0.1}
+            value={state.voice.getScreenShareVolume(props.user.id)}
+            onInput={(event) =>
+              state.voice.setScreenShareVolume(
+                props.user.id,
+                event.currentTarget.value,
+              )
+            }
+            labelFormatter={(label) => (label * 100).toFixed(0) + "%"}
+          />
+        </ContextMenuButton>
+        <ContextMenuButton
+          icon={MdMicOff}
+          onClick={() =>
+            state.voice.setScreenShareMuted(
+              props.user.id,
+              !state.voice.getScreenShareMuted(props.user.id),
+            )
+          }
+          actionSymbol={
+            state.voice.getScreenShareMuted(props.user.id)
+              ? MdChecked
+              : MdUnchecked
+          }
+        >
+          <Trans>Mute Screen Share</Trans>
+        </ContextMenuButton>
+
         <ContextMenuDivider />
       </Show>
 
@@ -415,8 +458,22 @@ export function UserContextMenu(props: {
 
       {/* Moderation: kick, ban */}
       {/** TODO: #287 timeout users */}
-      <Show when={props.member && (canKick() || canBan())}>
+      <Show
+        when={
+          canRemoveMemberFromGroup() ||
+          (props.member && (canKick() || canBan()))
+        }
+      >
         <ContextMenuDivider />
+        <Show when={canRemoveMemberFromGroup()}>
+          <ContextMenuButton
+            icon={MdPersonRemove}
+            onClick={removeMember}
+            destructive
+          >
+            <Trans>Remove Member</Trans>
+          </ContextMenuButton>
+        </Show>
         <Show when={canKick()}>
           <ContextMenuButton
             icon={MdPersonRemove}
@@ -436,15 +493,6 @@ export function UserContextMenu(props: {
           </ContextMenuButton>
         </Show>
       </Show>
-      <Show when={canRemoveMemberFromGroup()}>
-        <ContextMenuButton
-          icon={MdPersonRemove}
-          onClick={removeMember}
-          destructive
-        >
-          <Trans>Remove Member</Trans>
-        </ContextMenuButton>
-      </Show>
       <Show when={canBanNonMember()}>
         <ContextMenuDivider />
         <ContextMenuButton
@@ -457,8 +505,6 @@ export function UserContextMenu(props: {
       </Show>
 
       {/* Safety: remove friend, block, report */}
-      <ContextMenuDivider />
-
       <Show when={!props.user.self}>
         <ContextMenuDivider />
         <Show when={props.user.relationship === "Friend"}>

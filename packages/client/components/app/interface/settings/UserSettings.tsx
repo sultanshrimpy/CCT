@@ -8,10 +8,12 @@ import { useClient, useClientLifecycle } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { useUser } from "@revolt/markdown/users";
 import { useModals } from "@revolt/modal";
+import { fetchLatestChangelog } from "@revolt/modal/modals/Changelog";
 import { ColouredText, Column, Text, iconSize } from "@revolt/ui";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import MdAccountCircle from "@material-design-icons/svg/outlined/account_circle.svg?component-solid";
+import MdCampaign from "@material-design-icons/svg/outlined/campaign.svg?component-solid";
 import MdCoffee from "@material-design-icons/svg/outlined/coffee.svg?component-solid";
 import MdLanguage from "@material-design-icons/svg/outlined/language.svg?component-solid";
 import MdLogout from "@material-design-icons/svg/outlined/logout.svg?component-solid";
@@ -34,6 +36,7 @@ import AdvancedSettings from "./user/Advanced";
 import { Feedback } from "./user/Feedback";
 import { LanguageSettings } from "./user/Language";
 import Native from "./user/Native";
+import Notifications from "./user/Notifications";
 import { Sessions } from "./user/Sessions";
 import { AccountCard, BackCard } from "./user/_AccountCard";
 import { AppearanceMenu } from "./user/appearance";
@@ -177,7 +180,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
           ],
         },
         {
-          title: "Stoat",
+          title: "CCT",
           entries: [
             {
               id: "bots",
@@ -237,11 +240,11 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             //   title: t("app.settings.pages.plugins.title"),
             //   hidden: !getController("state").experiments.isEnabled("plugins"),
             // },
-            // {
-            //   id: "notifications",
-            //   icon: <MdNotifications {...iconSize(20)} />,
-            //   title: t("app.settings.pages.notifications.title"),
-            // },
+            {
+              id: "notifications",
+              icon: <MdNotifications {...iconSize(20)} />,
+              title: <Trans>Notifications</Trans>,
+            },
             // {
             //   id: "keybinds",
             //   icon: <MdKeybinds {...iconSize(20)} />,
@@ -271,7 +274,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
           ],
         },
         {
-          title: "Stoat Plus Settings",
+          title: "CCT Settings",
           entries: [
             {
               id: "push_to_talk",
@@ -287,12 +290,15 @@ const Config: SettingsConfiguration<{ server: Server }> = {
         },
         {
           entries: [
-            // {
-            //   onClick: () =>
-            //     getController("modal").push({ type: "changelog", posts: [] }),
-            //   icon: <MdFormatListBulleted {...iconSize(20)} />,
-            //   title: t("app.special.modals.changelogs.title"),
-            // },
+            {
+              onClick: async () => {
+                const changelog = await fetchLatestChangelog();
+                if (!changelog) return;
+                openModal({ type: "changelog", changelog });
+              },
+              icon: <MdCampaign {...iconSize(20)} />,
+              title: <Trans>What's New</Trans>,
+            },
             {
               href: "https://github.com/stoatchat",
               icon: <MdMemory {...iconSize(20)} />,
