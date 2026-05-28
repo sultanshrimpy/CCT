@@ -433,4 +433,24 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
   get micOn(): boolean {
     return this.get().micOn;
   }
+
+  setPushToTalkConfig(config: {
+    enabled: boolean;
+    keybind: string;
+    mode: "hold" | "toggle";
+    releaseDelay: number;
+  }) {
+    if (typeof config.enabled === "boolean") {
+      this.set("pushToTalkEnabled", config.enabled);
+    }
+    if (typeof config.keybind === "string") {
+      this.set("pushToTalkKeybind", config.keybind);
+    }
+    if (config.mode === "hold" || config.mode === "toggle") {
+      this.set("pushToTalkMode", config.mode);
+    }
+    if (typeof config.releaseDelay === "number") {
+      this.set("pushToTalkReleaseDelay", config.releaseDelay);
+    }
+   }
 }
