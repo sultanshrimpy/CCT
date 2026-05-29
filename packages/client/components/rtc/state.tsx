@@ -6,6 +6,7 @@ import {
   batch,
   createContext,
   createEffect,
+  createMemo,
   createSignal,
   onCleanup,
   onMount,
@@ -14,8 +15,8 @@ import {
 import {
   RoomContext,
   TrackReferenceOrPlaceholder,
-  useTracks,
 } from "solid-livekit-components";
+import { trackReferencesObservable } from "@livekit/components-core";
 
 import { voiceNotifications } from "./VoiceNotifications";
 
@@ -167,7 +168,26 @@ class Voice {
     this.stageRoom = stageRoom;
     this.#setStageRoom = setStageRoom;
 
-    this.vidTracks = () => [];
+    // vidTracks: subscribe directly to trackReferencesObservable rather than
+    // using useTracks() from solid-livekit-components, which has a bug where it
+    // passes an array as the second arg to createEffect() — SolidJS treats that
+    // as an initialValue and then crashes trying to call it as a cleanup fn
+    // ("TypeError: r is not a function").
+    const [vidTrackRefs, setVidTrackRefs] = createSignal<TrackReferenceOrPlaceholder[]>([]);
+    createEffect(() => {
+      const currentRoom = room();
+      if (!currentRoom) {
+        setVidTrackRefs([]);
+        return;
+      }
+      const sub = trackReferencesObservable(
+        currentRoom,
+        [Track.Source.Camera, Track.Source.ScreenShare],
+        { onlySubscribed: false },
+      ).subscribe(({ trackReferences }) => setVidTrackRefs(trackReferences));
+      onCleanup(() => sub.unsubscribe());
+    });
+    this.vidTracks = vidTrackRefs;
 
     const [state, setState] = createSignal<State>("READY");
     this.state = state;
@@ -301,14 +321,6 @@ class Voice {
         deviceId: this.#settings.preferredAudioOutputDevice,
       },
     });
-
-    this.vidTracks = useTracks(
-      [
-        { source: Track.Source.Camera, withPlaceholder: true },
-        { source: Track.Source.ScreenShare, withPlaceholder: false },
-      ],
-      { room, onlySubscribed: false },
-    );
 
     batch(() => {
       this.#setRoom(room);
@@ -529,7 +541,6 @@ class Voice {
         this.#setChannel();
         this.#setMicrophone(this.#settings.micOn);
         this.#setFullscreen(false);
-        this.vidTracks = () => [];
       });
     } catch (e) {
       this.onErr(e);
