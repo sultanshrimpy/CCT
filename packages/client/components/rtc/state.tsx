@@ -182,7 +182,7 @@ class Voice {
       }
       const sub = trackReferencesObservable(
         currentRoom,
-        [Track.Source.Camera, Track.Source.ScreenShare],
+        [Track.Source.Microphone, Track.Source.Camera, Track.Source.ScreenShare],
         { onlySubscribed: false },
       ).subscribe(({ trackReferences }) => setVidTrackRefs(trackReferences));
       onCleanup(() => sub.unsubscribe());
