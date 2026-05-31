@@ -289,7 +289,7 @@ function Entry(
       alert={
         !local.active &&
         local.channel.unread &&
-        (local.channel.mentions?.size || true)
+        (local.channel.mentions?.size ?? 0)
       }
       attention={
         local.active

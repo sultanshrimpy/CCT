@@ -13,7 +13,7 @@ export function createMfaResource() {
   return createQuery(() => ({
     queryKey: ["mfa", client().user!.id],
     queryFn: () => client().account.mfa(),
-    throwOnError: true,
+    throwOnError: false,
   }));
 }
 
@@ -26,7 +26,7 @@ export function createProfileResource(user: User) {
   return createQuery(() => ({
     queryKey: ["profile", user.id],
     queryFn: () => user!.fetchProfile(),
-    throwOnError: true,
+    throwOnError: false,
   }));
 }
 
@@ -48,6 +48,6 @@ export function createOwnBotsResource() {
   return createQuery(() => ({
     queryKey: ["bots", client().user!.id],
     queryFn: () => client().bots.fetchOwned(),
-    throwOnError: true,
+    throwOnError: false,
   }));
 }

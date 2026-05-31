@@ -467,7 +467,7 @@ function Entry(
     () =>
       !props.active &&
       props.channel.unread &&
-      (props.channel.mentions?.size || true),
+      (props.channel.mentions?.size ?? 0),
   );
 
   const inCall = () => props.channel.id === voice.channel()?.id;

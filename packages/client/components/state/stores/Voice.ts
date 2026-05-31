@@ -50,6 +50,19 @@ export interface TypeVoice {
   screenShareVolumes: Record<string, number>;
   screenShareMutes: Record<string, boolean>;
 
+  // Noise gate
+  noiseGateThreshold: number;
+
+  // Auto reconnect
+  autoReconnect: boolean;
+
+  // Push to talk
+  pushToTalkEnabled: boolean;
+  pushToTalkKeybind: string;
+  pushToTalkMode: "hold" | "toggle";
+  pushToTalkReleaseDelay: number;
+  pushToTalkNotificationSounds: boolean;
+
   // Notification sound settings
   notificationSoundsEnabled: boolean;
   notificationVolume: number;
@@ -102,6 +115,19 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
       userMutes: {},
       screenShareVolumes: {},
       screenShareMutes: {},
+
+      // Noise gate
+      noiseGateThreshold: 0.01,
+
+      // Auto reconnect
+      autoReconnect: true,
+
+      // Push to talk
+      pushToTalkEnabled: false,
+      pushToTalkKeybind: "",
+      pushToTalkMode: "hold",
+      pushToTalkReleaseDelay: 100,
+      pushToTalkNotificationSounds: true,
 
       // Notification sound defaults (all enabled)
       notificationSoundsEnabled: true,
@@ -459,6 +485,120 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
   get micOn(): boolean {
     return this.get().micOn;
   }
+
+  // --- Noise gate getter/setter ---
+
+  get noiseGateThreshold(): number {
+    return this.get().noiseGateThreshold;
+  }
+  set noiseGateThreshold(v: number) {
+    this.set("noiseGateThreshold", v);
+  }
+
+  // --- Notification sound getters/setters ---
+
+  get notificationSoundsEnabled(): boolean {
+    return this.get().notificationSoundsEnabled;
+  }
+  set notificationSoundsEnabled(v: boolean) {
+    this.set("notificationSoundsEnabled", v);
+  }
+
+  get notificationVolume(): number {
+    return this.get().notificationVolume;
+  }
+  set notificationVolume(v: number) {
+    this.set("notificationVolume", v);
+  }
+
+  get soundJoinCall(): boolean {
+    return this.get().soundJoinCall;
+  }
+  set soundJoinCall(v: boolean) {
+    this.set("soundJoinCall", v);
+  }
+
+  get soundLeaveCall(): boolean {
+    return this.get().soundLeaveCall;
+  }
+  set soundLeaveCall(v: boolean) {
+    this.set("soundLeaveCall", v);
+  }
+
+  get soundSomeoneJoined(): boolean {
+    return this.get().soundSomeoneJoined;
+  }
+  set soundSomeoneJoined(v: boolean) {
+    this.set("soundSomeoneJoined", v);
+  }
+
+  get soundSomeoneLeft(): boolean {
+    return this.get().soundSomeoneLeft;
+  }
+  set soundSomeoneLeft(v: boolean) {
+    this.set("soundSomeoneLeft", v);
+  }
+
+  get soundMute(): boolean {
+    return this.get().soundMute;
+  }
+  set soundMute(v: boolean) {
+    this.set("soundMute", v);
+  }
+
+  get soundUnmute(): boolean {
+    return this.get().soundUnmute;
+  }
+  set soundUnmute(v: boolean) {
+    this.set("soundUnmute", v);
+  }
+
+  get soundReceiveMessage(): boolean {
+    return this.get().soundReceiveMessage;
+  }
+  set soundReceiveMessage(v: boolean) {
+    this.set("soundReceiveMessage", v);
+  }
+
+  get soundDisconnect(): boolean {
+    return this.get().soundDisconnect;
+  }
+  set soundDisconnect(v: boolean) {
+    this.set("soundDisconnect", v);
+  }
+
+  get soundIncomingCall(): boolean {
+    return this.get().soundIncomingCall;
+  }
+  set soundIncomingCall(v: boolean) {
+    this.set("soundIncomingCall", v);
+  }
+
+  get autoReconnect(): boolean {
+    return this.get().autoReconnect ?? true;
+  }
+  set autoReconnect(v: boolean) {
+    this.set("autoReconnect", v);
+  }
+
+  set outputVolume(v: number) {
+    this.set("outputVolume", v);
+  }
+
+  get pushToTalkEnabled(): boolean { return this.get().pushToTalkEnabled; }
+  set pushToTalkEnabled(v: boolean) { this.set("pushToTalkEnabled", v); }
+
+  get pushToTalkKeybind(): string { return this.get().pushToTalkKeybind; }
+  set pushToTalkKeybind(v: string) { this.set("pushToTalkKeybind", v); }
+
+  get pushToTalkMode(): "hold" | "toggle" { return this.get().pushToTalkMode; }
+  set pushToTalkMode(v: "hold" | "toggle") { this.set("pushToTalkMode", v); }
+
+  get pushToTalkReleaseDelay(): number { return this.get().pushToTalkReleaseDelay; }
+  set pushToTalkReleaseDelay(v: number) { this.set("pushToTalkReleaseDelay", v); }
+
+  get pushToTalkNotificationSounds(): boolean { return this.get().pushToTalkNotificationSounds; }
+  set pushToTalkNotificationSounds(v: boolean) { this.set("pushToTalkNotificationSounds", v); }
 
   setPushToTalkConfig(config: {
     enabled: boolean;
