@@ -1,6 +1,7 @@
 import {
   type JSX,
   Accessor,
+  ErrorBoundary,
   createContext,
   createMemo,
   createSignal,
@@ -107,9 +108,19 @@ export function Settings(props: SettingsProps & SettingsConfiguration<never>) {
               onClose={props.onClose}
             >
               <Rerun on={page}>
-                <div>
-                  {props.render({ page }, props.context)}
-                </div>
+                <ErrorBoundary fallback={(err, reset) => (
+                  <div style={{ padding: "20px", color: "red" }}>
+                    <strong>Settings page error:</strong>
+                    <pre style={{ "font-size": "12px", "white-space": "pre-wrap" }}>
+                      {err?.message ?? String(err)}
+                    </pre>
+                    <button onClick={reset}>Retry</button>
+                  </div>
+                )}>
+                  <div>
+                    {props.render({ page }, props.context)}
+                  </div>
+                </ErrorBoundary>
               </Rerun>
             </SettingsContent>
           </>

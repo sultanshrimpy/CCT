@@ -9,7 +9,6 @@ import {
   splitProps,
 } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
 
 import { autoUpdate, flip, offset, shift, size } from "@floating-ui/dom";
 import { MenuItem } from "mdui/components/menu-item";
@@ -141,27 +140,15 @@ export function FloatingSelect(props: FloatingSelectProps) {
       </SelectTrigger>
 
       <Portal mount={document.getElementById("floating")!}>
-        <Presence>
+        
           <Show when={isOpen()}>
-            <Motion
-              ref={setDropdown}
-              style={{
-                position: position.strategy,
-                top: `${position.y ?? 0}px`,
-                left: `${position.x ?? 0}px`,
-                "z-index": "1000",
-              }}
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2, easing: [0.87, 0, 0.13, 1] }}
-            >
+            <div>
               <DropdownMenu onClick={handleItemClick}>
                 {local.children}
               </DropdownMenu>
-            </Motion>
+            </div>
           </Show>
-        </Presence>
+        
       </Portal>
     </>
   );

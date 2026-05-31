@@ -1,7 +1,6 @@
 import type { JSX } from "solid-js";
 import { For, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
 
 import { styled } from "styled-system/jsx";
 
@@ -50,16 +49,9 @@ export function Dialog(props: Props) {
             : "rgba(0, 0, 0, 0.6)",
         }}
       >
-        <Presence>
+
           <Show when={props.show}>
-            <Motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, easing: [0.05, 0.7, 0.1, 1.0] }}
+            <div
               class="dialog"
             >
               <Container
@@ -107,9 +99,8 @@ export function Dialog(props: Props) {
                   </Actions>
                 </Show>
               </Container>
-            </Motion.div>
+            </div>
           </Show>
-        </Presence>
       </Dialog.Scrim>
     </Portal>
   );

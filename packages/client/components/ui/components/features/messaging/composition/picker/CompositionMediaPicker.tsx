@@ -13,7 +13,6 @@ import {
   onMount,
 } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
 
 import { flip, offset, shift } from "@floating-ui/dom";
 import { cva } from "styled-system/css";
@@ -74,15 +73,10 @@ export function CompositionMediaPicker(props: Props) {
           setShow((current) => (current === "emoji" ? undefined : "emoji"));
         },
       })}
-      <Presence>
+      
         <Show when={show()}>
           <Portal mount={document.getElementById("floating")!}>
-            <Motion
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, easing: [0.87, 0, 0.13, 1] }}
-            >
+            <div>
               <Picker
                 anchor={() => altRef || anchor()}
                 show={show}
@@ -90,10 +84,10 @@ export function CompositionMediaPicker(props: Props) {
                 onMessage={props.onMessage}
                 onTextReplacement={props.onTextReplacement}
               />
-            </Motion>
+            </div>
           </Portal>
         </Show>
-      </Presence>
+      
     </CompositionMediaPickerContext.Provider>
   );
 }

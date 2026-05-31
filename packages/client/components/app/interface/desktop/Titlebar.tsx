@@ -1,5 +1,4 @@
 import { Match, Show, Switch, createSignal } from "solid-js";
-import { Motion, Presence } from "solid-motionone";
 
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
@@ -38,18 +37,14 @@ export function Titlebar() {
   }
 
   return (
-    <Presence>
+    
       <Show
         when={
           (window.native && window.desktopConfig?.get().customFrame) ||
           isDisconnected()
         }
       >
-        <Motion.div
-          initial={{ height: 0 }}
-          animate={{ height: "29px" }}
-          exit={{ height: 0 }}
-        >
+        <div>
           <Base disconnected={isDisconnected()}>
             <Title
               style={{
@@ -142,9 +137,9 @@ export function Titlebar() {
               </Action>
             </Show>
           </Base>
-        </Motion.div>
+        </div>
       </Show>
-    </Presence>
+    
   );
 }
 

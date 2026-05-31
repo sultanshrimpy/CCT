@@ -8,7 +8,6 @@ import {
   onCleanup,
 } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
 
 import Panzoom, { PanzoomObject } from "@panzoom/panzoom";
 import { css } from "styled-system/css";
@@ -73,25 +72,7 @@ export function ImageViewerModal(
       >
         <Presence>
           <Show when={props?.show}>
-            <Motion.div
-              class={css({
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-
-                minHeight: 0,
-                width: "100%",
-                height: "100%",
-
-                paddingInline: "20px",
-              })}
-              initial={{ opacity: 0, scale: 1.1 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.1 }}
-              transition={{
-                duration: 0.3,
-                easing: [0.17, 0.67, 0.58, 0.98],
-              }}
+            <div
             >
               <Relative>
                 <Bar>
@@ -178,7 +159,7 @@ export function ImageViewerModal(
                 </Match>
               </Switch>
               <div />
-            </Motion.div>
+            </div>
           </Show>
         </Presence>
       </Dialog.Scrim>

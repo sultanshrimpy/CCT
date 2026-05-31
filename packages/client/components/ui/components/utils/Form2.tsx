@@ -338,7 +338,7 @@ const FormResetButton = (props: {
       }}
       isDisabled={!props.group.isDirty}
     >
-      {props.children ?? Reset}
+      {props.children ?? "Reset"}
     </Button>
   );
 };

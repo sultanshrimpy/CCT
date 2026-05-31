@@ -32,7 +32,8 @@ export function VoiceInputOptions() {
  */
 function SelectInput(props: { kind: MediaDeviceKind }) {
   const state = useState();
-  const media = createMemo(() => useMediaDeviceSelect({ kind: props.kind }));
+  const mediaSelect = useMediaDeviceSelect({ kind: props.kind });
+  const media = () => mediaSelect;
 
   const setKey = () =>
     props.kind === "audioinput"

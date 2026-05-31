@@ -13,7 +13,6 @@ import {
   onMount,
 } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Motion } from "solid-motionone";
 
 import { styled } from "styled-system/jsx";
 
@@ -180,9 +179,7 @@ export function FileDropAnywhereCollector(props: Props) {
             hideStack={hideIndicator}
             overlay={
               <DropText>
-                <Motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                <div
                   transition={{ duration: 0.2 }}
                 >
                   <Plural
@@ -190,7 +187,7 @@ export function FileDropAnywhereCollector(props: Props) {
                     one="Drop a file"
                     other="Drop # files"
                   />
-                </Motion.div>
+                </div>
               </DropText>
             }
           >

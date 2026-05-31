@@ -8,7 +8,6 @@ import {
   splitProps,
 } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
 
 import { autoUpdate, offset, shift } from "@floating-ui/dom";
 import { styled } from "styled-system/jsx";
@@ -200,21 +199,9 @@ export function ContextMenuSubMenu(
         {local.buttonContent}
       </ContextMenuButton>
       <Portal mount={document.getElementById("floating")!}>
-        <Presence>
+        
           <Show when={isShowing()}>
-            <Motion
-              ref={setRef}
-              style={{
-                position: position.strategy,
-                top: `${position.y ?? 0}px`,
-                left: `${position.x ?? 0}px`,
-                "z-index": 1000,
-              }}
-              initial={{ opacity: 0, x: -24 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, easing: [0.87, 0, 0.13, 1] }}
-              onMouseLeave={() =>
+            <div>
                 setShow((show) => (show === true ? false : show))
               }
               // stop submenu from closing context menu
@@ -242,9 +229,9 @@ export function ContextMenuSubMenu(
                 }}
               />
               <ContextMenu>{local.children}</ContextMenu>
-            </Motion>
+            </div>
           </Show>
-        </Presence>
+        
       </Portal>
     </>
   );
