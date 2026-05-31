@@ -1,8 +1,6 @@
 import { createMemo } from "solid-js";
 import { useMediaDeviceSelect } from "solid-livekit-components";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useState } from "@revolt/state";
 import {
   CategoryButton,
@@ -50,9 +48,9 @@ function SelectInput(props: { kind: MediaDeviceKind }) {
 
   const title = () =>
     props.kind === "audioinput" ? (
-      <Trans>Select audio input</Trans>
+      "Select audio input"
     ) : (
-      <Trans>Select audio output</Trans>
+      "Select audio output"
     );
 
   const activeId = createMemo(() => {
@@ -100,7 +98,7 @@ function VolumeSliders() {
   return (
     <Column>
       <Text class="label">
-        <Trans>Output Volume</Trans>
+        Output Volume
       </Text>
       <Slider
         min={0}

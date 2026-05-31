@@ -1,8 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { createSignal, createMemo, Show } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { useNavigate } from "@revolt/routing";
 import { Column, Dialog, DialogProps, Form2, Radio2 } from "@revolt/ui";
 
@@ -17,7 +15,6 @@ import { StageBridgeLinks, saveStageBridgeLinks } from "./StageBridgeLinks";
 export function CreateChannelModal(
   props: DialogProps & Modals & { type: "create_channel" },
 ) {
-  const { t } = useLingui();
   const navigate = useNavigate();
   const { showError } = useModals();
 
@@ -58,18 +55,13 @@ const isVoice = createMemo(() => group.controls.type.value === "Voice");
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Create channel</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Create</Trans>,
+      title={"Create channel"}
+      actions={[{ text: "Close" }, {
+          text: "Create",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -80,15 +72,15 @@ const isVoice = createMemo(() => group.controls.type.value === "Voice");
             counter
             name="name"
             control={group.controls.name}
-            label={t`Channel Name`}
+            label={"Channel Name"}
           />
 
           <Form2.Radio control={group.controls.type}>
             <Radio2.Option value="Text">
-              <Trans>Text Channel</Trans>
+              Text Channel
             </Radio2.Option>
             <Radio2.Option value="Voice">
-              <Trans>Voice Channel</Trans>
+              Voice Channel
             </Radio2.Option>
           </Form2.Radio>
 	  <div style={group.controls.type.value === "Voice" ? {} : { display: "none" }}>

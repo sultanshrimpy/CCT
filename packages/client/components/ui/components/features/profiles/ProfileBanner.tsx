@@ -4,7 +4,6 @@ import { ServerMember, User } from "stoat.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import { Tooltip } from "@revolt/ui";
 import { Avatar, Ripple, UserStatus, typography } from "../../design";
 import { Row } from "../../layout";
@@ -17,8 +16,6 @@ export function ProfileBanner(props: {
   onClickAvatar?: (e: MouseEvent) => void;
   width: 2 | 3;
 }) {
-  const { t } = useLingui();
-
   const [isCopied, setIsCopied] = createSignal(false);
 
   function copyUsername() {
@@ -71,7 +68,7 @@ export function ProfileBanner(props: {
             </span>
           </Show>
           <Tooltip
-            content={isCopied() ? t`Copied!` : t`Click to copy username`}
+            content={isCopied() ? "Copied!" : "Click to copy username"}
             placement="top"
           >
             <span onClick={onUsernameClick}>

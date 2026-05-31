@@ -8,7 +8,6 @@ import {
   onCleanup,
 } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import { Channel } from "stoat.js";
 
 import { useClient } from "@revolt/client";
@@ -46,7 +45,6 @@ interface Props {
  */
 export function MessageComposition(props: Props) {
   const state = useState();
-  const { t } = useLingui();
   const client = useClient();
   const { openModal } = useModals();
 
@@ -237,7 +235,7 @@ export function MessageComposition(props: Props) {
         const file = rejectedFiles[0];
         const fileSize = humanFileSize(file.size);
         const error = new Error(
-          t`The file "${file.name}" (${fileSize}) exceeds the maximum size limit of ${maxSizeFormatted}.`,
+          `The file "${file.name}" (${fileSize}) exceeds the maximum size limit of ${maxSizeFormatted}.`,
         );
         error.name = "File too large";
         openModal({
@@ -246,7 +244,7 @@ export function MessageComposition(props: Props) {
         });
       } else {
         const error = new Error(
-          t`${rejectedFiles.length} files exceed the maximum size limit of ${maxSizeFormatted} and were not uploaded.`,
+          `${rejectedFiles.length} files exceed the maximum size limit of ${maxSizeFormatted} and were not uploaded.`,
         );
         error.name = "Files too large";
         openModal({
@@ -403,10 +401,10 @@ export function MessageComposition(props: Props) {
         }
         placeholder={
           props.channel.type === "SavedMessages"
-            ? t`Save to your notes`
+            ? "Save to your notes"
             : props.channel.type === "DirectMessage"
-              ? t`Message ${props.channel.recipient?.username}`
-              : t`Message ${props.channel.name}`
+              ? `Message ${props.channel.recipient?.username}`
+              : `Message ${props.channel.name}`
         }
         sendingAllowed={props.channel.havePermission("SendMessage")}
         autoCompleteSearchSpace={searchSpace}

@@ -1,6 +1,5 @@
 import { JSX, Match, Show, Switch, splitProps } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { cva } from "styled-system/css";
 
 import { useClient } from "@revolt/client";
@@ -120,7 +119,7 @@ export function RenderAnchor(
             fallback={
               <span class={internalLink()}>
                 <Symbol>tag</Symbol>
-                <Trans>Private Channel</Trans>
+                Private Channel
               </span>
             }
           >
@@ -152,7 +151,7 @@ export function RenderAnchor(
             fallback={
               <span class={internalLink()}>
                 <MdPeople {...iconSize("1em")} />
-                <Trans>Unknown Server</Trans>
+                Unknown Server
               </span>
             }
           >

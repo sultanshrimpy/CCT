@@ -1,7 +1,5 @@
 import { For, createSignal, onMount } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import {
   Checkbox,
   Column,
@@ -37,21 +35,16 @@ export function PolicyChangeModal(
       icon={<MdPolicy />}
       show={allowDisplay && props.show}
       onClose={props.onClose}
-      title={<Trans>Review policy changes</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Acknowledge</Trans>,
+      title={"Review policy changes"}
+      actions={[{ text: "Close" }, {
+          text: "Acknowledge",
           isDisabled: !confirm(),
           async onClick() {
             await props.acknowledge().catch(showError);
           },
-        },
-      ]}
+        }, ]}
     >
-      <Trans>
-        Click on the items below to learn more about different changes!
-      </Trans>
+      Click on the items below to learn more about different changes!
       <List>
         <For each={props.changes}>
           {(change) => (
@@ -60,11 +53,7 @@ export function PolicyChangeModal(
                 <Column gap="none" grow>
                   <Text class="title">{change.description}</Text>
                   <Text class="label">
-                    <Trans>
-                      Effective{" "}
-                      <Time format="iso8601" value={change.effective_time} /> (
-                      <Time format="relative" value={change.effective_time} />)
-                    </Trans>
+                    Effective{" "} <Time format="iso8601" value={change.effective_time} /> ( <Time format="relative" value={change.effective_time} />)
                   </Text>
                 </Column>
                 <Symbol>open_in_new</Symbol>

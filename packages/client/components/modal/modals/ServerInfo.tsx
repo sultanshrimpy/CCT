@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useClient } from "@revolt/client";
 import { Markdown } from "@revolt/markdown";
 import { Dialog, DialogProps } from "@revolt/ui";
@@ -30,7 +28,7 @@ export function ServerInfoModal(
         ...(canOpenSettings()
           ? [
               {
-                text: <Trans>Settings</Trans>,
+                text: "Settings",
                 onClick() {
                   openModal({
                     type: "settings",
@@ -42,7 +40,7 @@ export function ServerInfoModal(
             ]
           : []),
         {
-          text: <Trans>Edit Identity</Trans>,
+          text: "Edit Identity",
           onClick() {
             openModal({
               type: "server_identity",
@@ -51,7 +49,7 @@ export function ServerInfoModal(
           },
         },
         {
-          text: <Trans>Report</Trans>,
+          text: "Report",
           onClick() {
             openModal({
               type: "report_content",
@@ -60,7 +58,7 @@ export function ServerInfoModal(
             });
           },
         },
-        { text: <Trans>Close</Trans> },
+        { text: "Close" },
       ]}
     >
       <Markdown content={props.server.description!} />

@@ -1,6 +1,5 @@
 import { Match, Switch, createSignal, onMount } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { File } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -69,7 +68,7 @@ export function TextFile(props: Props) {
         >
           <Row align justify grow>
             <Button variant="filled" onPress={load}>
-              <Trans>Load file ({humanFileSize(props.file.size ?? 0)})</Trans>
+              Load file ({humanFileSize(props.file.size ?? 0)})
             </Button>
           </Row>
         </Match>

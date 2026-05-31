@@ -1,6 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
-import { t } from "@lingui/core/macro";
 import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
 import { createFormControl, createFormGroup } from "solid-forms";
 import { useModals } from "..";
@@ -44,17 +41,13 @@ export function EditCategoryModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Rename category</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Rename</Trans>,
+      title={"Rename category"}
+      actions={[{ text: "Cancel" }, {
+          text: "Rename",
           onClick: () => {
             onSubmit();
             return false;
-          },
-        },
-      ]}
+          }, },]}
       isDisabled={!Form2.canSubmit(group)}
     >
       <form onSubmit={submit}>
@@ -62,7 +55,7 @@ export function EditCategoryModal(
           <Form2.TextField
             name="category_name"
             control={group.controls.text}
-            label={t`New name`}
+            label={"New name"}
           />
         </Column>
       </form>

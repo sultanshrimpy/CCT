@@ -1,7 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { Show, createEffect, createSignal, on } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { useQuery, useQueryClient } from "@tanstack/solid-query";
 import { API, User } from "stoat.js";
 
@@ -25,7 +24,6 @@ interface Props {
 }
 
 export function UserProfileEditor(props: Props) {
-  const { t } = useLingui();
   const client = useClient();
   const queryClient = useQueryClient();
 
@@ -150,13 +148,13 @@ export function UserProfileEditor(props: Props) {
         <Form2.FileInput
           control={editGroup.controls.avatar}
           accept="image/*"
-          label={t`Avatar`}
+          label={"Avatar"}
           imageJustify={false}
         />
         <Form2.FileInput
           control={editGroup.controls.banner}
           accept="image/*"
-          label={t`Banner`}
+          label={"Banner"}
           imageAspect="232/100"
           imageRounded={false}
           imageJustify={false}
@@ -167,7 +165,7 @@ export function UserProfileEditor(props: Props) {
           counter
           name="displayName"
           control={editGroup.controls.displayName}
-          label={t`Display Name`}
+          label={"Display Name"}
         />
 
         <Show when={!props.user.bot}>
@@ -175,27 +173,27 @@ export function UserProfileEditor(props: Props) {
             icon={<MdBadge />}
             action="chevron"
             description={
-              <Trans>Go to account settings to edit your username</Trans>
+              "Go to account settings to edit your username"
             }
             onClick={() => navigate("account")}
           >
-            <Trans>Want to change username?</Trans>
+            Want to change username?
           </CategoryButton>
         </Show>
 
         <Text class="label">
-          <Trans>Profile Bio</Trans>
+          Profile Bio
         </Text>
         <Form2.TextEditor
           initialValue={initialBio()}
           control={editGroup.controls.bio}
-          placeholder={t`Something cool about me...`}
+          placeholder={"Something cool about me..."}
         />
 
         <Row>
           <Form2.Reset group={editGroup} onReset={onReset} />
           <Form2.Submit group={editGroup} requireDirty>
-            <Trans>Save</Trans>
+            Save
           </Form2.Submit>
           <Show when={editGroup.isPending}>
             <CircularProgress />

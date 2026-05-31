@@ -1,6 +1,5 @@
 import { Show, createSignal, onMount } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 import { styled } from "styled-system/jsx";
 
@@ -57,26 +56,20 @@ export function CreateInviteModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Create Invite</Trans>}
-      actions={[
-        { text: <Trans>OK</Trans> },
-        {
-          text: <Trans>Copy Link</Trans>,
+      title={"Create Invite"}
+      actions={[{ text: "OK" }, {
+          text: "Copy Link",
           onClick: () => {
             navigator.clipboard.writeText(link());
             return false;
-          },
-        },
-      ]}
+          }, },]}
     >
       <Show
         when={!fetchInvite.isPending}
-        fallback={<Trans>Generating invite…</Trans>}
+        fallback={"Generating invite…"}
       >
         <Invite>
-          <Trans>
-            Here is your new invite code: <code>{link()}</code>
-          </Trans>
+          Here is your new invite code: <code>{link()}</code>
         </Invite>
       </Show>
     </Dialog>

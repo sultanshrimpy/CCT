@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useApi } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { useNavigate } from "@revolt/routing";
@@ -36,17 +34,17 @@ export default function FlowResend() {
   return (
     <>
       <FlowTitle>
-        <Trans>Resend verification</Trans>
+        Resend verification
       </FlowTitle>
       <Form onSubmit={resend} captcha={CONFIGURATION.HCAPTCHA_SITEKEY}>
         <Fields fields={["email"]} />
         <Button type="submit">
-          <Trans>Resend</Trans>
+          Resend
         </Button>
       </Form>
       <a href="/login/auth">
         <Button variant="text">
-          <Trans>Go back to login</Trans>
+          Go back to login
         </Button>
       </a>
     </>

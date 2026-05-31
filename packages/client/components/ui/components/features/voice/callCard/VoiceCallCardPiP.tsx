@@ -6,10 +6,13 @@ import {
   useIsMuted,
   useIsSpeaking,
   useTrackRefContext,
-  useTracks,
   VideoTrack,
 } from "solid-livekit-components";
 
+import { createSignal, onCleanup } from "solid-js";
+import { trackReferencesObservable } from "@livekit/components-core";
+import type { TrackReferenceOrPlaceholder } from "@livekit/components-core";
+import { createEffect } from "solid-js";
 import { Track } from "livekit-client";
 import { styled } from "styled-system/jsx";
 
@@ -24,10 +27,17 @@ import { VoiceCallCardStatus } from "./VoiceCallCardStatus";
 
 export function VoiceCallCardPiP() {
   const voice = useVoice();
-  const audTracks = useTracks(
-    [{ source: Track.Source.Microphone, withPlaceholder: true }],
-    { onlySubscribed: false },
-  );
+  const [audTracks, setAudTracks] = createSignal<TrackReferenceOrPlaceholder[]>([]);
+  createEffect(() => {
+    const room = voice.room();
+    if (!room) { setAudTracks([]); return; }
+    const sub = trackReferencesObservable(
+      room,
+      [Track.Source.Microphone],
+      { onlySubscribed: false }
+    ).subscribe(({ trackReferences }) => setAudTracks(trackReferences));
+    onCleanup(() => sub.unsubscribe());
+  });
 
   const hasFocusVideo = () => {
     const track = voice.focusTrack();
@@ -47,7 +57,7 @@ export function VoiceCallCardPiP() {
       <VoiceCallCardStatus pip />
       <Show when={!hasFocusVideo()} fallback={<MiniVideoTile />}>
         <Row align justify grow wrap>
-          <TrackLoop tracks={audTracks}>{() => <ConnectedUser />}</TrackLoop>
+          <TrackLoop tracks={audTracks()}>{() => <ConnectedUser />}</TrackLoop>
         </Row>
       </Show>
       <VoiceCallCardActions size="xs" />

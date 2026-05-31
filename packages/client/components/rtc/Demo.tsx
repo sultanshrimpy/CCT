@@ -33,6 +33,7 @@ import MdMicOn from "@material-design-icons/svg/outlined/mic.svg?component-solid
 import MdMicOff from "@material-design-icons/svg/outlined/mic_off.svg?component-solid";
 
 import { InRoom, useVoice } from ".";
+import { floating } from "@revolt/ui/directives";
 
 export function RoomParticipants() {
   const tracks = useTracks(

@@ -1,6 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { Server } from "stoat.js";
 
 import { useModals } from "@revolt/modal";
@@ -39,10 +38,10 @@ export function ServerSidebarContextMenu(props: { server: Server }) {
     <ContextMenu>
       <Show when={props.server?.havePermission("ManageChannel")}>
         <ContextMenuButton icon={MdLibraryAdd} onClick={createChannel}>
-          <Trans>Create channel</Trans>
+          Create channel
         </ContextMenuButton>
         <ContextMenuButton icon={MdLibraryAdd} onClick={createCategory}>
-          <Trans>Create category</Trans>
+          Create category
         </ContextMenuButton>
       </Show>
     </ContextMenu>

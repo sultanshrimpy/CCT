@@ -1,6 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -46,7 +45,7 @@ export function PushToTalkSettings() {
               syncToDesktop({ enabled: newValue });
             }}
           >
-            <Trans id="ptt.settings.enable">Enable Push to Talk</Trans>
+            Enable Push to Talk
           </SettingsToggleButton>
         </SettingsToggleGroup>
       </Column>
@@ -54,7 +53,7 @@ export function PushToTalkSettings() {
       <Show when={state.voice.pushToTalkEnabled}>
         <Column gap="md">
           <Text class="label" rootClass={sectionHeading}>
-            <Trans id="ptt.settings.keybind">Push to Talk Keybind</Trans>
+            Push to Talk Keybind
           </Text>
 
           <KeybindInput
@@ -69,15 +68,13 @@ export function PushToTalkSettings() {
 
         <Column>
           <Text class="label" rootClass={sectionHeading}>
-            <Trans id="ptt.settings.notifications">Notification Sounds</Trans>
+            Notification Sounds
           </Text>
           <SettingsToggleGroup>
             <SettingsToggleButton
               checked={state.voice.pushToTalkNotificationSounds}
               description={
-                <Trans id="ptt.settings.muteSoundsDescription">
-                  Play sounds when muting/unmuting with Push to Talk
-                </Trans>
+                "Play sounds when muting/unmuting with Push to Talk"
               }
               onClick={() => {
                 const newValue = !state.voice.pushToTalkNotificationSounds;
@@ -85,24 +82,20 @@ export function PushToTalkSettings() {
                 syncToDesktop({ notificationSounds: newValue });
               }}
             >
-              <Trans id="ptt.settings.playMuteSounds">
-                Play Mute/Unmute Sounds
-              </Trans>
+              Play Mute/Unmute Sounds
             </SettingsToggleButton>
           </SettingsToggleGroup>
         </Column>
 
         <Column>
           <Text class="label" rootClass={sectionHeading}>
-            <Trans id="ptt.settings.mode">Mode</Trans>
+            Mode
           </Text>
           <SettingsToggleGroup>
             <SettingsToggleButton
               checked={state.voice.pushToTalkMode === "toggle"}
               description={
-                <Trans id="ptt.settings.defaultHold">
-                  Default is Hold mode
-                </Trans>
+                "Default is Hold mode"
               }
               onClick={() => {
                 const newMode =
@@ -111,14 +104,14 @@ export function PushToTalkSettings() {
                 syncToDesktop({ mode: newMode });
               }}
             >
-              <Trans id="ptt.settings.toggleMode">Enable Toggle Mode</Trans>
+              Enable Toggle Mode
             </SettingsToggleButton>
           </SettingsToggleGroup>
         </Column>
 
         <Column gap="md">
           <Text class="label" rootClass={sectionHeading}>
-            <Trans id="ptt.settings.releaseDelay">Release Delay</Trans>
+            Release Delay
           </Text>
           <Row gap="md" align={true}>
             <SliderContainer>

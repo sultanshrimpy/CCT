@@ -49,6 +49,19 @@ export interface TypeVoice {
 
   screenShareVolumes: Record<string, number>;
   screenShareMutes: Record<string, boolean>;
+
+  // Notification sound settings
+  notificationSoundsEnabled: boolean;
+  notificationVolume: number;
+  soundJoinCall: boolean;
+  soundLeaveCall: boolean;
+  soundSomeoneJoined: boolean;
+  soundSomeoneLeft: boolean;
+  soundMute: boolean;
+  soundUnmute: boolean;
+  soundReceiveMessage: boolean;
+  soundDisconnect: boolean;
+  soundIncomingCall: boolean;
 }
 
 /**
@@ -89,6 +102,19 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
       userMutes: {},
       screenShareVolumes: {},
       screenShareMutes: {},
+
+      // Notification sound defaults (all enabled)
+      notificationSoundsEnabled: true,
+      notificationVolume: 0.5,
+      soundJoinCall: true,
+      soundLeaveCall: true,
+      soundSomeoneJoined: true,
+      soundSomeoneLeft: true,
+      soundMute: true,
+      soundUnmute: true,
+      soundReceiveMessage: true,
+      soundDisconnect: true,
+      soundIncomingCall: true,
     };
   }
 

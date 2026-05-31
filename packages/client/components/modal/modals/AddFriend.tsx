@@ -1,8 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { createSignal } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Dialog, DialogProps, Form2 } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -14,7 +12,6 @@ import { Modals } from "../types";
 export function AddFriendModal(
   props: DialogProps & Modals & { type: "add_friend" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
   const [sent, setSent] = createSignal(false);
 
@@ -40,26 +37,21 @@ export function AddFriendModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Add a new friend</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: sent() ? <Trans>Sent!</Trans> : <Trans>Send Request</Trans>,
+      title={"Add a new friend"}
+      actions={[{ text: "Close" }, {
+          text: sent() ? "Sent!" : "Send Request",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: sent() || !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: sent() || !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
         <Form2.TextField
           name="username"
           control={group.controls.username}
-          label={t`Username`}
-          placeholder={t`username#1234`}
+          label={"Username"}
+          placeholder={"username#1234"}
         />
       </form>
     </Dialog>

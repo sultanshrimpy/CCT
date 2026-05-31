@@ -1,6 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 
 import { Column, Dialog, DialogProps, Form2, Text } from "@revolt/ui";
@@ -36,28 +35,22 @@ export function LeaveServerModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Leave {props.server.name}?</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Leave</Trans>,
+      title={<>Leave {props.server.name}?</>}
+      actions={[{ text: "Cancel" }, {
+          text: "Leave",
           onClick: () => {
             onSubmit();
             return false;
-          },
-        },
-      ]}
+          }, },]}
       isDisabled={leaveServer.isPending}
     >
       <form onSubmit={submit}>
         <Column>
           <Text>
-            <Trans>
-              You won't be able to rejoin unless you are re-invited.
-            </Trans>
+            You won't be able to rejoin unless you are re-invited.
           </Text>
           <Form2.Checkbox name="silent" control={group.controls.silent}>
-            <Trans>Don't notify others that you've left</Trans>
+            Don't notify others that you've left
           </Form2.Checkbox>
         </Column>
       </form>

@@ -1,7 +1,5 @@
 import { ErrorBoundary, For, Suspense } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useClient } from "@revolt/client";
 import { createOwnBotsResource } from "@revolt/client/resources";
 import { useModals } from "@revolt/modal";
@@ -53,22 +51,20 @@ function CreateBot() {
           })
         }
         description={
-          <Trans>
-            You agree that your bot is subject to the Acceptable Usage Policy.
-          </Trans>
+          "You agree that your bot is subject to the Acceptable Usage Policy."
         }
       >
-        <Trans>Create Bot</Trans>
+        Create Bot
       </CategoryButton>
       <CategoryButton
         action="external"
         icon={<MdLibraryBooks {...iconSize(22)} />}
         onClick={() => window.open("https://developers.stoat.chat", "_blank")}
         description={
-          <Trans>Learn more about how to create bots on Stoat.</Trans>
+          "Learn more about how to create bots on Stoat."
         }
       >
-        <Trans>Developer Documentation</Trans>
+        Developer Documentation
       </CategoryButton>
     </CategoryButton.Group>
   );

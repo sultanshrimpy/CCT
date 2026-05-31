@@ -9,7 +9,6 @@ import {
   splitProps,
 } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { VirtualContainer } from "@minht11/solid-virtual-container";
 import type { User } from "stoat.js";
 import { styled } from "styled-system/jsx";
@@ -35,6 +34,7 @@ import {
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import { HeaderIcon } from "./common/CommonHeader";
+import { floating, scrollable } from "@revolt/ui/directives";
 
 /**
  * Base layout of the friends page
@@ -56,7 +56,6 @@ const Base = styled("div", {
  * Friends menu
  */
 export function Friends() {
-  const { t } = useLingui();
   const client = useClient();
   const { openModal } = useModals();
 
@@ -108,7 +107,7 @@ export function Friends() {
         <HeaderIcon>
           <Symbol>group</Symbol>
         </HeaderIcon>
-        <Trans>Friends</Trans>
+        Friends
       </Header>
 
       <main class={main()}>
@@ -132,7 +131,7 @@ export function Friends() {
                 use:floating={{
                   tooltip: {
                     placement: "right",
-                    content: t`Add a new friend`,
+                    content: "Add a new friend",
                   },
                 }}
               >
@@ -144,16 +143,16 @@ export function Friends() {
               icon={<Symbol>waving_hand</Symbol>}
               value="online"
             >
-              <Trans>Online</Trans>
+              Online
             </NavigationRailItem>
             <NavigationRailItem icon={<Symbol>all_inbox</Symbol>} value="all">
-              <Trans>All</Trans>
+              All
             </NavigationRailItem>
             <NavigationRailItem
               icon={<Symbol>notifications</Symbol>}
               value="pending"
             >
-              <Trans>Pending</Trans>
+              Pending
               <Show when={pending()}>
                 <Badge slot="badge" variant="large">
                   {pending()}
@@ -161,12 +160,12 @@ export function Friends() {
               </Show>
             </NavigationRailItem>
             <NavigationRailItem icon={<Symbol>block</Symbol>} value="blocked">
-              <Trans>Blocked</Trans>
+              Blocked
             </NavigationRailItem>
           </NavigationRail>
 
           <Deferred>
-            <div class="FriendsList" ref={scrollTargetElement} use:scrollable>
+            <div class="FriendsList" ref={scrollTargetElement} use:scrollable={{}}>
               <Switch
                 fallback={
                   <People
@@ -227,7 +226,7 @@ function People(props: {
 
       <Show when={props.users.length === 0}>
         <ListItem disabled>
-          <Trans>Nobody here right now!</Trans>
+          Nobody here right now!
         </ListItem>
       </Show>
 

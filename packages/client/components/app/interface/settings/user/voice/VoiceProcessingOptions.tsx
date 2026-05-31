@@ -1,7 +1,5 @@
 import { Show, createEffect, createSignal, on, onCleanup } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useState } from "@revolt/state";
 import { CategoryButton, Checkbox, Column, Text } from "@revolt/ui";
 
@@ -16,19 +14,19 @@ export function VoiceProcessingOptions() {
   return (
     <Column>
       <Text class="title">
-        <Trans>Voice Processing</Trans>
+        Voice Processing
       </Text>
       <CategoryButton.Group>
         <CategoryButton.Select
           icon={"blank"}
-          title={<Trans>Select noise suppression</Trans>}
+          title={"Select noise suppression"}
           options={{
-            disabled: { title: <Trans>Disabled</Trans> },
-            browser: { title: <Trans>Browser</Trans> },
+            disabled: { title: Disabled },
+            browser: { title: Browser },
             enhanced: {
-              title: <Trans>Enhanced</Trans>,
-              description: <Trans>Powered by RNNoise</Trans>,
-              shortDesc: <Trans>Enhanced (RNNoise)</Trans>,
+              title: "Enhanced",
+              description: "Powered by RNNoise",
+              shortDesc: "Enhanced (RNNoise)",
             },
           }}
           value={voice.noiseSupression}
@@ -39,22 +37,22 @@ export function VoiceProcessingOptions() {
           action={<Checkbox checked={voice.echoCancellation} />}
           onClick={() => (voice.echoCancellation = !voice.echoCancellation)}
         >
-          <Trans>Browser Echo Cancellation</Trans>
+          Browser Echo Cancellation
         </CategoryButton>
         <CategoryButton
           icon="blank"
           action={<Checkbox checked={voice.autoGainControl} />}
           onClick={() => (voice.autoGainControl = !voice.autoGainControl)}
         >
-          <Trans>Automatic Gain Control</Trans>
+          Automatic Gain Control
         </CategoryButton>
         <CategoryButton
           icon="blank"
           action={<Checkbox checked={voice.noiseGateEnabled} />}
           onClick={() => (voice.noiseGateEnabled = !voice.noiseGateEnabled)}
-          description={<Trans>Silence your mic when you're not speaking</Trans>}
+          description={"Silence your mic when you're not speaking"}
         >
-          <Trans>Noise Gate</Trans>
+          Noise Gate
         </CategoryButton>
       </CategoryButton.Group>
       <Show when={voice.noiseGateEnabled}>
@@ -179,7 +177,7 @@ function NoiseGateSettings() {
   return (
     <Column>
       <Text class="label">
-        <Trans>Noise Gate Threshold</Trans>: {state.voice.noiseGateThreshold} dB
+        {"Noise Gate Threshold: "}{state.voice.noiseGateThreshold}{" dB"}
       </Text>
 
       <NoiseGateMeter

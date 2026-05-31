@@ -1,4 +1,3 @@
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { Bot } from "stoat.js";
 
 import { createProfileResource } from "@revolt/client/resources";
@@ -25,8 +24,6 @@ export function ViewBot(props: { bot: Bot }) {
   const profile = createProfileResource(props.bot.user!);
   const { openModal } = useModals();
   const snackbar = useSnackbar();
-  const { t } = useLingui();
-
   return (
     <Column gap="lg">
       <UserSummary
@@ -43,24 +40,22 @@ export function ViewBot(props: { bot: Bot }) {
       <CategoryButton.Group>
         <CategoryButton
           description={
-            <Trans>Generate a new token if it gets lost or compromised</Trans>
+            "Generate a new token if it gets lost or compromised"
           }
           icon={<MdToken {...iconSize(22)} />}
           action="chevron"
           onClick={() => openModal({ type: "reset_bot_token", bot: props.bot })}
         >
-          <Trans>Reset Token</Trans>
+          Reset Token
         </CategoryButton>
         <CategoryButton
           description={
-            <Trans>
-              Allow others to add your bot to their servers from Discover
-            </Trans>
+            "Allow others to add your bot to their servers from Discover"
           }
           icon={<MdPublic {...iconSize(22)} />}
           action="chevron"
         >
-          <Trans>Submit to Discover</Trans>
+          Submit to Discover
         </CategoryButton>
       </CategoryButton.Group>
 
@@ -75,7 +70,7 @@ export function ViewBot(props: { bot: Bot }) {
             })
           }
         >
-          <Trans>Invite Bot</Trans>
+          Invite Bot
         </CategoryButton>
         <CategoryButton
           icon={<MdLink {...iconSize(22)} />}
@@ -86,13 +81,13 @@ export function ViewBot(props: { bot: Bot }) {
             );
 
             snackbar.show({
-              message: t`Invite URL copied to clipboard`,
+              message: "Invite URL copied to clipboard",
               placement: "bottom",
               closeable: true,
             });
           }}
         >
-          <Trans>Copy Invite URL</Trans>
+          Copy Invite URL
         </CategoryButton>
         <CategoryButton
           icon={<MdContentCopy {...iconSize(22)} />}
@@ -100,13 +95,13 @@ export function ViewBot(props: { bot: Bot }) {
           onClick={() => {
             navigator.clipboard.writeText(props.bot.id);
             snackbar.show({
-              message: t`ID copied to clipboard`,
+              message: "ID copied to clipboard",
               placement: "bottom",
               closeable: true,
             });
           }}
         >
-          <Trans>Copy ID</Trans>
+          Copy ID
         </CategoryButton>
         <CategoryButton
           icon={<MdKey {...iconSize(22)} />}
@@ -114,20 +109,20 @@ export function ViewBot(props: { bot: Bot }) {
           onClick={() => {
             navigator.clipboard.writeText(props.bot.token);
             snackbar.show({
-              message: t`Token copied to clipboard`,
+              message: "Token copied to clipboard",
               placement: "bottom",
               closeable: true,
             });
           }}
         >
-          <Trans>Copy Token</Trans>
+          Copy Token
         </CategoryButton>
         <CategoryButton
           icon={<MdDelete {...iconSize(22)} />}
           action="chevron"
           onClick={() => openModal({ type: "delete_bot", bot: props.bot })}
         >
-          <Trans>Delete Bot</Trans>
+          Delete Bot
         </CategoryButton>
       </CategoryButton.Group>
     </Column>

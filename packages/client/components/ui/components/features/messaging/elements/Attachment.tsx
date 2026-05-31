@@ -12,6 +12,7 @@ import { SizedContent, Spoiler } from "@revolt/ui/components/utils";
 import { MediaPickerProps } from "../composition/picker/CompositionMediaPicker";
 import { FileInfo } from "./FileInfo";
 import { TextFile } from "./TextFile";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * List of attachments

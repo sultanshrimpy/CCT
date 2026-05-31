@@ -1,7 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { For, Match, Switch } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { API, Message as MessageI, Server, User } from "stoat.js";
 import { cva } from "styled-system/css";
 
@@ -53,32 +52,31 @@ const USER_REPORT_REASONS: API.UserReportReason[] = [
 export function ReportContentModal(
   props: DialogProps & Modals & { type: "report_content" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   const strings: Record<
     API.ContentReportReason | API.UserReportReason,
     string
   > = {
-    Illegal: t`Content breaks one or more laws`,
-    IllegalGoods: t`Drugs or illegal goods`,
-    IllegalExtortion: t`Extortion or blackmail`,
-    IllegalPornography: t`Revenge or underage pornography`,
-    IllegalHacking: t`Illegal hacking or cracking`,
-    ExtremeViolence: t`Extreme violence, gore or animal cruelty`,
-    PromotesHarm: t`Promotes harm`,
-    UnsolicitedSpam: t`Unsolicited advertising or spam`,
-    Raid: t`Raid or spam attack`,
-    SpamAbuse: t`Spam or similar platform abuse`,
-    ScamsFraud: t`Scams or fraud`,
-    Malware: t`Malware or phishing`,
-    Harassment: t`Harassment or cyberbullying`,
-    NoneSpecified: t`Other`,
+    Illegal: "Content breaks one or more laws",
+    IllegalGoods: "Drugs or illegal goods",
+    IllegalExtortion: "Extortion or blackmail",
+    IllegalPornography: "Revenge or underage pornography",
+    IllegalHacking: "Illegal hacking or cracking",
+    ExtremeViolence: "Extreme violence, gore or animal cruelty",
+    PromotesHarm: "Promotes harm",
+    UnsolicitedSpam: "Unsolicited advertising or spam",
+    Raid: "Raid or spam attack",
+    SpamAbuse: "Spam or similar platform abuse",
+    ScamsFraud: "Scams or fraud",
+    Malware: "Malware or phishing",
+    Harassment: "Harassment or cyberbullying",
+    NoneSpecified: "Other",
 
-    InappropriateProfile: t`User's profile has inappropriate content`,
-    Impersonation: t`Impersonation`,
-    BanEvasion: t`Ban evasion`,
-    Underage: t`Not of minimum age to use the platform`,
+    InappropriateProfile: "User's profile has inappropriate content",
+    Impersonation: "Impersonation",
+    BanEvasion: "Ban evasion",
+    Underage: "Not of minimum age to use the platform",
   };
 
   const group = createFormGroup({
@@ -136,27 +134,22 @@ export function ReportContentModal(
       title={
         <Switch>
           <Match when={props.target instanceof User}>
-            <Trans>Tell us what's wrong with this user</Trans>
+            Tell us what's wrong with this user
           </Match>
           <Match when={props.target instanceof Server}>
-            <Trans>Tell us what's wrong with this server</Trans>
+            Tell us what's wrong with this server
           </Match>
           <Match when={props.target instanceof MessageI}>
-            <Trans>Tell us what's wrong with this message</Trans>
+            Tell us what's wrong with this message
           </Match>
         </Switch>
       }
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Report</Trans>,
+      actions={[{ text: "Cancel" }, {
+          text: "Report",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -182,11 +175,11 @@ export function ReportContentModal(
           </div>
 
           <ControlSelect
-            label={t`Reason for report`}
+            label={"Reason for report"}
             control={group.controls.category}
           >
             <MenuItem>
-              <Trans>Please select a reason</Trans>
+              Please select a reason
             </MenuItem>
             <For each={reasons}>
               {(value) => <MenuItem value={value}>{strings[value]}</MenuItem>}
@@ -197,7 +190,7 @@ export function ReportContentModal(
           <Form2.TextField
             name="detail"
             control={group.controls.detail}
-            label={t`Give us some detail`}
+            label={"Give us some detail"}
           />
         </Column>
       </form>

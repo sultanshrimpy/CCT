@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { Show } from "solid-js";
 
 import { useNotifications } from "@revolt/client";
@@ -31,16 +30,13 @@ export default function Notifications(props: { isDesktop: boolean }) {
           icon={<MdNotifications {...iconSize(22)} />}
           description={
             props.isDesktop ? (
-              <Trans>
-                Receive notifications while the app is open and in the
-                background.
-              </Trans>
+              "Receive notifications while the app is open and in the background."
             ) : (
-              <Trans>Receive notifications while the tab is open.</Trans>
+              "Receive notifications while the tab is open."
             )
           }
         >
-          <Trans>Enable Desktop Notifications</Trans>
+          Enable Desktop Notifications
         </CategoryButton>
       </Show>
       <Show when={!props.isDesktop}>
@@ -51,17 +47,17 @@ export default function Notifications(props: { isDesktop: boolean }) {
           onClick={() => togglePushPermission(true)}
           icon={<MdMarkUnreadChatAlt {...iconSize(22)} />}
           description={
-            <Trans>Receive push notifications while the app is closed.</Trans>
+            "Receive push notifications while the app is closed."
           }
         >
-          <Trans>Enable Push Notifications</Trans>
+          Enable Push Notifications
         </CategoryButton>
       </Show>
 
       {/* This is not shown because it is disabled, but it is not commented out so that lingui will still process it. */}
       <Show when={false}>
         <CategoryButton.Collapse
-          title={<Trans>Sounds</Trans>}
+          title={"Sounds"}
           icon={<MdSpeaker {...iconSize(22)} />}
         >
           <CategoryButton
@@ -69,28 +65,28 @@ export default function Notifications(props: { isDesktop: boolean }) {
             onClick={() => void 0}
             icon="blank"
           >
-            <Trans>Message Received</Trans>
+            Message Received
           </CategoryButton>
           <CategoryButton
             action={<Checkbox onChange={(value) => void value} />}
             onClick={() => void 0}
             icon="blank"
           >
-            <Trans>Message Sent</Trans>
+            Message Sent
           </CategoryButton>
           <CategoryButton
             action={<Checkbox checked onChange={(value) => void value} />}
             onClick={() => void 0}
             icon="blank"
           >
-            <Trans>User Joined Call</Trans>
+            User Joined Call
           </CategoryButton>
           <CategoryButton
             action={<Checkbox checked onChange={(value) => void value} />}
             onClick={() => void 0}
             icon="blank"
           >
-            <Trans>User Left Call</Trans>
+            User Left Call
           </CategoryButton>
         </CategoryButton.Collapse>
       </Show>

@@ -3,6 +3,7 @@ import { JSX, createMemo, splitProps } from "solid-js";
 import { css } from "styled-system/css";
 import { splitCssProps, styled } from "styled-system/jsx";
 import { HTMLStyledProps } from "styled-system/types";
+import { floating } from "@revolt/ui/directives";
 
 interface Props {
   /**
@@ -82,7 +83,7 @@ export function Symbol(rawProps: Props & HTMLStyledProps<"span">) {
       }}
       aria-hidden="true"
       {...restProps}
-      // @codegen directives props=props include=floating
+      use:floating={props["use:floating"] as never}
     />
   );
 }

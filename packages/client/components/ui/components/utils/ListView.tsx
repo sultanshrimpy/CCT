@@ -1,6 +1,7 @@
 import { JSX, createSignal, createUniqueId } from "solid-js";
 
 import { styled } from "styled-system/jsx";
+import { scrollable } from "@revolt/ui/directives";
 
 interface Props {
   /**

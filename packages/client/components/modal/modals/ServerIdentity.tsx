@@ -1,6 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { API } from "stoat.js";
 
 import { useClient } from "@revolt/client";
@@ -16,7 +15,6 @@ import { Modals } from "../types";
 export function ServerIdentityModal(
   props: DialogProps & Modals & { type: "server_identity" },
 ) {
-  const { t } = useLingui();
   const client = useClient();
   const { showError } = useModals();
 
@@ -70,18 +68,13 @@ export function ServerIdentityModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Change identity on {props.member.server!.name}</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Save</Trans>,
+      title={<>Change identity on {props.member.server!.name}</>}
+      actions={[{ text: "Cancel" }, {
+          text: "Save",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -89,7 +82,7 @@ export function ServerIdentityModal(
           <Form2.FileInput
             control={group.controls.avatar}
             accept="image/*"
-            label={t`Server Avatar`}
+            label={"Server Avatar"}
             imageJustify={false}
           />
           <Form2.TextField
@@ -97,7 +90,7 @@ export function ServerIdentityModal(
             maxlength={32}
             counter
             name="nickname"
-            label={t`Nickname`}
+            label={"Nickname"}
             control={group.controls.nickname}
             placeholder={props.member.user?.displayName}
           />

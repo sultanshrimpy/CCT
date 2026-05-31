@@ -1,6 +1,5 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import type { Message } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -106,16 +105,16 @@ export function MessageReplyPreview(props: Props) {
   return (
     <Base gap="md" align>
       <ReplyTo>
-        <Trans>Replying to</Trans>
+        Replying to
       </ReplyTo>
       <MessageReply message={props.message} noDecorations />
       <Row gap="lg" align>
         <Show when={!props.self}>
           <MentionToggle mention={props.mention} onClick={props.toggle}>
             <Symbol size={16}>alternate_email</Symbol>
-            <Switch fallback={<Trans>Off</Trans>}>
+            <Switch fallback={"Off"}>
               <Match when={props.mention}>
-                <Trans>On</Trans>
+                On
               </Match>
             </Switch>
           </MentionToggle>

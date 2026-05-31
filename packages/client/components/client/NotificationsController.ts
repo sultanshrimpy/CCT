@@ -1,5 +1,3 @@
-import { useLingui } from "@lingui-solid/solid/macro";
-
 import { Client } from "stoat.js";
 
 import { useModals } from "@revolt/modal";
@@ -10,7 +8,6 @@ import { IS_DEV, useClient } from ".";
 
 export function useNotifications() {
   const { settings } = useState();
-  const { t } = useLingui();
   const getClient = useClient();
   const snackbar = useSnackbar();
   const { showError } = useModals();
@@ -21,7 +18,7 @@ export function useNotifications() {
     settings.resetNotificationsState("denied");
     if (showModal) {
       showError(
-        t`Failed to enable notifications. Stoat does not have notification permission.`,
+        "Failed to enable notifications. Stoat does not have notification permission.",
       );
     }
     await killServiceWorkerSubscription(getClient());
@@ -95,7 +92,7 @@ export function useNotifications() {
     } catch (e) {
       console.error(e);
       snackbar.show({
-        message: t`Failed to enable push notifications. Please try again later.`,
+        message: "Failed to enable push notifications. Please try again later.",
       });
       settings.pushNotificationsState = "default";
     }

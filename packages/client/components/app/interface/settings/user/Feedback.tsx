@@ -1,7 +1,6 @@
 import { useNavigate } from "@solidjs/router";
 import { Match, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { PublicChannelInvite } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -38,9 +37,9 @@ export function Feedback() {
             action="external"
             icon={<MdViewKanban {...iconSize(22)} />}
             onClick={() => void 0}
-            description={<Trans>See what we're currently working on.</Trans>}
+            description={"See what we're currently working on."}
           >
-            <Trans>Roadmap</Trans>
+            Roadmap
           </CategoryButton>
         </Link> */}
         <Link
@@ -52,10 +51,10 @@ export function Feedback() {
             icon={<MdStar {...iconSize(22)} />}
             onClick={() => void 0}
             description={
-              <Trans>Suggest new Stoat features on GitHub discussions.</Trans>
+              "Suggest new Stoat features on GitHub discussions."
             }
           >
-            <Trans>Submit feature suggestion</Trans>
+            Submit feature suggestion
           </CategoryButton>
         </Link>
         <Link
@@ -66,9 +65,9 @@ export function Feedback() {
             action="external"
             icon={<MdFormatListNumbered {...iconSize(22)} />}
             onClick={() => void 0}
-            description={<Trans>Submit feedback</Trans>}
+            description={"Submit feedback"}
           >
-            <Trans>Feedback</Trans>
+            Feedback
           </CategoryButton>
         </Link>
         <Link
@@ -79,9 +78,9 @@ export function Feedback() {
             action="external"
             icon={<MdBugReport {...iconSize(22)} />}
             onClick={() => void 0}
-            description={<Trans>View currently active bug reports here.</Trans>}
+            description={"View currently active bug reports here."}
           >
-            <Trans>Bug Tracker</Trans>
+            Bug Tracker
           </CategoryButton>
         </Link>
         <Switch fallback={null}>
@@ -92,14 +91,11 @@ export function Feedback() {
                 pop();
               }}
               description={
-                <Trans>
-                  You can report issues and discuss improvements with us
-                  directly here.
-                </Trans>
+                "You can report issues and discuss improvements with us directly here."
               }
               icon={<MdGroups3 />}
             >
-              <Trans>Go to the Stoat Lounge</Trans>
+              Go to the Stoat Lounge
             </CategoryButton>
           </Match>
           <Match when={showLoungeButton && !isInLounge}>
@@ -111,14 +107,11 @@ export function Feedback() {
                   .then((invite) => openModal({ type: "invite", invite }));
               }}
               description={
-                <Trans>
-                  You can report issues and discuss improvements with us
-                  directly here.
-                </Trans>
+                "You can report issues and discuss improvements with us directly here."
               }
               icon={<MdGroups3 />}
             >
-              <Trans>Join the Stoat Lounge</Trans>
+              Join the Stoat Lounge
             </CategoryButton>
           </Match>
         </Switch>

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 
 import { Dialog, DialogProps } from "@revolt/ui";
@@ -23,17 +22,13 @@ export function DeleteMessageModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Delete message</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Delete</Trans>,
-          onClick: () => deleteMessage.mutateAsync(),
-        },
-      ]}
+      title={"Delete message"}
+      actions={[{ text: "Cancel" }, {
+          text: "Delete",
+          onClick: () => deleteMessage.mutateAsync(), },]}
       isDisabled={deleteMessage.isPending}
     >
-      <Trans>Are you sure you want to delete this?</Trans>
+      Are you sure you want to delete this?
     </Dialog>
   );
 }

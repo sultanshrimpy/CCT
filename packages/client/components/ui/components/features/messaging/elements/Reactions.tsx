@@ -1,6 +1,5 @@
 import { Accessor, For, Show, createMemo } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import { API } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -142,7 +141,6 @@ function Reaction(props: {
   addReaction(id: string): void;
   removeReaction(id: string): void;
 }) {
-  const { t } = useLingui();
   const users = useUsers(() => [...(props.users?.values() ?? [])]);
 
   /**
@@ -172,14 +170,14 @@ function Reaction(props: {
 
     if (unknown) {
       if (usernames) {
-        return t`${usernames} and ${unknown} others reacted`;
+        return `${usernames} and ${unknown} others reacted`;
       } else if (unknown === 1) {
-        return t`1 person reacted`;
+        return "1 person reacted";
       } else {
-        return t`${unknown} reacted`;
+        return `${unknown} reacted`;
       }
     } else {
-      return t`${usernames} reacted`;
+      return `${usernames} reacted`;
     }
   };
 

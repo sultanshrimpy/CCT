@@ -26,6 +26,7 @@ import {
   CompositionMediaPickerContext,
   compositionContent,
 } from "./CompositionMediaPicker";
+import { invisibleScrollable } from "@revolt/ui/directives";
 
 type Item =
   | {

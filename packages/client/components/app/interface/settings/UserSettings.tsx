@@ -1,6 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { Server } from "stoat.js";
 import { css } from "styled-system/css";
 
@@ -135,7 +134,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
         <Column gap="none">
           <Text class="label">
             <span class={css({ userSelect: "none", fontWeight: "bold" })}>
-              <Trans>Version:</Trans>
+              Version:
             </span>{" "}
             <span class={css({ userSelect: "all" })}>{pkg.version}</span>
           </Text>
@@ -161,7 +160,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
       ),
       entries: [
         {
-          title: <Trans>User Settings</Trans>,
+          title: "User Settings",
           entries: [
             {
               id: "account",
@@ -172,12 +171,12 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             {
               id: "profile",
               icon: <MdAccountCircle {...iconSize(20)} />,
-              title: <Trans>Profile</Trans>,
+              title: "Profile",
             },
             {
               id: "sessions",
               icon: <MdVerifiedUser {...iconSize(20)} />,
-              title: <Trans>Sessions</Trans>,
+              title: "Sessions",
             },
           ],
         },
@@ -187,17 +186,17 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             {
               id: "bots",
               icon: <MdSmartToy {...iconSize(20)} />,
-              title: <Trans>My Bots</Trans>,
+              title: "My Bots",
             },
             {
               id: "feedback",
               icon: <MdRateReview {...iconSize(20)} />,
-              title: <Trans>Feedback</Trans>,
+              title: "Feedback",
             },
           ],
         },
         {
-          title: <Trans>Subscriptions</Trans>,
+          title: "Subscriptions",
           hidden: import.meta.env.PROD,
           entries: [
             {
@@ -208,7 +207,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
           ],
         },
         {
-          title: <Trans>Client Settings</Trans>,
+          title: "Client Settings",
           entries: [
             // {
             //   id: "audio",
@@ -221,15 +220,15 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               id: "voice",
               icon: <MdMic {...iconSize(20)} />,
               title: CONFIGURATION.ENABLE_VIDEO ? (
-                <Trans>Voice & Video</Trans>
+                "Voice & Video"
               ) : (
-                <Trans>Voice</Trans>
+                "Voice"
               ),
             },
             {
               id: "appearance",
               icon: <MdPalette {...iconSize(20)} />,
-              title: <Trans>Appearance</Trans>,
+              title: "Appearance",
             },
             // {
             //   id: "accessibility",
@@ -245,7 +244,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             {
               id: "notifications",
               icon: <MdNotifications {...iconSize(20)} />,
-              title: <Trans>Notifications</Trans>,
+              title: "Notifications",
             },
             // {
             //   id: "keybinds",
@@ -255,7 +254,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             {
               id: "language",
               icon: <MdLanguage {...iconSize(20)} />,
-              title: <Trans>Language</Trans>,
+              title: "Language",
             },
             // {
             //   id: "sync",
@@ -266,12 +265,12 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               id: "native",
               hidden: !window.native,
               icon: <Symbol size={20}>desktop_windows</Symbol>,
-              title: <Trans>Desktop</Trans>,
+              title: "Desktop",
             },
             // {
             //   id: "experiments",
             //   icon: <MdScience {...iconSize(20)} />,
-            //   title: <Trans>Experiments</Trans>,
+            //   title: Experiments,
             // },
           ],
         },
@@ -281,13 +280,13 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             {
               id: "push_to_talk",
               icon: <MdRecordVoiceOver {...iconSize(20)} />,
-              title: <Trans id="ptt.tab.title">Push to Talk</Trans>,
+              title: "Push to Talk",
             },
             {
               id: "notification_sounds",
               icon: <MdNotifications {...iconSize(20)} />,
               title: (
-                <Trans id="notifications.tab.title">Notification Sounds</Trans>
+                "Notification Sounds"
               ),
             },
           ],
@@ -301,22 +300,22 @@ const Config: SettingsConfiguration<{ server: Server }> = {
                 openModal({ type: "changelog", changelog });
               },
               icon: <MdCampaign {...iconSize(20)} />,
-              title: <Trans>What's New</Trans>,
+              title: "What's New",
             },
             {
               href: "https://github.com/stoatchat",
               icon: <MdMemory {...iconSize(20)} />,
-              title: <Trans>Source Code</Trans>,
+              title: "Source Code",
             },
             {
               id: "advanced",
               icon: <MdScience {...iconSize(20)} />,
-              title: <Trans>Advanced</Trans>,
+              title: "Advanced",
             },
             {
               href: "https://ko-fi.com/stoatchat",
               icon: <MdCoffee {...iconSize(20)} />,
-              title: <Trans>Donate</Trans>,
+              title: "Donate",
             },
             {
               id: "logout",
@@ -325,7 +324,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               ),
               title: (
                 <ColouredText colour="var(--md-sys-color-error)">
-                  <Trans>Log Out</Trans>
+                  Log Out
                 </ColouredText>
               ),
               onClick() {

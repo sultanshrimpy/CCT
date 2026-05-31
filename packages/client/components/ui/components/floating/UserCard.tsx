@@ -8,6 +8,7 @@ import { useModals } from "@revolt/modal";
 
 import { useState } from "@revolt/state";
 import { Profile } from "../features";
+import { invisibleScrollable } from "@revolt/ui/directives";
 
 /**
  * Base element for the card

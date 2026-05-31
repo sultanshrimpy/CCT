@@ -1,7 +1,5 @@
 import { createSignal, onMount } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { CategoryButton, Checkbox, Column } from "@revolt/ui";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
@@ -56,7 +54,6 @@ declare global {
  * Desktop Configuration Page
  */
 export default function Native() {
-  const { t } = useLingui();
   const [autostart, setAutostart] = createSignal(false);
   const [config, setConfig] = createSignal(window.desktopConfig.get());
 
@@ -113,29 +110,29 @@ export default function Native() {
           onClick={toggleAutostart}
           icon={<Symbol>exit_to_app</Symbol>}
           description={
-            <Trans>Launch Stoat when you log into your computer.</Trans>
+            "Launch Stoat when you log into your computer."
           }
         >
-          <Trans>Start with Computer</Trans>
+          Start with Computer
         </CategoryButton>
         {autostart() &&
           CheckboxButton(
             "startMinimisedToTray",
             "minimize",
-            t`Start Minimised to Tray`,
-            t`Stoat will start in the system tray.`,
+            "Start Minimised to Tray",
+            "Stoat will start in the system tray.",
           )}
         {CheckboxButton(
           "minimiseToTray",
           "cancel_presentation",
-          t`Minimise to Tray`,
-          t`Instead of closing, Stoat will hide in your tray.`,
+          "Minimise to Tray",
+          "Instead of closing, Stoat will hide in your tray.",
         )}
         {CheckboxButton(
           "customFrame",
           "web_asset",
-          t`Custom window frame`,
-          t`Let Stoat use its own custom titlebar.`,
+          "Custom window frame",
+          "Let Stoat use its own custom titlebar.",
         )}
       </CategoryButton.Group>
 
@@ -143,20 +140,20 @@ export default function Native() {
         {CheckboxButton(
           "discordRpc",
           "groups_2",
-          t`Discord RPC`,
-          t`Rep Stoat using Discord rich presence.`,
+          "Discord RPC",
+          "Rep Stoat using Discord rich presence.",
         )}
         {CheckboxButton(
           "spellchecker",
           "spellcheck",
-          t`Spellchecker`,
-          t`Show corrections and suggestions as you type.`,
+          "Spellchecker",
+          "Show corrections and suggestions as you type.",
         )}
         {CheckboxButton(
           "hardwareAcceleration",
           "speed",
-          t`Hardware Acceleration`,
-          t`Use the graphics card to improve performance.`,
+          "Hardware Acceleration",
+          "Use the graphics card to improve performance.",
         )}
       </CategoryButton.Group>
 
@@ -165,11 +162,11 @@ export default function Native() {
           icon={<Symbol>desktop_windows</Symbol>}
           description={
             <>
-              <Trans>Version:</Trans> {window.native.versions.desktop()}
+              Version: {window.native.versions.desktop()}
             </>
           }
         >
-          <Trans>Stoat for Desktop</Trans>
+          Stoat for Desktop
         </CategoryButton>
       </CategoryButton.Group>
     </Column>

@@ -1,6 +1,5 @@
 import { For, Match, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { User } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -60,18 +59,12 @@ export function TypingIndicator(props: Props) {
             </For>
           </Avatars>
           <OverflowingText class={typography({ class: "body", size: "small" })}>
-            <Switch fallback={<Trans>Several people are typing…</Trans>}>
+            <Switch fallback={"Several people are typing…"}>
               <Match when={users().length === 1}>
-                <Trans>{users()[0]!.username} is typing…</Trans>
+                {users()[0]!.username} is typing…
               </Match>
               <Match when={users().length < 5}>
-                <Trans>
-                  {users()
-                    .slice(0, -1)
-                    .map((user) => user!.username)
-                    .join(", ")}{" "}
-                  and {users().slice(-1)[0]!.username} are typing…
-                </Trans>
+                {users() .slice(0, -1) .map((user) => user!.username) .join(", ")}{" "} and {users().slice(-1)[0]!.username} are typing…
               </Match>
             </Switch>
           </OverflowingText>

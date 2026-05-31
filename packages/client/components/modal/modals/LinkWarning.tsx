@@ -1,6 +1,5 @@
 import { Match, Switch, createMemo, createSignal } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { useState } from "@revolt/state";
@@ -41,52 +40,43 @@ export function LinkWarningModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>External links can be dangerous!</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Continue</Trans>,
+      title={"External links can be dangerous!"}
+      actions={[{ text: "Close" }, {
+          text: "Continue",
           onClick: () => {
             window.open(props.url, "_blank", "noopener");
 
             if (value() && scrutiny() === 0) {
               state.linkSafety.trust(props.url);
             }
-          },
-          isDisabled: scrutiny() === 2 && !value(),
-        },
-      ]}
+          }, isDisabled: scrutiny() === 2 && !value(), },]}
     >
       <Column>
         <span>
-          <Trans>Are you sure you want to go to </Trans>
+          Are you sure you want to go to
           <Link>{props.url.toString()}</Link>?
         </span>
         <Switch
           fallback={
             <Checkbox checked={value()} onChange={() => setValue((v) => !v)}>
               <span>
-                <Trans>Don't ask me again for </Trans>
+                Don't ask me again for
                 <Link>{props.url.origin}</Link>
               </span>
             </Checkbox>
           }
         >
           <Match when={scrutiny() === 1}>
-            <Trans>You clicked on "{props.display}"</Trans>
+            {"You clicked on "}{props.display}{"."}
           </Match>
           <Match when={scrutiny() === 2}>
             <Scrutinise>
               <Text>
-                <Trans>
-                  <strong>Be careful!</strong>
-                  <br />
-                  This is not the same as the link that was displayed:
-                </Trans>
+                <strong>Be careful!</strong> <br /> This is not the same as the link that was displayed:
               </Text>
               <Link>{props.display}</Link>
               <Checkbox checked={value()} onChange={() => setValue((v) => !v)}>
-                <Trans>I understand the consequences</Trans>
+                I understand the consequences
               </Checkbox>
             </Scrutinise>
           </Match>

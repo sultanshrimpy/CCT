@@ -1,6 +1,5 @@
 import { JSXElement, Match, Suspense, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useQuery } from "@tanstack/solid-query";
 import { styled } from "styled-system/jsx";
 
@@ -64,17 +63,14 @@ export function AgeGate(props: {
 
             <Text class="body" size="large">
               {geoQuery.data?.countryCode == "GB" ? (
-                <Trans>
-                  This channel is not available in your region while we review
-                  options on legal compliance.
-                </Trans>
+                "This channel is not available in your region while we review options on legal compliance."
               ) : (
-                <Trans>This content is not available in your region.</Trans>
+                "This content is not available in your region."
               )}
             </Text>
 
             <Button variant="text" onPress={() => history.back()}>
-              <Trans>Back</Trans>
+              {"Back"}
             </Button>
           </Base>
         </Match>
@@ -86,7 +82,7 @@ export function AgeGate(props: {
             </Text>
 
             <Text class="body" size="large">
-              <Trans>This channel is marked as mature.</Trans>
+              {"This channel is marked as mature."}
             </Text>
 
             <Confirmation>
@@ -100,13 +96,13 @@ export function AgeGate(props: {
                 }
               />
               <Text class="body" size="large">
-                <Trans>I confirm that I am at least 18 years old.</Trans>
+                {"I confirm that I am at least 18 years old."}
               </Text>
             </Confirmation>
 
             <Actions>
               <Button variant="text" onPress={() => history.back()}>
-                <Trans>Back</Trans>
+                Back
               </Button>
               <Button
                 variant="filled"
@@ -115,7 +111,7 @@ export function AgeGate(props: {
                   state.layout.setSectionState(props.contentId + "-nsfw", true)
                 }
               >
-                <Trans>Enter Channel</Trans>
+                {"Enter Channel"}
               </Button>
             </Actions>
           </Base>

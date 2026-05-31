@@ -3,6 +3,7 @@ import {
   Match,
   Show,
   Switch,
+  batch,
   createContext,
   createEffect,
   createMemo,
@@ -12,7 +13,6 @@ import {
 } from "solid-js";
 import { Portal } from "solid-js/web";
 
-import { makeResizeObserver } from "@solid-primitives/resize-observer";
 import { Channel } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -41,6 +41,8 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
 
   const [mode, setMode] = createSignal<Mode>();
   const [info, setInfo] = createSignal<Info>();
+  const [moving, setMoving] = createSignal(false);
+  const [offset, setOffset] = createSignal({ x: 0, y: 0 });
 
   let ref: HTMLDivElement | undefined,
     events: AbortController | null,
@@ -76,7 +78,6 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
 
     sty.transition = "all .2s cubic-bezier(0, 1.5, 0.85, 0.8)";
     setFloat(left ? (top ? "tl" : "bl") : top ? "tr" : "br");
-    //Reset CSS transition on next render pass
     setTimeout(() => (sty.transition = ""), 1);
     resetEvents();
   }
@@ -100,7 +101,6 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
     if (!ref) return;
     const sty = ref.style;
 
-    //Set mode based on state
     if (inf?.pos) {
       sty.transform = `translate(${inf.pos.x}px, ${inf.pos.y}px)`;
       sty.width = `${inf.pos.width}px`;
@@ -131,31 +131,16 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
       {props.children}
       <Portal ref={document.getElementById("floating")! as HTMLDivElement}>
         <div
+          ref={ref}
           style={{
             position: "fixed",
             "z-index": 10,
-            "transition-duration": moving() ? ".2s" : voice.room() && ".3s",
-            "transition-property": "all",
-            "transition-timing-function": moving()
-              ? "cubic-bezier(0, 1.67, 0.85, 0.8)"
-              : "cubic-bezier(1, 0, 0, 1)",
-            ...position(),
             "pointer-events": "none",
+            transition: moving() ? "none" : "all .3s cubic-bezier(1, 0, 0, 1)",
             cursor: moving() ? "grabbing" : "grab",
-            "--offset-x": `${moving() ? offset().x : 0}px`,
-            "--offset-y": `${moving() ? offset().y : 0}px`,
+            width: "300px",
           }}
-          // dragging logic for mice
-          onMouseDown={() => {
-            if (state().type === "floating") {
-              batch(() => {
-                setMoving(true);
-                setOffset({ x: 0, y: 0 });
-              });
-            }
-          }}
-          // dragging logic for touch input
-          // todo
+          onPointerDown={mouseDown}
         >
           <Switch>
             <Match when={mode()}>
@@ -222,14 +207,7 @@ export function VoiceChannelCallCardMount(props: { channel: Channel }) {
 
   createEffect(updateInfo);
 
-  //Observe resize of parent
-  let obs: ReturnType<typeof makeResizeObserver>;
-  onMount(() => {
-    obs = makeResizeObserver(updateInfo);
-    obs.observe(ref!.parentElement!);
-  });
   onCleanup(() => {
-    obs.unobserve(ref!.parentElement!);
     setInfo();
   });
 
@@ -260,18 +238,19 @@ function VoiceCallCard(props: { channel: Channel }) {
   );
 }
 
+function VoiceCallCardPiP() {
+  return null;
+}
+
 const Base = styled("div", {
   base: {
     left: 0,
     top: "var(--gap-md)",
     padding: "var(--gap-md)",
-
     width: "100%",
     position: "absolute",
-
     zIndex: 2,
     userSelect: "none",
-
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
@@ -283,14 +262,11 @@ const Card = styled("div", {
     pointerEvents: "all",
     display: "flex",
     flexDirection: "column",
-
     maxWidth: "100%",
     transition: "var(--transitions-fast) all",
     transitionTimingFunction: "ease-in-out",
-
     borderRadius: "var(--borderRadius-lg)",
     background: "var(--md-sys-color-secondary-container)",
-
     "&:fullscreen, &:-webkit-full-screen": {
       width: "100vw",
       height: "100vh",

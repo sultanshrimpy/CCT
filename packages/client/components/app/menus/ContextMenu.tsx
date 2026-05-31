@@ -183,8 +183,7 @@ export function ContextMenuSubMenu(
       <ContextMenuButton
         ref={setAnchor}
         selected={isShowing()}
-        actionIcon={MdChevronRight}
-        onMouseDown={(e) => {
+        actionIcon={MdChevronRight} onMouseDown={(e) => {
           e.stopImmediatePropagation();
         }}
         onClick={(e) => {

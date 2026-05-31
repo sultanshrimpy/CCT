@@ -9,7 +9,6 @@ import {
   onMount,
 } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import type { API } from "stoat.js";
 
 import {
@@ -31,7 +30,6 @@ import { Modals } from "../types";
 export function MFAFlowModal(
   props: DialogProps & Modals & { type: "mfa_flow" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   // Keep track of available methods
@@ -133,9 +131,9 @@ export function MFAFlowModal(
       return [
         {
           text: (
-            <Switch fallback={<Trans>Back</Trans>}>
+            <Switch fallback={"Back"}>
               <Match when={methods()!.length === 1}>
-                <Trans>Cancel</Trans>
+                Cancel
               </Match>
             </Switch>
           ),
@@ -145,7 +143,7 @@ export function MFAFlowModal(
           },
         },
         {
-          text: <Trans>Confirm</Trans>,
+          text: "Confirm",
           onClick: () => {
             onSubmit();
             return false;
@@ -157,7 +155,7 @@ export function MFAFlowModal(
 
     return [
       {
-        text: <Trans>Cancel</Trans>,
+        text: "Cancel",
         onClick: () => {
           onCancel();
           return false;
@@ -176,7 +174,7 @@ export function MFAFlowModal(
           ? undefined
           : props.onClose()
       }
-      title={<Trans>Confirm action</Trans>}
+      title={"Confirm action"}
       actions={getActions()}
       isDisabled={group.isPending}
     >
@@ -185,15 +183,11 @@ export function MFAFlowModal(
           <Text>
             <Switch
               fallback={
-                <Trans>
-                  Please select a method to authenticate your request.
-                </Trans>
+                "Please select a method to authenticate your request."
               }
             >
               <Match when={selectedMethod()}>
-                <Trans>
-                  Please confirm this action using the selected method.
-                </Trans>
+                Please confirm this action using the selected method.
               </Match>
             </Switch>
           </Text>
@@ -206,7 +200,7 @@ export function MFAFlowModal(
                     name="password"
                     control={group.controls.password}
                     type="password"
-                    label={t`Password`}
+                    label={"Password"}
                   />
                 </Match>
                 <Match when={selectedMethod() === "Totp"}>
@@ -214,7 +208,7 @@ export function MFAFlowModal(
                     name="totp_code"
                     control={group.controls.totp_code}
                     type="text"
-                    label={t`Authenticator App`}
+                    label={"Authenticator App"}
                   />
                 </Match>
                 <Match when={selectedMethod() === "Recovery"}>
@@ -222,7 +216,7 @@ export function MFAFlowModal(
                     name="recovery_code"
                     control={group.controls.recovery_code}
                     type="text"
-                    label={t`Recovery Code`}
+                    label={"Recovery Code"}
                   />
                 </Match>
               </Switch>
@@ -255,13 +249,13 @@ export function MFAFlowModal(
                   >
                     <Switch>
                       <Match when={method === "Password"}>
-                        <Trans>Password</Trans>
+                        Password
                       </Match>
                       <Match when={method === "Totp"}>
-                        <Trans>Authenticator App</Trans>
+                        Authenticator App
                       </Match>
                       <Match when={method === "Recovery"}>
-                        <Trans>Recovery Code</Trans>
+                        Recovery Code
                       </Match>
                     </Switch>
                   </CategoryButton>

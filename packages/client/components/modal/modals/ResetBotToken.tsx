@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { Dialog, DialogProps } from "@revolt/ui";
 
 import { useMutation } from "@tanstack/solid-query";
@@ -22,19 +20,12 @@ export function ResetBotTokenModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Reset {props.bot.user!.username}'s token?</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Reset</Trans>,
-          onClick: () => resetToken.mutateAsync(),
-        },
-      ]}
+      title={<>Reset {props.bot.user!.username}'s token?</>}
+      actions={[{ text: "Cancel" }, {
+          text: "Reset",
+          onClick: () => resetToken.mutateAsync(), },]}
     >
-      <Trans>
-        This will invalidate the current token and stop any existing instances
-        of the bot from running.
-      </Trans>
+      This will invalidate the current token and stop any existing instances of the bot from running.
     </Dialog>
   );
 }

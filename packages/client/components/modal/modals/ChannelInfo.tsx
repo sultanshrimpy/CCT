@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { Markdown } from "@revolt/markdown";
 import { Dialog, DialogProps } from "@revolt/ui";
 
@@ -13,7 +11,7 @@ export function ChannelInfoModal(
       show={props.show}
       onClose={props.onClose}
       title={`#${props.channel.name}`}
-      actions={[{ text: <Trans>Close</Trans> }]}
+      actions={[{ text: "Close" }]}
     >
       <Markdown content={props.channel.description!} />
     </Dialog>

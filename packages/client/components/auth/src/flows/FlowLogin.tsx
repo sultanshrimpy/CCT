@@ -1,7 +1,5 @@
 import { Match, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useClientLifecycle } from "@revolt/client";
 import { State, TransitionType } from "@revolt/client/Controller";
 import { useModals } from "@revolt/modal";
@@ -63,30 +61,30 @@ export default function FlowLogin() {
         fallback={
           <>
             <FlowTitle subtitle={"Sign into CCT"} emoji="wave">
-              <Trans>Welcome!</Trans>
+              Welcome!
             </FlowTitle>
             <Form onSubmit={performLogin}>
               <Fields fields={["email", "password"]} />
               <Column gap="xl" align>
                 <a href="/login/reset">
                   <Button variant="text">
-                    <Trans>Reset password</Trans>
+                    Reset password
                   </Button>
                 </a>
                 <a href="/login/resend">
                   <Button variant="text">
-                    <Trans>Resend verification</Trans>
+                    Resend verification
                   </Button>
                 </a>
               </Column>
               <Row align justify>
                 <a href="..">
                   <Button variant="text">
-                    <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
+                    <MdArrowBack {...iconSize("1.2em")} /> Back
                   </Button>
                 </a>
                 <Button type="submit">
-                  <Trans>Login</Trans>
+                  Login
                 </Button>
               </Row>
             </Form>
@@ -101,14 +99,11 @@ export default function FlowLogin() {
         </Match>
         <Match when={lifecycle.state() === State.Onboarding}>
           <FlowTitle>
-            <Trans>Choose a username</Trans>
+            Choose a username
           </FlowTitle>
 
           <Text>
-            <Trans>
-              Pick a username that you want people to be able to find you by.
-              This can be changed later in your user settings.
-            </Trans>
+            Pick a username that you want people to be able to find you by. This can be changed later in your user settings.
           </Text>
 
           <Form onSubmit={select}>
@@ -122,10 +117,10 @@ export default function FlowLogin() {
                   })
                 }
               >
-                <MdArrowBack {...iconSize("1.2em")} /> <Trans>Cancel</Trans>
+                <MdArrowBack {...iconSize("1.2em")} /> Cancel
               </Button>
               <Button type="submit">
-                <Trans>Confirm</Trans>
+                Confirm
               </Button>
             </Row>
           </Form>

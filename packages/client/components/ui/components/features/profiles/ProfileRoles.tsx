@@ -1,6 +1,5 @@
 import { For, Show, createMemo } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { ServerMember } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -11,6 +10,7 @@ import { dismissFloatingElements } from "../../floating";
 import { Row } from "../../layout";
 
 import { ProfileCard } from "./ProfileCard";
+import { invisibleScrollable } from "@revolt/ui/directives";
 
 export function ProfileRoles(props: { member?: ServerMember }) {
   const { openModal } = useModals();
@@ -34,9 +34,9 @@ export function ProfileRoles(props: { member?: ServerMember }) {
         <Ripple />
 
         <Text class="title" size="large">
-          <Trans>Roles</Trans>
+          Roles
         </Text>
-        <div use:invisibleScrollable>
+        <div use:invisibleScrollable={{}}>
           <For each={visibleRoles().toReversed()}>
             {(role) => (
               <Row align>

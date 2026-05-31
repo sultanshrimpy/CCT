@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { Show } from "solid-js";
 import type { Channel } from "stoat.js";
 
@@ -57,7 +56,7 @@ export function DraftMessageContextMenu(props: Props) {
       <ContextMenu>
         <Show when={false}>
           <ContextMenuButton icon={MdClose} onClick={deleteMessage} destructive>
-            <Trans>Cancel message</Trans>
+            Cancel message
           </ContextMenuButton>
         </Show>
         <Show
@@ -66,20 +65,19 @@ export function DraftMessageContextMenu(props: Props) {
           }
         >
           <ContextMenuButton icon={MdRefresh} onClick={retrySend}>
-            <Trans>Retry sending</Trans>
+            Retry sending
           </ContextMenuButton>
           <Show when={props.draft.content}>
             <ContextMenuButton icon={MdContentCopy} onClick={copyText}>
-              <Trans>Copy text</Trans>
+              Copy text
             </ContextMenuButton>
           </Show>
           <ContextMenuDivider />
           <ContextMenuButton
-            icon={MdDelete}
-            onClick={deleteMessage}
+            icon={MdDelete} onClick={deleteMessage}
             destructive
           >
-            <Trans>Delete message</Trans>
+            Delete message
           </ContextMenuButton>
         </Show>
       </ContextMenu>

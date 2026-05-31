@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -13,7 +11,6 @@ import { Modals } from "../types";
 export function EditEmailModal(
   props: DialogProps & Modals & { type: "edit_email" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   const group = createFormGroup({
@@ -40,18 +37,13 @@ export function EditEmailModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Change login email</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Send email</Trans>,
+      title={"Change login email"}
+      actions={[{ text: "Close" }, {
+          text: "Send email",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -59,16 +51,16 @@ export function EditEmailModal(
           <Form2.TextField
             name="email"
             type="email"
-            label={t`Email`}
+            label={"Email"}
             control={group.controls.email}
-            placeholder={t`someone@example.com`}
+            placeholder={"someone@example.com"}
           />
           <Form2.TextField
             name="currentPassword"
             control={group.controls.currentPassword}
-            label={t`Current Password`}
+            label={"Current Password"}
             type="password"
-            placeholder={t`Enter your current password...`}
+            placeholder={"Enter your current password..."}
           />
         </Column>
       </form>

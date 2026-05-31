@@ -1,6 +1,5 @@
 import { For, Match, Switch, createMemo, createSignal } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import { useQuery, useQueryClient } from "@tanstack/solid-query";
 import { Server, ServerBan } from "stoat.js";
 
@@ -15,12 +14,12 @@ import {
 } from "@revolt/ui";
 
 import MdDelete from "@material-design-icons/svg/outlined/delete.svg?component-solid";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * List and invalidate server bans
  */
 export function ListServerBans(props: { server: Server }) {
-  const { t } = useLingui();
   const client = useQueryClient();
   const { showError } = useModals();
 
@@ -63,19 +62,17 @@ export function ListServerBans(props: { server: Server }) {
 
   return (
     <DataTable
-      columns={[
-        <TextField
-          label={t`User`}
+      columns={[<TextField
+          label={"User"}
           value={filterName()}
           onChange={(e) => setFilterName(e.currentTarget.value)}
         />,
         <TextField
-          label={t`Reason`}
+          label={"Reason"}
           value={filterDesc()}
           onChange={(e) => setFilterDesc(e.currentTarget.value)}
         />,
-        <></>,
-      ]}
+        <></>,]}
       itemCount={query.data?.length}
     >
       {(page, itemsPerPage) => (
@@ -116,7 +113,7 @@ export function ListServerBans(props: { server: Server }) {
                       use:floating={{
                         tooltip: {
                           placement: "bottom",
-                          content: t`Pardon User`,
+                          content: "Pardon User",
                         },
                       }}
                       onPress={() => pardon(item)}

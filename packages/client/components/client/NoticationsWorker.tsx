@@ -1,7 +1,6 @@
 import { playMessageReceived } from "../../src/sounds";
 import { createEffect, onCleanup, onMount } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import {
   ChannelEditSystemMessage,
   ChannelOwnershipChangeSystemMessage,
@@ -23,7 +22,6 @@ import { useClient } from ".";
  */
 export function NotificationsWorker() {
   const state = useState();
-  const { t } = useLingui();
   const client = useClient();
   const navigate = useNavigate();
   const params = useSmartParams();
@@ -99,64 +97,64 @@ export function NotificationsWorker() {
           body = (message.systemMessage as TextSystemMessage).content;
           break;
         case "user_added":
-          body = t`${(message.systemMessage as UserModeratedSystemMessage).user?.username} was added by ${(message.systemMessage as UserModeratedSystemMessage).by?.username}`;
+          body = `${(message.systemMessage as UserModeratedSystemMessage).user?.username} was added by ${(message.systemMessage as UserModeratedSystemMessage).by?.username}`;
           icon = (message.systemMessage as UserModeratedSystemMessage).user
             ?.avatarURL;
           break;
         case "user_remove":
-          body = t`${(message.systemMessage as UserModeratedSystemMessage).user?.username} was removed by ${(message.systemMessage as UserModeratedSystemMessage).by?.username}`;
+          body = `${(message.systemMessage as UserModeratedSystemMessage).user?.username} was removed by ${(message.systemMessage as UserModeratedSystemMessage).by?.username}`;
           icon = (message.systemMessage as UserModeratedSystemMessage).user
             ?.avatarURL;
           break;
         case "user_joined":
-          body = t`${(message.systemMessage as UserSystemMessage).user?.username} joined`;
+          body = `${(message.systemMessage as UserSystemMessage).user?.username} joined`;
           icon = (message.systemMessage as UserSystemMessage).user?.avatarURL;
           break;
         case "user_left":
-          body = t`${(message.systemMessage as UserSystemMessage).user?.username} left`;
+          body = `${(message.systemMessage as UserSystemMessage).user?.username} left`;
           icon = (message.systemMessage as UserSystemMessage).user?.avatarURL;
           break;
         case "user_kicked":
-          body = t`${(message.systemMessage as UserSystemMessage).user?.username} was kicked`;
+          body = `${(message.systemMessage as UserSystemMessage).user?.username} was kicked`;
           icon = (message.systemMessage as UserSystemMessage).user?.avatarURL;
           break;
         case "user_banned":
-          body = t`${(message.systemMessage as UserSystemMessage).user?.username} was banned`;
+          body = `${(message.systemMessage as UserSystemMessage).user?.username} was banned`;
           icon = (message.systemMessage as UserSystemMessage).user?.avatarURL;
           break;
         case "channel_renamed":
-          body = t`${(message.systemMessage as ChannelRenamedSystemMessage).by?.username} renamed the channel`;
+          body = `${(message.systemMessage as ChannelRenamedSystemMessage).by?.username} renamed the channel`;
           icon = (message.systemMessage as ChannelRenamedSystemMessage).by
             ?.avatarURL;
           break;
         case "channel_description_changed":
-          body = t`${(message.systemMessage as ChannelEditSystemMessage).by?.username} changed the channel description`;
+          body = `${(message.systemMessage as ChannelEditSystemMessage).by?.username} changed the channel description`;
           icon = (message.systemMessage as ChannelEditSystemMessage).by
             ?.avatarURL;
           break;
         case "channel_icon_changed":
-          body = t`${(message.systemMessage as ChannelEditSystemMessage).by?.username} changed the channel icon`;
+          body = `${(message.systemMessage as ChannelEditSystemMessage).by?.username} changed the channel icon`;
           icon = (message.systemMessage as ChannelEditSystemMessage).by
             ?.avatarURL;
           break;
         case "channel_ownership_changed":
-          body = t`${(message.systemMessage as ChannelOwnershipChangeSystemMessage).from?.username} made ${(message.systemMessage as ChannelOwnershipChangeSystemMessage).to?.username} the new group owner`;
+          body = `${(message.systemMessage as ChannelOwnershipChangeSystemMessage).from?.username} made ${(message.systemMessage as ChannelOwnershipChangeSystemMessage).to?.username} the new group owner`;
           icon = (message.systemMessage as ChannelOwnershipChangeSystemMessage)
             .from?.avatarURL;
           break;
         case "message_pinned":
-          body = t`${(message.systemMessage as MessagePinnedSystemMessage).by?.username} pinned a message`;
+          body = `${(message.systemMessage as MessagePinnedSystemMessage).by?.username} pinned a message`;
           icon = (message.systemMessage as MessagePinnedSystemMessage).by
             ?.avatarURL;
           break;
         case "message_unpinned":
-          body = t`${(message.systemMessage as MessagePinnedSystemMessage).by?.username} unpinned a message`;
+          body = `${(message.systemMessage as MessagePinnedSystemMessage).by?.username} unpinned a message`;
           icon = (message.systemMessage as MessagePinnedSystemMessage).by
             ?.avatarURL;
           break;
       }
     } else if (message.attachments?.length) {
-      body = t`Sent ${message.attachments!.length} attachments`;
+      body = `Sent ${message.attachments!.length} attachments`;
     }
 
     // todo: play sound

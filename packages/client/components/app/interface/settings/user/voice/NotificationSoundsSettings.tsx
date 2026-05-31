@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -30,16 +29,14 @@ export function NotificationSoundsSettings() {
                 !state.voice.notificationSoundsEnabled;
             }}
           >
-            <Trans id="notifications.sounds.enable">
-              Enable Notification Sounds
-            </Trans>
+            Enable Notification Sounds
           </SettingsToggleButton>
         </SettingsToggleGroup>
       </Column>
 
       <Column gap="md">
         <Text class="label" rootClass={sectionHeading}>
-          <Trans id="notifications.sounds.volume">Master Volume</Trans>
+          Master Volume
         </Text>
         <Row gap="md" align={true}>
           <SliderContainer>
@@ -85,7 +82,7 @@ export function NotificationSoundsSettings() {
 
       <Column>
         <Text class="label" rootClass={sectionHeading}>
-          <Trans id="notifications.sounds.individual">Individual Sounds</Trans>
+          Individual Sounds
         </Text>
         <SettingsToggleGroup class={notificationToggleGroup}>
           <SettingsToggleButton
@@ -97,7 +94,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.joinCall">Join Call</Trans>
+            Join Call
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -109,7 +106,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.leaveCall">Leave Call</Trans>
+            Leave Call
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -122,9 +119,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.someoneJoined">
-              Someone Joined
-            </Trans>
+            Someone Joined
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -136,7 +131,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.someoneLeft">Someone Left</Trans>
+            Someone Left
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -148,7 +143,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.mute">Mute</Trans>
+            Mute
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -160,7 +155,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.unmute">Unmute</Trans>
+            Unmute
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -173,9 +168,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.receiveMessage">
-              Receive Message
-            </Trans>
+            Receive Message
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -187,7 +180,7 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.disconnect">Disconnected</Trans>
+            Disconnected
           </SettingsToggleButton>
 
           <SettingsToggleButton
@@ -199,14 +192,14 @@ export function NotificationSoundsSettings() {
               }
             }}
           >
-            <Trans id="notifications.sounds.incomingCall">Incoming Call</Trans>
+            Incoming Call
           </SettingsToggleButton>
         </SettingsToggleGroup>
       </Column>
 
       <Column>
         <Text class="label" rootClass={sectionHeading}>
-          <Trans id="notifications.sounds.connection">Connection</Trans>
+          Connection
         </Text>
         <SettingsToggleGroup class={notificationToggleGroup}>
           <SettingsToggleButton
@@ -215,9 +208,7 @@ export function NotificationSoundsSettings() {
               state.voice.autoReconnect = !state.voice.autoReconnect;
             }}
           >
-            <Trans id="notifications.sounds.autoReconnect">
-              Auto-reconnect
-            </Trans>
+            Auto-reconnect
           </SettingsToggleButton>
         </SettingsToggleGroup>
       </Column>

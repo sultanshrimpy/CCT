@@ -1,7 +1,6 @@
 import { BiLogosGithub } from "solid-icons/bi";
 import { JSX } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { Titlebar } from "@revolt/app/interface/desktop/Titlebar";
@@ -164,18 +163,18 @@ export function AuthPage(props: { children: JSX.Element }) {
             <Bullet />
             <NavItems>
               <a href="https://stoat.chat/about" target="_blank">
-                <Trans>About</Trans>
+                About
               </a>
               <a href="https://stoat.chat/terms" target="_blank">
-                <Trans>Terms of Service</Trans>
+                Terms of Service
               </a>
               <a href="https://stoat.chat/privacy" target="_blank">
-                <Trans>Privacy Policy</Trans>
+                Privacy Policy
               </a>
             </NavItems>
           </NavItems>
           <NavItems variant="hide">
-            <Trans>Image by {"@fakurian"}</Trans>
+            Image by {"@fakurian"}
             <Bullet />
             <a href="https://unsplash.com/" target="_blank" rel="noreferrer">
               unsplash.com

@@ -1,7 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { Show, createMemo, createSignal } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { Server } from "stoat.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
@@ -23,12 +22,12 @@ import {
 
 import { useModals } from "..";
 import { Modals } from "../types";
+import { scrollable } from "@revolt/ui/directives";
 
 /**
  * Modal to join a server
  */
 export function AddBotModal(props: DialogProps & Modals & { type: "add_bot" }) {
-  const { t } = useLingui();
   const client = useClient();
   const { showError } = useModals();
 
@@ -83,18 +82,13 @@ export function AddBotModal(props: DialogProps & Modals & { type: "add_bot" }) {
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Add</Trans>,
+      actions={[{ text: "Cancel" }, {
+          text: "Add",
           onClick: () => {
             onSubmit(); // doesn't go through submitHandler!
             //             much like other modals don't either
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -107,10 +101,7 @@ export function AddBotModal(props: DialogProps & Modals & { type: "add_bot" }) {
             />
             <Text class="title">{props.invite.username}</Text>
             <Text class="label">
-              <Trans>
-                Registered since{" "}
-                <Time format="calendar" value={decodeTime(props.invite.id)} />
-              </Trans>
+              Registered since{" "} <Time format="calendar" value={decodeTime(props.invite.id)} />
             </Text>
           </Column>
 
@@ -119,7 +110,7 @@ export function AddBotModal(props: DialogProps & Modals & { type: "add_bot" }) {
               <Markdown content={props.invite.description} />
               <ProvidedBy>
                 <Text class="label" size="small">
-                  <Trans>Description provided by {props.invite.username}</Trans>
+                  Description provided by {props.invite.username}
                 </Text>
                 <CoverText>
                   <div />
@@ -131,7 +122,7 @@ export function AddBotModal(props: DialogProps & Modals & { type: "add_bot" }) {
           <TextField
             value={filter()}
             variant="filled"
-            placeholder={t`Search for groups...`}
+            placeholder={"Search for groups..."}
             onKeyUp={(e) => setFilter(e.currentTarget.value)}
           />
 

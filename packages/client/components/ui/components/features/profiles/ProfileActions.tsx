@@ -14,6 +14,7 @@ import MdMoreVert from "@material-design-icons/svg/filled/more_vert.svg?componen
 import { Button, IconButton } from "../../design";
 import { dismissFloatingElements } from "../../floating";
 import { iconSize } from "../../utils";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * Actions shown on profile cards

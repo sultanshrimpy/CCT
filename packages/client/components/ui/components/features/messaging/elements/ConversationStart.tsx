@@ -1,6 +1,5 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { Channel } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -26,10 +25,10 @@ export function ConversationStart(props: Props) {
       </Show>
       <Text class="title">
         <Switch
-          fallback={<Trans>This is the start of your conversation.</Trans>}
+          fallback={"This is the start of your conversation."}
         >
           <Match when={props.channel.type === "SavedMessages"}>
-            <Trans>This is the start of your notes.</Trans>
+            This is the start of your notes.
           </Match>
         </Switch>
       </Text>

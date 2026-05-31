@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useClient } from "@revolt/client";
 import { Avatar, OverflowingText, Ripple, typography } from "@revolt/ui";
 
@@ -33,7 +31,7 @@ export function AccountCard() {
           >
             {client().user!.displayName}
           </OverflowingText>
-          <Trans>My Account</Trans>
+          My Account
         </SidebarButtonContent>
       </SidebarButtonTitle>
       {/*<SidebarButtonIcon>
@@ -50,7 +48,7 @@ export function BackCard(props: { onClose?: () => void }) {
       <SidebarButtonTitle>
         <MdArrowBack />
         <SidebarButtonContent>
-          <Trans>Back</Trans>
+          Back
         </SidebarButtonContent>
       </SidebarButtonTitle>
     </SidebarButton>

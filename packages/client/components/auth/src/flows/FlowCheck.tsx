@@ -1,7 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useNavigate } from "@revolt/routing";
 import { Button, Row, iconSize } from "@revolt/ui";
 
@@ -32,19 +30,16 @@ export default function FlowCheck() {
     <>
       <FlowTitle
         subtitle={
-          <Trans>
-            We've sent you a verification email. Please allow up to 10 minutes
-            for it to arrive.
-          </Trans>
+          "We've sent you a verification email. Please allow up to 10 minutes for it to arrive."
         }
         emoji="mail"
       >
-        <Trans>Check your mail!</Trans>
+        Check your mail!
       </FlowTitle>
       <Row align justify>
         <a href="..">
           <Button variant="text">
-            <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
+            <MdArrowBack {...iconSize("1.2em")} /> Back
           </Button>
         </a>
         <Show when={email}>

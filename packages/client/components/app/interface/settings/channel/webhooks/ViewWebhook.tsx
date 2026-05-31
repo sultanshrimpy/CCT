@@ -1,7 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { Show } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 import { API, ChannelWebhook } from "stoat.js";
 
@@ -25,7 +24,6 @@ import { useSettingsNavigation } from "../../Settings";
  * Webhook
  */
 export function ViewWebhook(props: { webhook: ChannelWebhook }) {
-  const { t } = useLingui();
   const client = useClient();
   const { showError } = useModals();
   const { navigate } = useSettingsNavigation();
@@ -94,18 +92,18 @@ export function ViewWebhook(props: { webhook: ChannelWebhook }) {
           <Form2.FileInput
             control={editGroup.controls.avatar}
             accept="image/*"
-            label={t`Webhook Icon`}
+            label={"Webhook Icon"}
             imageJustify={false}
           />
           <Form2.TextField
             name="name"
             control={editGroup.controls.name}
-            label={t`Webhook Name`}
+            label={"Webhook Name"}
           />
           <Row>
             <Form2.Reset group={editGroup} onReset={onReset} />
             <Form2.Submit group={editGroup}>
-              <Trans>Save</Trans>
+              Save
             </Form2.Submit>
             <Show when={editGroup.isPending}>
               <CircularProgress />
@@ -124,7 +122,7 @@ export function ViewWebhook(props: { webhook: ChannelWebhook }) {
             )
           }
         >
-          <Trans>Copy webhook URL</Trans>
+          Copy webhook URL
         </CategoryButton>
         <CategoryButton
           action="chevron"

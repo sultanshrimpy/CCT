@@ -1,19 +1,17 @@
 import { useNavigate } from "@solidjs/router";
 import { Show } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { CONFIGURATION } from "@revolt/common";
 import { useVoice } from "@revolt/rtc";
 import { Button, IconButton } from "@revolt/ui/components/design";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
+import { floating } from "@revolt/ui/directives";
 
 export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
   const voice = useVoice();
   const navigate = useNavigate();
-  const { t } = useLingui();
-
   const enableVideo = CONFIGURATION.ENABLE_VIDEO;
 
   return (
@@ -28,7 +26,7 @@ export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
           use:floating={{
             tooltip: {
               placement: "top",
-              content: t`Return to voice channel`,
+              content: "Return to voice channel",
             },
           }}
         >
@@ -44,9 +42,9 @@ export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
             placement: "top",
             content: voice.speakingPermission
               ? voice.microphone()
-                ? t`Mute`
-                : t`Unmute`
-              : t`Missing permission`,
+                ? "Mute"
+                : "Unmute"
+              : "Missing permission",
           },
         }}
         isDisabled={!voice.speakingPermission}
@@ -64,9 +62,9 @@ export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
             placement: "top",
             content: voice.listenPermission
               ? voice.deafen()
-                ? t`Listen`
-                : t`Defean`
-              : t`Missing permission`,
+                ? "Listen"
+                : "Defean"
+              : "Missing permission",
           },
         }}
         isDisabled={!voice.listenPermission}
@@ -89,9 +87,9 @@ export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
             placement: "top",
             content: enableVideo
               ? voice.video()
-                ? t`Stop camera`
-                : t`Start camera`
-              : t`Coming soon! 👀`,
+                ? "Stop camera"
+                : "Start camera"
+              : "Coming soon! 👀",
           },
         }}
         isDisabled={!enableVideo}
@@ -109,9 +107,9 @@ export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
             placement: "top",
             content: enableVideo
               ? voice.screenshare()
-                ? t`Stop sharing`
-                : t`Share screen`
-              : t`Coming soon! 👀`,
+                ? "Stop sharing"
+                : "Share screen"
+              : "Coming soon! 👀",
           },
         }}
         isDisabled={!enableVideo}
@@ -130,7 +128,7 @@ export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
         use:floating={{
           tooltip: {
             placement: "top",
-            content: t`End call`,
+            content: "End call",
           },
         }}
       >

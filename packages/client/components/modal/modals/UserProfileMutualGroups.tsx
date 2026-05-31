@@ -1,6 +1,5 @@
 import { For } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useNavigate } from "@solidjs/router";
 
 import { Avatar, Dialog, DialogProps, List, OverflowingText } from "@revolt/ui";
@@ -19,8 +18,8 @@ export function UserProfileMutualGroupsModal(
       minWidth={420}
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Mutual Groups</Trans>}
-      actions={[{ text: <Trans>Close</Trans> }]}
+      title={"Mutual Groups"}
+      actions={[{ text: "Close" }]}
     >
       <List>
         <For each={props.groups}>

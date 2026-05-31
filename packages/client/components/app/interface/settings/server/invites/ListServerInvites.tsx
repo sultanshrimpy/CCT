@@ -1,6 +1,5 @@
 import { For, Match, Switch } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { useQuery, useQueryClient } from "@tanstack/solid-query";
 import { Server, ServerInvite } from "stoat.js";
 
@@ -16,12 +15,12 @@ import {
 } from "@revolt/ui";
 
 import MdDelete from "@material-design-icons/svg/outlined/delete.svg?component-solid";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * List and invalidate server invites
  */
 export function ListServerInvites(props: { server: Server }) {
-  const { t } = useLingui();
   const client = useQueryClient();
   const { showError, openModal } = useModals();
   const query = useQuery(() => ({
@@ -64,16 +63,16 @@ export function ListServerInvites(props: { server: Server }) {
         use:floating={{
           tooltip: serverDoesntHaveChannels()
             ? {
-                content: t`Create a channel before inviting others!`,
+                content: "Create a channel before inviting others!",
                 placement: "bottom",
               }
             : undefined,
         }}
       >
-        <Trans>Create invite</Trans>
+        Create invite
       </Button>
       <DataTable
-        columns={[<Trans>Inviter</Trans>, <Trans>Invite Code</Trans>, <></>]}
+        columns={["Inviter", "Invite Code", <></>]}
         itemCount={query.data?.length}
       >
         {(page, itemsPerPage) => (
@@ -116,7 +115,7 @@ export function ListServerInvites(props: { server: Server }) {
                         use:floating={{
                           tooltip: {
                             placement: "bottom",
-                            content: t`Delete Invite`,
+                            content: "Delete Invite",
                           },
                         }}
                         onPress={() => deleteInvite(item)}

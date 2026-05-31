@@ -1,6 +1,5 @@
 import { For, Match, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { Checkbox, Column, Dialog, DialogProps, Row } from "@revolt/ui";
@@ -21,13 +20,13 @@ export function UserProfileRolesModal(
       show={props.show}
       onClose={props.onClose}
       title={
-        <Switch fallback={<Trans>{props.member.displayName}'s roles</Trans>}>
+        <Switch fallback={<>{props.member.displayName}&apos;s roles</>}>
           <Match when={editMode()}>
-            <Trans>Edit {props.member.displayName}'s roles</Trans>
+            <>Edit {props.member.displayName}&apos;s roles</>
           </Match>
         </Switch>
       }
-      actions={[{ text: <Trans>Close</Trans> }]}
+      actions={[{ text: "Close" }]}
     >
       <Switch
         fallback={
@@ -54,8 +53,6 @@ export function UserProfileRolesModal(
                 <Checkbox
                   checked={props.member.roles.includes(role.id)}
                   disabled={
-                    // this needs a better API
-                    // not sure if this actually works
                     !props.member.server?.owner?.self &&
                     (role.rank ?? 0) <
                       (props.member.server?.member?.orderedRoles.toReversed()[0]

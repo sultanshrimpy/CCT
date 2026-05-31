@@ -1,7 +1,6 @@
 import { BiSolidFile } from "solid-icons/bi";
 import { Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { type Message } from "stoat.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
@@ -12,6 +11,7 @@ import { Avatar, typography } from "@revolt/ui/components/design";
 import { NonBreakingText } from "@revolt/ui/components/utils";
 
 import { Username } from "../../legacy";
+import { floating } from "@revolt/ui/directives";
 
 interface Props {
   /**
@@ -116,9 +116,9 @@ export function MessageReply(props: Props) {
 
   return (
     <Base noDecorations={props.noDecorations}>
-      <Switch fallback={<Trans>Message not loaded, click to jump</Trans>}>
+      <Switch fallback={"Message not loaded, click to jump"}>
         <Match when={props.message?.author?.relationship === "Blocked"}>
-          <Trans>Blocked User</Trans>
+          Blocked User
         </Match>
         <Match when={props.message}>
           <div
@@ -137,9 +137,9 @@ export function MessageReply(props: Props) {
             <Show when={props.message!.attachments}>
               <Attachments>
                 <BiSolidFile size={16} />
-                <Switch fallback={<Trans>Sent an attachment</Trans>}>
+                <Switch fallback={"Sent an attachment"}>
                   <Match when={props.message!.attachments!.length > 1}>
-                    <Trans>Sent multiple attachments</Trans>
+                    Sent multiple attachments
                   </Match>
                 </Switch>
               </Attachments>

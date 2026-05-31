@@ -10,3 +10,17 @@ packages/client/test-results
 .vscode
 .github
 docs
+
+packages/client/src/interface/Development.tsx
+
+# Files that may have duplicate directive imports due to patching
+packages/client/src/interface/Home.tsx
+packages/client/src/interface/Friends.tsx
+packages/client/src/interface/navigation/channels/ServerSidebar.tsx
+packages/client/src/interface/navigation/channels/HomeSidebar.tsx
+packages/client/src/interface/navigation/servers/ServerList.tsx
+packages/client/src/interface/navigation/servers/UserMenu.tsx
+packages/client/src/interface/channels/text/MemberSidebar.tsx
+packages/client/src/interface/channels/text/TextChannel.tsx
+packages/client/src/interface/channels/ChannelHeader.tsx
+packages/client/src/interface/common/CommonHeader.tsx

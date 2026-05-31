@@ -36,7 +36,6 @@ export default function codegenPlugin() {
 
           switch (args.type) {
             case "directives": {
-              // Generate directives forwarding
               const source = args.props ?? "props";
               const permitted: string[] =
                 args.include?.split(",") ?? DIRECTIVES;
@@ -50,11 +49,16 @@ export default function codegenPlugin() {
         });
 
         if (directiveRegex.test(src)) {
-          if (!id.endsWith("client/components/ui/index.tsx"))
+          // Only add the import if it's not already present
+          if (
+            !id.endsWith("client/components/ui/index.tsx") &&
+            !src.includes(`from "@revolt/ui/directives"`)
+          ) {
             src =
               `import { ${DIRECTIVES.join(
                 ", ",
               )} } from "@revolt/ui/directives";\n` + src;
+          }
         }
 
         return src;

@@ -10,7 +10,6 @@ import {
   splitProps,
 } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { VirtualContainer } from "@minht11/solid-virtual-container";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
@@ -20,6 +19,7 @@ import { TextEditor2 } from "../features/texteditor/TextEditor2";
 import { Row } from "../layout";
 
 import { FileInput } from "./files";
+import { scrollable } from "@revolt/ui/directives";
 
 /**
  * Form wrapper for TextField
@@ -338,7 +338,7 @@ const FormResetButton = (props: {
       }}
       isDisabled={!props.group.isDirty}
     >
-      {props.children ?? <Trans>Reset</Trans>}
+      {props.children ?? Reset}
     </Button>
   );
 };

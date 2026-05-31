@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -15,7 +13,6 @@ import { Modals } from "../types";
 export function OnboardingModal(
   props: DialogProps & Modals & { type: "onboarding" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   const group = createFormGroup({
@@ -37,18 +34,13 @@ export function OnboardingModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Choose username</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Good</Trans>,
+      title={"Choose username"}
+      actions={[{ text: "Cancel" }, {
+          text: "Good",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -59,7 +51,7 @@ export function OnboardingModal(
             counter
             name="username"
             control={group.controls.username}
-            label={t`Username`}
+            label={"Username"}
           />
         </Column>
       </form>

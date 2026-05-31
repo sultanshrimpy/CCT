@@ -15,7 +15,6 @@ import {
 import { Portal } from "solid-js/web";
 import { Motion } from "solid-motionone";
 
-import { Plural } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { useModals } from "@revolt/modal";

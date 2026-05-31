@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -13,7 +11,6 @@ import { Modals } from "../types";
 export function EditPasswordModal(
   props: DialogProps & Modals & { type: "edit_password" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   const group = createFormGroup({
@@ -40,18 +37,13 @@ export function EditPasswordModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Change login password</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Change</Trans>,
+      title={"Change login password"}
+      actions={[{ text: "Close" }, {
+          text: "Change",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -59,16 +51,16 @@ export function EditPasswordModal(
           <Form2.TextField
             name="password"
             control={group.controls.password}
-            label={t`New Password`}
+            label={"New Password"}
             type="password"
-            placeholder={t`Enter a new password.`}
+            placeholder={"Enter a new password."}
           />
           <Form2.TextField
             name="currentPassword"
             control={group.controls.currentPassword}
-            label={t`Current Password`}
+            label={"Current Password"}
             type="password"
-            placeholder={t`Enter your current password...`}
+            placeholder={"Enter your current password..."}
           />
         </Column>
       </form>

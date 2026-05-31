@@ -1,6 +1,5 @@
 import { For, Show } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { Channel } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -15,8 +14,6 @@ import { Symbol } from "@revolt/ui/components/utils/Symbol";
  */
 export function VoiceCallCardPreview(props: { channel: Channel }) {
   const voice = useVoice();
-  const { t } = useLingui();
-
   const ids = () => [...props.channel.voiceParticipants.keys()];
   const users = useUsers(ids);
 
@@ -25,7 +22,7 @@ export function VoiceCallCardPreview(props: { channel: Channel }) {
       .map((user) => user?.username)
       .filter((x) => x);
 
-    return names.length ? t`With ${names.join(", ")}` : t`Start the call`;
+    return names.length ? `With ${names.join(", ")}` : "Start the call";
   }
 
   return (
@@ -41,9 +38,9 @@ export function VoiceCallCardPreview(props: { channel: Channel }) {
       <Text class="title" size="large">
         <Show
           when={voice.state() === "READY"}
-          fallback={<Trans>Switch to this voice channel</Trans>}
+          fallback={"Switch to this voice channel"}
         >
-          <Trans>Join the voice channel</Trans>
+          Join the voice channel
         </Show>
       </Text>
       <Text class="body">{subtext()}</Text>

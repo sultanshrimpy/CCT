@@ -22,6 +22,7 @@ import { OverflowingText } from "@revolt/ui/components/utils";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import { VoiceStatefulUserIcons } from "../VoiceStatefulUserIcons";
+import { floating } from "@revolt/ui/directives";
 
 type TileProps = {
   focus?: boolean;

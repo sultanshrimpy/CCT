@@ -13,13 +13,10 @@ export default function Accessibility() {
             onClick={() => void 0}
             icon={<MdAnimation {...iconSize(22)} />}
             description={
-              <Trans>
-                If this is enabled, animations and motion effects won't play or
-                will be less intense.
-              </Trans>
+              "If this is enabled, animations and motion effects won't play or will be less intense."
             }
           >
-            <Trans>Reduced Motion</Trans>
+            Reduced Motion
           </CategoryButton>
         </FormGroup>
       </CategoryButtonGroup> */}

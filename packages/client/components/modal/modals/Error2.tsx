@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useError } from "@revolt/i18n";
 import { Dialog, DialogProps, iconSize } from "@revolt/ui";
 
@@ -15,8 +13,8 @@ export function Error2Modal(props: DialogProps & Modals & { type: "error2" }) {
       icon={<MdError {...iconSize(24)} />}
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>An error occurred.</Trans>}
-      actions={[{ text: <Trans>OK</Trans> }]}
+      title={"An error occurred."}
+      actions={[{ text: "OK" }]}
     >
       {err(props.error)}
     </Dialog>

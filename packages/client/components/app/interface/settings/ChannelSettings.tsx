@@ -5,7 +5,6 @@ import {
   BiSolidTrash,
 } from "solid-icons/bi";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { Channel } from "stoat.js";
 
 import { useClient } from "@revolt/client";
@@ -27,15 +26,13 @@ const Config: SettingsConfiguration<Channel> = {
    */
   title(ctx, key) {
     const client = useClient();
-    const { t } = useLingui();
-
     if (key.startsWith("webhooks/")) {
       const webhook = client().channelWebhooks.get(key.substring(9));
       if (webhook) return webhook.name;
     }
 
     if (key.startsWith("permissions/")) {
-      if (key === "permissions/default") return t`Default Permissions`;
+      if (key === "permissions/default") return "Default Permissions";
 
       return ctx.context.server?.roles.get(key.substring(12))?.name ?? "";
     }
@@ -112,7 +109,7 @@ const Config: SettingsConfiguration<Channel> = {
             {
               id: "overview",
               icon: <BiSolidInfoCircle size={20} />,
-              title: <Trans>Overview</Trans>,
+              title: "Overview",
             },
             {
               hidden:
@@ -120,7 +117,7 @@ const Config: SettingsConfiguration<Channel> = {
                 !channel.havePermission("ManagePermissions"),
               id: "permissions",
               icon: <BiRegularListUl size={20} />,
-              title: <Trans>Permissions</Trans>,
+              title: "Permissions",
             },
             {
               hidden:
@@ -128,7 +125,7 @@ const Config: SettingsConfiguration<Channel> = {
                 import.meta.env.DEV,
               id: "webhooks",
               icon: <BiSolidCloud size={20} />,
-              title: <Trans>Webhooks</Trans>,
+              title: "Webhooks",
             },
           ],
         },
@@ -143,7 +140,7 @@ const Config: SettingsConfiguration<Channel> = {
               ),
               title: (
                 <ColouredText colour="var(--md-sys-color-error)">
-                  <Trans>Delete Channel</Trans>
+                  Delete Channel
                 </ColouredText>
               ),
               onClick() {

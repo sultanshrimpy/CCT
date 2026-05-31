@@ -1,8 +1,6 @@
 import HCaptcha, { HCaptchaFunctions } from "solid-hcaptcha";
 import { createSignal, For, JSX, Show } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
-
 import { useError } from "@revolt/i18n";
 import { Checkbox, Column, iconSize, Text, TextField } from "@revolt/ui";
 import { styled } from "styled-system/jsx";
@@ -33,44 +31,42 @@ type Field =
  * Properties to apply to fields
  */
 const useFieldConfiguration = () => {
-  const { t } = useLingui();
-
   return {
     email: {
       type: "email" as const,
-      name: () => t`Email`,
-      placeholder: () => t`Please enter your email.`,
+      name: () => "Email",
+      placeholder: () => "Please enter your email.",
       autocomplete: "email",
     },
     password: {
       minLength: 8,
       type: "password" as const,
-      name: () => t`Password`,
-      placeholder: () => t`Enter your current password.`,
+      name: () => "Password",
+      placeholder: () => "Enter your current password.",
     },
     "new-password": {
       minLength: 8,
       type: "password" as const,
       autocomplete: "new-password",
-      name: () => t`New Password`,
-      placeholder: () => t`Enter a new password.`,
+      name: () => "New Password",
+      placeholder: () => "Enter a new password.",
     },
     "log-out": {
-      name: () => t`Log out of all other sessions`,
+      name: () => "Log out of all other sessions",
     },
     username: {
       minLength: 2,
       type: "text" as const,
       autocomplete: "none",
-      name: () => t`Username`,
-      placeholder: () => t`Enter your preferred username.`,
+      name: () => "Username",
+      placeholder: () => "Enter your preferred username.",
     },
     invite: {
       minLength: 1,
       type: "text" as const,
       autocomplete: "none",
-      name: () => t`Invite Code`,
-      placeholder: () => t`Enter your invite code.`,
+      name: () => "Invite Code",
+      placeholder: () => "Enter your invite code.",
     },
   };
 };

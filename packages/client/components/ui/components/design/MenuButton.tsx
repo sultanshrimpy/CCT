@@ -6,6 +6,7 @@ import { styled } from "styled-system/jsx";
 import { useState } from "@revolt/state";
 import { Ripple } from "./Ripple";
 import { Unreads } from "./Unreads";
+import { floating } from "@revolt/ui/directives";
 
 export type Props = {
   /**
@@ -105,7 +106,7 @@ export function MenuButton(
               size: local.size,
             })]: true,
           }}
-          // @codegen directives props=other include=floating
+          use:floating={other["use:floating"] as never}
         >
           {cont}
         </div>
@@ -120,7 +121,7 @@ export function MenuButton(
             size: local.size,
           })]: true,
         }}
-        // @codegen directives props=other include=floating
+        use:floating={other["use:floating"] as never}
       >
         {cont}
       </a>

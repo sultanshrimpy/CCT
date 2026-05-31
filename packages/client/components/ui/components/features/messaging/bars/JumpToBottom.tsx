@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { iconSize } from "@revolt/ui";
 
 import MdArrowForward from "@material-design-icons/svg/filled/arrow_forward.svg?component-solid";
@@ -23,10 +21,10 @@ export function JumpToBottom(props: Props) {
     <FloatingIndicator position="bottom" onClick={props.onClick}>
       <Ripple />
       <span style={{ "flex-grow": 1 }}>
-        <Trans>Viewing older messages</Trans>
+        Viewing older messages
       </span>
       <span>
-        <Trans>Jump to present</Trans>
+        Jump to present
       </span>
       <MdArrowForward {...iconSize(16)} />
     </FloatingIndicator>

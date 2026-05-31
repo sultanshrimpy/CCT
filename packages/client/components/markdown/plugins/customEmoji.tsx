@@ -9,6 +9,7 @@ import { useClient } from "@revolt/client";
 import { Avatar, Column, Row } from "@revolt/ui";
 
 import { CustomEmoji, Emoji, RE_CUSTOM_EMOJI } from "../emoji";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * Render a custom emoji

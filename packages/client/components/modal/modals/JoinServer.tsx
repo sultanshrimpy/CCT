@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { useNavigate } from "@revolt/routing";
 import { Column, Dialog, DialogProps, Form2, Text } from "@revolt/ui";
 
@@ -16,7 +14,6 @@ const RE_INVITE_URL = /(?:invite|stt.gg)\/([a-z0-9]+)/gi;
 export function JoinServerModal(
   props: DialogProps & Modals & { type: "join_server" },
 ) {
-  const { t } = useLingui();
   const navigate = useNavigate();
   const { showError } = useModals();
 
@@ -53,29 +50,24 @@ export function JoinServerModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Join a server</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Join</Trans>,
+      title={"Join a server"}
+      actions={[{ text: "Close" }, {
+          text: "Join",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
         <Column>
           <Text>
-            <Trans>Use a code or invite link</Trans>
+            Use a code or invite link
           </Text>
           <Form2.TextField
             name="link"
             control={group.controls.link}
-            label={t`Code`}
+            label={"Code"}
             placeholder="stt.gg/wVEJDGVs"
           />
         </Column>

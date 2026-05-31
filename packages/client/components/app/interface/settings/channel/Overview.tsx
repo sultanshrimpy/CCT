@@ -1,7 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { Match, Show, Switch } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import type { API } from "stoat.js";
 
 import { useClient } from "@revolt/client";
@@ -15,7 +14,6 @@ import { ChannelSettingsProps } from "../ChannelSettings";
  * Channel overview
  */
 export default function ChannelOverview(props: ChannelSettingsProps) {
-  const { t } = useLingui();
   const client = useClient();
   const { openModal } = useModals();
 
@@ -88,7 +86,7 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
       <form onSubmit={submit}>
         <Column>
           <Text class="label">
-            <Trans>Channel Info</Trans>
+            Channel Info
           </Text>
           <Form2.FileInput control={editGroup.controls.icon} accept="image/*" />
           <Form2.TextField
@@ -97,7 +95,7 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
             counter
             name="name"
             control={editGroup.controls.name}
-            label={t`Channel Name`}
+            label={"Channel Name"}
           />
           <Form2.TextField
             autosize
@@ -106,13 +104,13 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
             counter
             name="description"
             control={editGroup.controls.description}
-            label={t`Channel Description`}
-            placeholder={t`This channel is about...`}
+            label={"Channel Description"}
+            placeholder={"This channel is about..."}
           />
           <Row>
             <Form2.Reset group={editGroup} onReset={onReset} />
             <Form2.Submit group={editGroup} requireDirty>
-              <Trans>Save</Trans>
+              Save
             </Form2.Submit>
             <Show when={editGroup.isPending}>
               <CircularProgress />
@@ -122,13 +120,10 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
       </form>
       <Column>
         <Text class="label">
-          <Trans>Mark as Mature</Trans>
+          Mark as Mature
         </Text>
         <Text>
-          <Trans>
-            Users will be asked to confirm their age before opening this
-            channel.
-          </Trans>
+          Users will be asked to confirm their age before opening this channel.
         </Text>
         <div>
           <Button
@@ -139,9 +134,9 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
               })
             }
           >
-            <Switch fallback={<Trans>Mark as Mature</Trans>}>
+            <Switch fallback={"Mark as Mature"}>
               <Match when={props.channel.mature}>
-                <Trans>Unmark as Mature</Trans>
+                Unmark as Mature
               </Match>
             </Switch>
           </Button>

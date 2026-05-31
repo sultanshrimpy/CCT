@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useApi, useClient, useClientLifecycle } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { useModals } from "@revolt/modal";
@@ -67,8 +65,8 @@ export default function FlowCreate() {
 
   return (
     <>
-      <FlowTitle subtitle={<Trans>Create an account</Trans>} emoji="wave">
-        <Trans>Hello!</Trans>
+      <FlowTitle subtitle={"Create an account"} emoji="wave">
+        Hello!
       </FlowTitle>
       <Form onSubmit={create} captcha={CONFIGURATION.HCAPTCHA_SITEKEY}>
         <Fields fields={["email", "new-password"]} />
@@ -78,11 +76,11 @@ export default function FlowCreate() {
         <Row justify>
           <a href="..">
             <Button variant="text">
-              <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
+              <MdArrowBack {...iconSize("1.2em")} /> Back
             </Button>
           </a>
           <Button type="submit">
-            <Trans>Register</Trans>
+            Register
           </Button>
         </Row>
       </Form>

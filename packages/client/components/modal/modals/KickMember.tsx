@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 
 import { Avatar, Column, Dialog, DialogProps, Text } from "@revolt/ui";
@@ -23,20 +22,17 @@ export function KickMemberModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Kick Member</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Kick</Trans>,
+      title={"Kick Member"}
+      actions={[{ text: "Cancel" }, {
+          text: "Kick",
           onClick: kick.mutateAsync,
-        },
-      ]}
+        }, ]}
       isDisabled={kick.isPending}
     >
       <Column align>
         <Avatar src={props.member.user?.animatedAvatarURL} size={64} />
         <Text>
-          <Trans>You are about to kick {props.member.user?.username}</Trans>
+          You are about to kick {props.member.user?.username}
         </Text>
       </Column>
     </Dialog>

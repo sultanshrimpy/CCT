@@ -1,6 +1,5 @@
 import { For, Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import dayjs from "dayjs";
 import { Server } from "stoat.js";
 
@@ -162,7 +161,7 @@ export function ServerContextMenu(props: { server: Server }) {
     <ContextMenu>
       <Show when={props.server.unread}>
         <ContextMenuButton icon={MdMarkChatRead} onClick={markAsRead}>
-          <Trans>Mark as read</Trans>
+          Mark as read
         </ContextMenuButton>
         <ContextMenuDivider />
       </Show>
@@ -174,24 +173,15 @@ export function ServerContextMenu(props: { server: Server }) {
             onClick={() =>
               state.notifications.setServerMute(props.server, undefined)
             }
-            symbol={MdDoNotDisturbOff}
-            _titleCase={false}
+            symbol={MdDoNotDisturbOff} _titleCase={false}
           >
             <Column gap="none">
-              <Trans>Unmute Server</Trans>
+              Unmute Server
               <Show
                 when={state.notifications.getServerMute(props.server)?.until}
               >
                 <Text class="label" size="small">
-                  <Trans>
-                    Muted until{" "}
-                    <Time
-                      format="datetime"
-                      value={
-                        state.notifications.getServerMute(props.server)!.until
-                      }
-                    />
-                  </Trans>
+                  Muted until{" "} <Time format="datetime" value={ state.notifications.getServerMute(props.server)!.until } />
                 </Text>
               </Show>
             </Column>
@@ -200,18 +190,17 @@ export function ServerContextMenu(props: { server: Server }) {
       >
         <ContextMenuSubMenu
           onClick={() => state.notifications.setServerMute(props.server, {})}
-          buttonContent={<Trans>Mute Server</Trans>}
-          symbol={MdDoNotDisturbOn}
-        >
+          buttonContent={"Mute Server"}
+          symbol={MdDoNotDisturbOn} >
           <For
             each={
               [
-                [15, <Trans>For 15 minutes</Trans>],
-                [60, <Trans>For 1 hour</Trans>],
-                [180, <Trans>For 3 hours</Trans>],
-                [480, <Trans>For 8 hours</Trans>],
-                [1440, <Trans>For 24 hours</Trans>],
-                [undefined, <Trans>Until I turn it back on</Trans>],
+                [15, "For 15 minutes"],
+                [60, "For 1 hour"],
+                [180, "For 3 hours"],
+                [480, "For 8 hours"],
+                [1440, "For 24 hours"],
+                [undefined, "Until I turn it back on"],
               ] as const
             }
           >
@@ -234,58 +223,54 @@ export function ServerContextMenu(props: { server: Server }) {
       </Show>
 
       <ContextMenuSubMenu
-        symbol={MdNotificationSettings}
-        buttonContent={<Trans>Notifications</Trans>}
+        symbol={MdNotificationSettings} buttonContent={"Notifications"}
       >
         <ContextMenuButton
-          icon={MdNotificationsActive}
-          onClick={() => state.notifications.setServer(props.server, "all")}
+          icon={MdNotificationsActive} onClick={() => state.notifications.setServer(props.server, "all")}
           actionSymbol={
             state.notifications.computeForServer(props.server) === "all"
               ? MdRadioButtonChecked
               : MdRadioButtonUnchecked
           }
         >
-          <Trans>All Messages</Trans>
+          All Messages
         </ContextMenuButton>
         <ContextMenuButton
-          icon={MdAlternateEmail}
-          onClick={() => state.notifications.setServer(props.server, "mention")}
+          icon={MdAlternateEmail} onClick={() => state.notifications.setServer(props.server, "mention")}
           actionSymbol={
             state.notifications.computeForServer(props.server) === "mention"
               ? MdRadioButtonChecked
               : MdRadioButtonUnchecked
           }
         >
-          <Trans>Mentions Only</Trans>
+          Mentions Only
         </ContextMenuButton>
         <ContextMenuButton
-          icon={MdNotificationsOff}
-          onClick={() => state.notifications.setServer(props.server, "none")}
+          icon={MdNotificationsOff} onClick={() => state.notifications.setServer(props.server, "none")}
           actionSymbol={
             state.notifications.computeForServer(props.server) === "none"
               ? MdRadioButtonChecked
               : MdRadioButtonUnchecked
           }
         >
-          <Trans>None</Trans>
+          None
         </ContextMenuButton>
       </ContextMenuSubMenu>
       <ContextMenuDivider />
 
       <Show when={permissionInviteOthers()}>
         <ContextMenuButton icon={MdPersonAdd} onClick={createInvite}>
-          <Trans>Create invite</Trans>
+          Create invite
         </ContextMenuButton>
       </Show>
       <Show when={permissionEditIdentity()}>
         <ContextMenuButton icon={MdFace} onClick={editIdentity}>
-          <Trans>Edit your identity</Trans>
+          Edit your identity
         </ContextMenuButton>
       </Show>
       <Show when={permissionServerSettings()}>
         <ContextMenuButton icon={MdSettings} onClick={openSettings}>
-          <Trans>Open server settings</Trans>
+          Open server settings
         </ContextMenuButton>
       </Show>
       <Show
@@ -299,11 +284,11 @@ export function ServerContextMenu(props: { server: Server }) {
       </Show>
 
       <ContextMenuButton icon={MdReport} onClick={report} destructive>
-        <Trans>Report server</Trans>
+        Report server
       </ContextMenuButton>
       <Show when={!props.server.owner?.self}>
         <ContextMenuButton icon={MdLogout} onClick={leave} destructive>
-          <Trans>Leave server</Trans>
+          Leave server
         </ContextMenuButton>
       </Show>
 
@@ -318,12 +303,12 @@ export function ServerContextMenu(props: { server: Server }) {
 
       <Show when={state.settings.getValue("advanced:admin_panel")}>
         <ContextMenuButton icon={MdShield} onClick={openAdminPanel}>
-          <Trans>Admin Panel</Trans>
+          Admin Panel
         </ContextMenuButton>
       </Show>
       <Show when={state.settings.getValue("advanced:copy_id")}>
         <ContextMenuButton icon={MdBadge} onClick={copyId}>
-          <Trans>Copy server ID</Trans>
+          Copy server ID
         </ContextMenuButton>
       </Show>
     </ContextMenu>

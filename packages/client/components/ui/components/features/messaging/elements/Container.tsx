@@ -1,6 +1,5 @@
 import { Accessor, JSX, Match, Ref, Show, Switch } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import { Message } from "stoat.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
@@ -16,6 +15,7 @@ import {
 import { useState } from "@revolt/state";
 import { MediaPickerProps } from "../composition/picker/CompositionMediaPicker";
 import { MessageToolbar } from "./MessageToolbar";
+import { floating } from "@revolt/ui/directives";
 
 interface CommonProps {
   /**
@@ -312,7 +312,6 @@ const CompactInfo = styled(Row, {
  * Component to show avatar, username, timestamp and content
  */
 export function MessageContainer(props: Props) {
-  const { t } = useLingui();
   const { isMobile } = useState();
 
   return (
@@ -365,7 +364,7 @@ export function MessageContainer(props: Props) {
                       placement: "top",
                       content: () => (
                         <>
-                          {t`Sent`}{" "}
+                          {"Sent"}{" "}
                           <Time
                             format="datetime"
                             value={props.timestamp}
@@ -396,7 +395,7 @@ export function MessageContainer(props: Props) {
                     content: () => (
                       <Column>
                         <span>
-                          {t`Sent`}{" "}
+                          {"Sent"}{" "}
                           <Time
                             format="datetime"
                             value={props.timestamp}
@@ -405,7 +404,7 @@ export function MessageContainer(props: Props) {
                         </span>
                         <Show when={props.edited}>
                           <span>
-                            {t`Edited`}{" "}
+                            {"Edited"}{" "}
                             <Time
                               format="datetime"
                               value={props.edited}
@@ -448,7 +447,7 @@ export function MessageContainer(props: Props) {
                           placement: "top",
                           content: () => (
                             <>
-                              {t`Sent`}{" "}
+                              {"Sent"}{" "}
                               <Time
                                 format="datetime"
                                 value={props.timestamp}
@@ -474,7 +473,7 @@ export function MessageContainer(props: Props) {
                           placement: "top",
                           content: () => (
                             <>
-                              {t`Edited`}{" "}
+                              {"Edited"}{" "}
                               <Time
                                 format="datetime"
                                 value={props.edited}

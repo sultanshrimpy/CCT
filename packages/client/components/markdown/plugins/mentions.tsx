@@ -14,6 +14,7 @@ import { Avatar, ColouredText, iconSize } from "@revolt/ui";
 import MdAt from "@material-design-icons/svg/filled/alternate_email.svg?component-solid";
 
 import { useUser } from "../users";
+import { floating } from "@revolt/ui/directives";
 
 export function RenderMention(props: {
   mentions?: string;

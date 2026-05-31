@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { Avatar, Dialog, DialogProps } from "@revolt/ui";
 
 import { Modals } from "../types";
@@ -12,15 +10,12 @@ export function EmojiPreviewModal(
       show={props.show}
       onClose={props.onClose}
       title={`:${props.emoji.name}:`}
-      actions={[
-        {
-          text: <Trans>Delete</Trans>,
+      actions={[{
+          text: "Delete",
           async onClick() {
             await props.emoji.delete();
           },
-        },
-        { text: <Trans>Close</Trans> },
-      ]}
+        }, { text: "Close" }, ]}
     >
       <Avatar src={props.emoji.url} shape="rounded-square" />
     </Dialog>

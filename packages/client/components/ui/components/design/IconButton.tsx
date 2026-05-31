@@ -7,6 +7,7 @@ import { cva } from "styled-system/css/cva";
 import { debounce } from "@revolt/common";
 import { Ripple } from "./Ripple";
 import { typography } from "./Text";
+import { floating } from "@revolt/ui/directives";
 
 type Props = Omit<
   Parameters<typeof iconButton2>[0] &
@@ -60,7 +61,7 @@ export function IconButton(props: Props) {
         ...style,
         disabled: buttonProps.disabled,
       })}
-      // @codegen directives props=rest include=floating
+      use:floating={noBtnRest["use:floating"] as never}
     >
       <Show when={!buttonProps.disabled}>
         <Ripple />

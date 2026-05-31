@@ -11,6 +11,7 @@ import {
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 import { Column, Row } from "../layout";
+import { scrollable } from "@revolt/ui/directives";
 
 export interface ListView2Update {
   /**

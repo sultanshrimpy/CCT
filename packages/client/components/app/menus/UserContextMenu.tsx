@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { useNavigate } from "@solidjs/router";
 import { type JSX, Match, Show, Switch } from "solid-js";
 import type { Channel, Message, ServerMember, User } from "stoat.js";
@@ -309,7 +308,7 @@ export function UserContextMenu(props: {
           onClick={(e) => e.stopImmediatePropagation()}
         >
           <Text class="label">
-            <Trans>Volume</Trans>
+            Volume
           </Text>
           <Slider
             min={0}
@@ -326,8 +325,7 @@ export function UserContextMenu(props: {
           />
         </ContextMenuButton>
         <ContextMenuButton
-          icon={MdMicOff}
-          onClick={() =>
+          icon={MdMicOff} onClick={() =>
             state.voice.setUserMuted(
               props.user.id,
               !state.voice.getUserMuted(props.user.id),
@@ -337,7 +335,7 @@ export function UserContextMenu(props: {
             state.voice.getUserMuted(props.user.id) ? MdChecked : MdUnchecked
           }
         >
-          <Trans>Mute</Trans>
+          Mute
         </ContextMenuButton>
         <ContextMenuDivider />
       </Show>
@@ -347,7 +345,7 @@ export function UserContextMenu(props: {
           onClick={(e) => e.stopImmediatePropagation()}
         >
           <Text class="label">
-            <Trans>Screen Share Volume</Trans>
+            Screen Share Volume
           </Text>
           <Slider
             min={0}
@@ -364,8 +362,7 @@ export function UserContextMenu(props: {
           />
         </ContextMenuButton>
         <ContextMenuButton
-          icon={MdMicOff}
-          onClick={() =>
+          icon={MdMicOff} onClick={() =>
             state.voice.setScreenShareMuted(
               props.user.id,
               !state.voice.getScreenShareMuted(props.user.id),
@@ -377,7 +374,7 @@ export function UserContextMenu(props: {
               : MdUnchecked
           }
         >
-          <Trans>Mute Screen Share</Trans>
+          Mute Screen Share
         </ContextMenuButton>
 
         <ContextMenuDivider />
@@ -385,16 +382,16 @@ export function UserContextMenu(props: {
 
       {/* Quick actions: Profile, Message, Mention */}
       <ContextMenuButton icon={MdAccountCircle} onClick={openProfile}>
-        <Trans>Profile</Trans>
+        Profile
       </ContextMenuButton>
       <Show when={props.user.relationship === "Friend"}>
         <ContextMenuButton icon={MdChat} onClick={openDm}>
-          <Trans>Message</Trans>
+          Message
         </ContextMenuButton>
       </Show>
       <Show when={props.channel?.type === "TextChannel"}>
         <ContextMenuButton icon={MdAlternateEmail} onClick={mention}>
-          <Trans>Mention</Trans>
+          Mention
         </ContextMenuButton>
       </Show>
 
@@ -402,7 +399,7 @@ export function UserContextMenu(props: {
       <Show when={props.channel?.type === "DirectMessage"}>
         <ContextMenuDivider />
         <ContextMenuButton icon={MdClose} onClick={closeDm} destructive>
-          <Trans>Close chat</Trans>
+          Close chat
         </ContextMenuButton>
         <NotificationContextMenu channel={props.channel!} />
       </Show>
@@ -412,16 +409,16 @@ export function UserContextMenu(props: {
         <ContextMenuDivider />
         <Show when={canEditIdentity()}>
           <ContextMenuButton icon={MdFace} onClick={editIdentity}>
-            <Switch fallback={<Trans>Edit identity</Trans>}>
+            <Switch fallback={"Edit identity"}>
               <Match when={props.user.self}>
-                <Trans>Edit your identity</Trans>
+                Edit your identity
               </Match>
             </Switch>
           </ContextMenuButton>
         </Show>
         <Show when={canEditRoles()}>
           <ContextMenuButton icon={MdAssignmentInd} onClick={editRoles}>
-            <Trans>Edit roles</Trans>
+            Edit roles
           </ContextMenuButton>
         </Show>
       </Show>
@@ -438,20 +435,20 @@ export function UserContextMenu(props: {
         <ContextMenuDivider />
         <Show when={props.user.relationship === "None" && !props.user.bot}>
           <ContextMenuButton icon={MdPersonAddAlt} onClick={addFriend}>
-            <Trans>Add friend</Trans>
+            Add friend
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Incoming"}>
           <ContextMenuButton icon={MdPersonAddAlt} onClick={addFriend}>
-            <Trans>Accept friend request</Trans>
+            Accept friend request
           </ContextMenuButton>
           <ContextMenuButton icon={MdCancel} onClick={removeFriend} destructive>
-            <Trans>Reject friend request</Trans>
+            Reject friend request
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Outgoing"}>
           <ContextMenuButton icon={MdCancel} onClick={removeFriend} destructive>
-            <Trans>Cancel friend request</Trans>
+            Cancel friend request
           </ContextMenuButton>
         </Show>
       </Show>
@@ -467,40 +464,36 @@ export function UserContextMenu(props: {
         <ContextMenuDivider />
         <Show when={canRemoveMemberFromGroup()}>
           <ContextMenuButton
-            icon={MdPersonRemove}
-            onClick={removeMember}
+            icon={MdPersonRemove} onClick={removeMember}
             destructive
           >
-            <Trans>Remove Member</Trans>
+            Remove Member
           </ContextMenuButton>
         </Show>
         <Show when={canKick()}>
           <ContextMenuButton
-            icon={MdPersonRemove}
-            onClick={kickMember}
+            icon={MdPersonRemove} onClick={kickMember}
             destructive
           >
-            <Trans>Kick member</Trans>
+            Kick member
           </ContextMenuButton>
         </Show>
         <Show when={canBan()}>
           <ContextMenuButton
-            icon={MdDoNotDisturbOn}
-            onClick={banMember}
+            icon={MdDoNotDisturbOn} onClick={banMember}
             destructive
           >
-            <Trans>Ban member</Trans>
+            Ban member
           </ContextMenuButton>
         </Show>
       </Show>
       <Show when={canBanNonMember()}>
         <ContextMenuDivider />
         <ContextMenuButton
-          icon={MdDoNotDisturbOn}
-          onClick={banUser}
+          icon={MdDoNotDisturbOn} onClick={banUser}
           destructive
         >
-          <Trans>Ban user</Trans>
+          Ban user
         </ContextMenuButton>
       </Show>
 
@@ -509,25 +502,24 @@ export function UserContextMenu(props: {
         <ContextMenuDivider />
         <Show when={props.user.relationship === "Friend"}>
           <ContextMenuButton
-            icon={MdPersonRemove}
-            onClick={removeFriend}
+            icon={MdPersonRemove} onClick={removeFriend}
             destructive
           >
-            <Trans>Remove friend</Trans>
+            Remove friend
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship !== "Blocked"}>
           <ContextMenuButton icon={MdBlock} onClick={blockUser} destructive>
-            <Trans>Block user</Trans>
+            Block user
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Blocked"}>
           <ContextMenuButton icon={MdAddCircleOutline} onClick={unblockUser}>
-            <Trans>Unblock user</Trans>
+            Unblock user
           </ContextMenuButton>
         </Show>
         <ContextMenuButton icon={MdReport} onClick={reportUser} destructive>
-          <Trans>Report user</Trans>
+          Report user
         </ContextMenuButton>
       </Show>
 
@@ -542,12 +534,12 @@ export function UserContextMenu(props: {
       </Show>
       <Show when={state.settings.getValue("advanced:admin_panel")}>
         <ContextMenuButton icon={MdAdminPanelSettings} onClick={openAdminPanel}>
-          <Trans>Admin Panel</Trans>
+          Admin Panel
         </ContextMenuButton>
       </Show>
       <Show when={state.settings.getValue("advanced:copy_id")}>
         <ContextMenuButton icon={MdBadge} onClick={copyId}>
-          <Trans>Copy user ID</Trans>
+          Copy user ID
         </ContextMenuButton>
       </Show>
     </ContextMenu>

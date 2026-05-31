@@ -1,8 +1,6 @@
 import { BiSolidCloud } from "solid-icons/bi";
 import { For, Match, Show, Switch, createMemo, onMount } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useClient } from "@revolt/client";
 import { useModals } from "@revolt/modal";
 import { Avatar, CategoryButton, CircularProgress, Column } from "@revolt/ui";
@@ -45,7 +43,7 @@ export function WebhooksList(props: ChannelSettingsProps) {
           })
         }
       >
-        <Trans>Create Webhook</Trans>
+        Create Webhook
       </CategoryButton>
 
       <Show when={!webhooks() || webhooks()!.length !== 0}>

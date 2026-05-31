@@ -1,6 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import type { API } from "stoat.js";
 import { Channel, Server } from "stoat.js";
 
@@ -89,14 +88,14 @@ export function CategoryContextMenu(props: {
     <ContextMenu>
       <Show when={hasUnread()}>
         <ContextMenuButton icon={MdMarkChatRead} onClick={markAsRead}>
-          <Trans>Mark as read</Trans>
+          Mark as read
         </ContextMenuButton>
         <ContextMenuDivider />
       </Show>
 
       <Show when={props.server.havePermission("ManageChannel")}>
         <ContextMenuButton icon={MdLibraryAdd} onClick={createCategory}>
-          <Trans>Create category</Trans>
+          Create category
         </ContextMenuButton>
       </Show>
       <Show when={props.server.havePermission("ManageChannel")}>
@@ -104,12 +103,12 @@ export function CategoryContextMenu(props: {
           icon={<Symbol size={16}>edit</Symbol>}
           onClick={editCategoryName}
         >
-          <Trans>Rename category</Trans>
+          Rename category
         </ContextMenuButton>
       </Show>
       <Show when={props.server.havePermission("ManageChannel")}>
         <ContextMenuButton icon={MdDelete} onClick={deleteCategory} destructive>
-          <Trans>Delete category</Trans>
+          Delete category
         </ContextMenuButton>
       </Show>
 
@@ -119,7 +118,7 @@ export function CategoryContextMenu(props: {
 
       <Show when={state.settings.getValue("advanced:copy_id")}>
         <ContextMenuButton icon={MdBadge} onClick={copyId}>
-          <Trans>Copy category ID</Trans>
+          Copy category ID
         </ContextMenuButton>
       </Show>
     </ContextMenu>

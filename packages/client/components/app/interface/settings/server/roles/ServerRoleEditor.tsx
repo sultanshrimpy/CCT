@@ -1,4 +1,3 @@
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import MdContentCopy from "@material-design-icons/svg/outlined/content_copy.svg?component-solid";
 import MdDelete from "@material-design-icons/svg/outlined/delete.svg?component-solid";
 import MDPalette from "@material-design-icons/svg/outlined/palette.svg?component-solid";
@@ -26,7 +25,6 @@ import { ChannelPermissionsEditor } from "../../channel/permissions/ChannelPermi
  * Role editor
  */
 export function ServerRoleEditor(props: { context: Server; roleId: string }) {
-  const { t } = useLingui();
   const client = useClient();
   const { openModal } = useModals();
   const { navigate } = useSettingsNavigation();
@@ -100,7 +98,7 @@ export function ServerRoleEditor(props: { context: Server; roleId: string }) {
             counter
             name="name"
             control={editGroup.controls.name}
-            label={t`Role Name`}
+            label={"Role Name"}
           />
           <Column>
             <Row>
@@ -135,16 +133,7 @@ export function ServerRoleEditor(props: { context: Server; roleId: string }) {
               <Column gap="lg">
                 <Row justify wrap>
                   <For
-                    each={[
-                      "#7B68EE",
-                      "#3498DB",
-                      "#1ABC9C",
-                      "#F1C40F",
-                      "#FF7F50",
-                      "#FD6671",
-                      "#E91E63",
-                      "#D468EE",
-                    ]}
+                    each={["#7B68EE", "#3498DB", "#1ABC9C", "#F1C40F", "#FF7F50", "#FD6671", "#E91E63", "#D468EE", ]}
                   >
                     {(colour) => (
                       <Button
@@ -163,16 +152,7 @@ export function ServerRoleEditor(props: { context: Server; roleId: string }) {
 
                 <Row justify wrap>
                   <For
-                    each={[
-                      "#594CAD",
-                      "#206694",
-                      "#11806A",
-                      "#C27C0E",
-                      "#CD5B45",
-                      "#FF424F",
-                      "#AD1457",
-                      "#954AA8",
-                    ]}
+                    each={["#594CAD", "#206694", "#11806A", "#C27C0E", "#CD5B45", "#FF424F", "#AD1457", "#954AA8", ]}
                   >
                     {(colour) => (
                       <Button
@@ -195,7 +175,7 @@ export function ServerRoleEditor(props: { context: Server; roleId: string }) {
           <Form2.FileInput
             control={editGroup.controls.icon}
             accept="image/*"
-            label={t`Role Icon`}
+            label={"Role Icon"}
             imageJustify={false}
           />
 
@@ -210,7 +190,7 @@ export function ServerRoleEditor(props: { context: Server; roleId: string }) {
             <Row>
               <Form2.Reset group={editGroup} onReset={onReset} />
               <Form2.Submit group={editGroup} requireDirty>
-                <Trans>Save</Trans>
+                Save
               </Form2.Submit>
               <Show when={editGroup.isPending}>
                 <CircularProgress />
@@ -231,7 +211,7 @@ export function ServerRoleEditor(props: { context: Server; roleId: string }) {
           icon={<MdContentCopy />}
           onClick={() => navigator.clipboard.writeText(`${props.roleId}`)}
         >
-          <Trans>Copy role ID</Trans>
+          Copy role ID
         </CategoryButton>
         <CategoryButton
           action="chevron"
@@ -244,7 +224,7 @@ export function ServerRoleEditor(props: { context: Server; roleId: string }) {
             })
           }
         >
-          <Trans>Delete Role</Trans>
+          Delete Role
         </CategoryButton>
       </Column>
     </Column>

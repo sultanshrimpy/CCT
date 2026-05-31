@@ -61,13 +61,13 @@ export function RoomAudioManager() {
         {(track) => (
           <AudioTrack
             trackRef={track()}
-            volume={
+            volume={() =>
               state.voice.outputVolume *
               (track().source === Track.Source.ScreenShareAudio
                 ? state.voice.getScreenShareVolume(track().participant.identity)
                 : state.voice.getUserVolume(track().participant.identity))
             }
-            muted={
+            muted={() =>
               (track().source === Track.Source.ScreenShareAudio
                 ? state.voice.getScreenShareMuted(track().participant.identity)
                 : state.voice.getUserMuted(track().participant.identity)) ||

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { useTime } from "@revolt/i18n";
@@ -53,13 +52,13 @@ export function ChangelogModal(
   props: DialogProps & Modals & { type: "changelog" },
 ) {
   const dayjs = useTime();
-  const actions: DialogAction[] = [{ text: <Trans>Close</Trans> }];
+  const actions: DialogAction[] = [{ text: "Close" }];
 
   return (
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>What's new</Trans>}
+      title={"What's new"}
       actions={actions}
     >
       <Column>

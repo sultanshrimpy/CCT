@@ -18,6 +18,7 @@ import MdMoreVert from "@material-design-icons/svg/outlined/more_vert.svg?compon
 import MdReply from "@material-design-icons/svg/outlined/reply.svg?component-solid";
 
 import { MediaPickerProps } from "../composition/picker/CompositionMediaPicker";
+import { floating } from "@revolt/ui/directives";
 
 export function MessageToolbar(props: {
   message?: Message;

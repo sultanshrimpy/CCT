@@ -1,4 +1,3 @@
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { createFormControl, createFormGroup } from "solid-forms";
 
 import { useState } from "@revolt/state";
@@ -13,8 +12,6 @@ export function ScreenSharePickerModal(
   props: DialogProps & Modals & { type: "screen_share_picker" },
 ) {
   const { voice } = useState();
-  const { t } = useLingui();
-
   const group = createFormGroup({
     qualityName: createFormControl<ScreenShareQualityName>(
       voice.screenShareQuality || "low",
@@ -50,23 +47,19 @@ export function ScreenSharePickerModal(
       minWidth={420}
       show={props.show}
       onClose={onCancel}
-      title={t`Pick a Screen to Share`}
-      actions={[
-        {
-          text: <Trans>Cancel</Trans>,
+      title={"Pick a Screen to Share"}
+      actions={[{
+          text: "Cancel",
           onClick: () => {
             onCancel();
             return false;
-          },
-        },
+          }, },
         {
-          text: <Trans>Go</Trans>,
-          onClick: () => {
+          text: "Go", onClick: () => {
             onSubmit();
             return false;
           },
-        },
-      ]}
+        },]}
     >
       <form onSubmit={submit}>
         <Column>
@@ -100,7 +93,7 @@ export function ScreenSharePickerModal(
             })}
           />
           <Form2.Checkbox control={group.controls.audio}>
-            <Trans>Share audio</Trans>
+            Share audio
           </Form2.Checkbox>
         </Column>
       </form>

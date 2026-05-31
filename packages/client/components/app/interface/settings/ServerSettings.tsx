@@ -8,7 +8,6 @@ import {
   BiSolidUserX,
 } from "solid-icons/bi";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { Server } from "stoat.js";
 
 import { useUser } from "@revolt/client";
@@ -32,10 +31,8 @@ const Config: SettingsConfiguration<Server> = {
    * @param key
    */
   title(ctx, key) {
-    const { t } = useLingui();
-
     if (key.startsWith("roles/")) {
-      if (key === "roles/default") return t`Default Permissions`;
+      if (key === "roles/default") return "Default Permissions";
 
       return ctx.context.roles.get(key.substring(6))?.name ?? "";
     }
@@ -104,18 +101,18 @@ const Config: SettingsConfiguration<Server> = {
             {
               id: "overview",
               icon: <BiSolidInfoCircle size={20} />,
-              title: <Trans>Overview</Trans>,
+              title: "Overview",
             },
           ],
         },
         {
           hidden: !server.havePermission("ManageCustomisation"),
-          title: <Trans>Customisation</Trans>,
+          title: "Customisation",
           entries: [
             {
               id: "emojis",
               icon: <BiSolidHappyBeaming size={20} />,
-              title: <Trans>Emojis</Trans>,
+              title: "Emojis",
             },
           ],
         },
@@ -123,13 +120,13 @@ const Config: SettingsConfiguration<Server> = {
           hidden:
             !server.havePermission("ManageServer") &&
             !server.havePermission("BanMembers"),
-          title: <Trans>User Management</Trans>,
+          title: "User Management",
           entries: [
             {
               hidden: true,
               id: "members",
               icon: <BiSolidGroup size={20} />,
-              title: <Trans>Members</Trans>,
+              title: "Members",
             },
             {
               hidden: !(
@@ -138,19 +135,19 @@ const Config: SettingsConfiguration<Server> = {
               ),
               id: "roles",
               icon: <BiSolidFlagAlt size={20} />,
-              title: <Trans>Roles</Trans>,
+              title: "Roles",
             },
             {
               hidden: !server.havePermission("ManageServer"),
               id: "invites",
               icon: <BiSolidEnvelope size={20} />,
-              title: <Trans>Invites</Trans>,
+              title: "Invites",
             },
             {
               hidden: !server.havePermission("BanMembers"),
               id: "bans",
               icon: <BiSolidUserX size={20} />,
-              title: <Trans>Bans</Trans>,
+              title: "Bans",
             },
           ],
         },
@@ -163,7 +160,7 @@ const Config: SettingsConfiguration<Server> = {
               ),
               title: (
                 <ColouredText colour="var(--md-sys-color-error)">
-                  <Trans>Delete Server</Trans>
+                  Delete Server
                 </ColouredText>
               ),
               /**

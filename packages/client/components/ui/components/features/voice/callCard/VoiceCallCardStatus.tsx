@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { useVoice } from "@revolt/rtc";
@@ -25,13 +24,13 @@ export function VoiceCallCardStatus(props: { pip?: boolean }) {
   const text = () => {
     switch (voice.state()) {
       case "CONNECTED":
-        return <Trans>Connected</Trans>;
+        return "Connected";
       case "CONNECTING":
-        return <Trans>Connecting</Trans>;
+        return "Connecting...";
       case "DISCONNECTED":
-        return <Trans>Disconnected</Trans>;
+        return "Disconnected";
       case "RECONNECTING":
-        return <Trans>Reconnecting</Trans>;
+        return "Reconnecting...";
       default:
         return null;
     }

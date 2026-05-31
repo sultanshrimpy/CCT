@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -13,7 +11,6 @@ import { Modals } from "../types";
 export function CustomStatusModal(
   props: DialogProps & Modals & { type: "custom_status" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   /* eslint-disable solid/reactivity */
@@ -43,18 +40,13 @@ export function CustomStatusModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Set your status</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Save</Trans>,
+      title={"Set your status"}
+      actions={[{ text: "Close" }, {
+          text: "Save",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -64,7 +56,7 @@ export function CustomStatusModal(
             counter
             name="text"
             control={group.controls.text}
-            label={t`Custom status`}
+            label={"Custom status"}
           />
         </Column>
       </form>

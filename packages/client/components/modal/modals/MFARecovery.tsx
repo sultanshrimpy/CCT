@@ -1,6 +1,5 @@
 import { For, createSignal } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { Dialog, DialogProps, Text } from "@revolt/ui";
@@ -58,23 +57,19 @@ export function MFARecoveryModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Your recovery codes</Trans>}
-      actions={[
-        {
-          text: <Trans>Reset</Trans>,
+      title={"Your recovery codes"}
+      actions={[{
+          text: "Reset",
           onClick: () => {
             reset();
             return false;
-          },
-        },
+          }, },
         {
-          text: <Trans>Done</Trans>,
-          onClick: () => true,
-        },
-      ]}
+          text: "Done", onClick: () => true,
+        },]}
     >
       <Text>
-        <Trans>Please save these to a safe location.</Trans>
+        Please save these to a safe location.
       </Text>
       <List>
         <For each={known()}>

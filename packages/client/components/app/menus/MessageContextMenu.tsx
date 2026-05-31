@@ -1,6 +1,5 @@
 import { Accessor, For, Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { File, Message } from "stoat.js";
 
 import { useClient, useUser } from "@revolt/client";
@@ -138,19 +137,19 @@ export function MessageContextMenu(props: {
   return (
     <ContextMenu>
       <Show when={props.file}>
-        <ContextMenuButton icon={MdOpenInNew} onClick={OpenFile}>
-          <Trans>Open file</Trans>
+        <ContextMenuButton icon={MdOpenInNew} onClick={OpenFile} >
+          Open file
         </ContextMenuButton>
-        <ContextMenuButton icon={MdLink} onClick={CopyLink}>
-          <Trans>Copy link</Trans>
+        <ContextMenuButton icon={MdLink} onClick={CopyLink} >
+          Copy link
         </ContextMenuButton>
         <a
           target="_blank"
           download={props.file?.filename}
           href={props.file?.originalUrl}
         >
-          <ContextMenuButton icon={MdDownload}>
-            <Trans>Save file</Trans>
+          <ContextMenuButton icon={MdDownload} >
+            Save file
           </ContextMenuButton>
         </a>
 
@@ -159,24 +158,23 @@ export function MessageContextMenu(props: {
       <Show when={props.message}>
         <Show when={props.message!.channel?.havePermission("SendMessage")}>
           <ContextMenuButton icon={MdReply} onClick={reply}>
-            <Trans>Reply</Trans>
+            Reply
           </ContextMenuButton>
         </Show>
         <ContextMenuButton icon={MdMarkChatUnread} onClick={markAsUnread}>
-          <Trans>Mark as unread</Trans>
+          Mark as unread
         </ContextMenuButton>
         <ContextMenuButton icon={MdContentCopy} onClick={copyText}>
-          <Trans>Copy text</Trans>
+          Copy text
         </ContextMenuButton>
 
         <ContextMenuDivider />
 
         <Show when={props.message?.channel?.havePermission("React")}>
           <ContextMenuButton
-            icon={MdEmojiEmotions}
-            onClick={(e) => props.reactPicker?.()?.onClickEmoji(e)}
+            icon={MdEmojiEmotions} onClick={(e) => props.reactPicker?.()?.onClickEmoji(e)}
           >
-            <Trans>React</Trans>
+            React
           </ContextMenuButton>
         </Show>
 
@@ -187,10 +185,9 @@ export function MessageContextMenu(props: {
           }
         >
           <ContextMenuButton
-            icon={MdEdit}
-            onClick={() => state.draft.setEditingMessage(props.message!)}
+            icon={MdEdit} onClick={() => state.draft.setEditingMessage(props.message!)}
           >
-            <Trans>Edit message</Trans>
+            Edit message
           </ContextMenuButton>
         </Show>
         <Show
@@ -200,8 +197,7 @@ export function MessageContextMenu(props: {
           }
         >
           <ContextMenuButton
-            icon={MdPin}
-            onClick={() => {
+            icon={MdPin} onClick={() => {
               if (props.message!.pinned) {
                 props.message!.unpin().catch(showError);
               } else {
@@ -209,9 +205,9 @@ export function MessageContextMenu(props: {
               }
             }}
           >
-            <Switch fallback={<Trans>Pin message</Trans>}>
+            <Switch fallback={"Pin message"}>
               <Match when={props.message!.pinned}>
-                <Trans>Unpin message</Trans>
+                Unpin message
               </Match>
             </Switch>
           </ContextMenuButton>
@@ -223,10 +219,9 @@ export function MessageContextMenu(props: {
           }
         >
           <ContextMenuSubMenu
-            icon={MdDeleteSweep}
-            onClick={() => props.message!.clearReactions()}
+            icon={MdDeleteSweep} onClick={() => props.message!.clearReactions()}
             destructive
-            buttonContent={<Trans>Remove reaction</Trans>}
+            buttonContent={"Remove reaction"}
           >
             <For each={[...props.message!.reactions.keys()]}>
               {(key) => (
@@ -250,11 +245,10 @@ export function MessageContextMenu(props: {
           }
         >
           <ContextMenuButton
-            symbol={MdSentimentContent}
-            onClick={() => props.message!.clearReactions()}
+            symbol={MdSentimentContent} onClick={() => props.message!.clearReactions()}
             destructive
           >
-            <Trans>Remove all reactions</Trans>
+            Remove all reactions
           </ContextMenuButton>
         </Show>
         <Show
@@ -264,30 +258,29 @@ export function MessageContextMenu(props: {
           }
         >
           <ContextMenuButton
-            icon={MdDelete}
-            onClick={deleteMessage}
+            icon={MdDelete} onClick={deleteMessage}
             destructive
           >
-            <Trans>Delete message</Trans>
+            Delete message
           </ContextMenuButton>
         </Show>
         <Show when={!props.message!.author?.self}>
           <ContextMenuButton icon={MdReport} onClick={report} destructive>
-            <Trans>Report message</Trans>
+            Report message
           </ContextMenuButton>
         </Show>
         <ContextMenuDivider />
         <Show when={state.settings.getValue("advanced:admin_panel")}>
           <ContextMenuButton icon={MdShield} onClick={openAdminPanel}>
-            <Trans>Admin Panel</Trans>
+            Admin Panel
           </ContextMenuButton>
         </Show>
         <ContextMenuButton icon={MdShare} onClick={copyLink}>
-          <Trans>Copy link</Trans>
+          Copy link
         </ContextMenuButton>
         <Show when={state.settings.getValue("advanced:copy_id")}>
           <ContextMenuButton icon={MdBadge} onClick={copyId}>
-            <Trans>Copy message ID</Trans>
+            Copy message ID
           </ContextMenuButton>
         </Show>
       </Show>

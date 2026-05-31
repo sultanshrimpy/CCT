@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { Dialog, DialogProps } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -18,28 +16,24 @@ export function CreateGroupOrServer(
       show={props.show}
       onClose={props.onClose}
       title="Create a group or server"
-      actions={[
-        {
+      actions={[{
           text: "Group",
           onClick: () => {
             openModal({
               type: "create_group",
               client: props.client,
             });
-          },
-        },
+          }, },
         {
-          text: "Server",
-          onClick: () => {
+          text: "Server", onClick: () => {
             openModal({
               type: "create_server",
               client: props.client,
             });
           },
-        },
-      ]}
+        },]}
     >
-      <Trans>Would you like to create a new group or server?</Trans>
+      Would you like to create a new group or server?
     </Dialog>
   );
 }

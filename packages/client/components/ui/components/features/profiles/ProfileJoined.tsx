@@ -1,6 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { ServerMember, User } from "stoat.js";
 
 import { timeLocale, useTime } from "@revolt/i18n";
@@ -16,11 +15,11 @@ export function ProfileJoined(props: { user: User; member?: ServerMember }) {
   return (
     <ProfileCard>
       <Text class="title" size="large">
-        <Trans>Joined</Trans>
+        Joined
       </Text>
       <Text class="label">
         <OverflowingText>Stoat</OverflowingText>
-        {/* <Trans>Account Created</Trans> */}
+        {/* Account Created */}
       </Text>
       <Text>
         {dayjs(props.user.createdAt).format(
@@ -33,7 +32,7 @@ export function ProfileJoined(props: { user: User; member?: ServerMember }) {
       <Show when={props.member}>
         <Text class="label">
           <OverflowingText>{props.member!.server!.name}</OverflowingText>
-          {/* <Trans>Member Since</Trans> */}
+          {/* Member Since */}
         </Text>
         <Text>
           {dayjs(props.member!.joinedAt).format(

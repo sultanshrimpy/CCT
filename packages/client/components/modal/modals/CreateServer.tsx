@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { useNavigate } from "@revolt/routing";
 import { Column, Dialog, DialogProps, Form2, Text } from "@revolt/ui";
 
@@ -14,7 +12,6 @@ import { Modals } from "../types";
 export function CreateServerModal(
   props: DialogProps & Modals & { type: "create_server" },
 ) {
-  const { t } = useLingui();
   const navigate = useNavigate();
   const { showError } = useModals();
 
@@ -41,30 +38,19 @@ export function CreateServerModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Create server</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Create</Trans>,
+      title={"Create server"}
+      actions={[{ text: "Close" }, {
+          text: "Create",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
         <Column>
           <Text>
-            <Trans>
-              By creating this server, you agree to the{" "}
-              <a href="https://stoat.chat/aup" target="_blank" rel="noreferrer">
-                <Trans>Acceptable Use Policy</Trans>
-              </a>
-              .
-            </Trans>
+            By creating this server, you agree to the{" "} <a href="https://stoat.chat/aup" target="_blank" rel="noreferrer"> Acceptable Use Policy </a> .
           </Text>
           <Form2.TextField
             minlength={1}
@@ -72,7 +58,7 @@ export function CreateServerModal(
             counter
             name="name"
             control={group.controls.name}
-            label={t`Server Name`}
+            label={"Server Name"}
           />
         </Column>
       </form>

@@ -1,10 +1,9 @@
 import { Show } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
-
 import { useState } from "@revolt/state";
 
 import { Symbol } from "../../utils/Symbol";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * Component that shows user voice status icons populated with client state
@@ -16,7 +15,6 @@ export function VoiceStatefulUserIcons(props: {
   camera?: boolean;
   screenshare?: boolean;
 }) {
-  const { t } = useLingui();
   const state = useState();
 
   const isMuted = () =>
@@ -35,7 +33,7 @@ export function VoiceStatefulUserIcons(props: {
               isMuted() === "by-user"
                 ? {
                     placement: "top",
-                    content: t`You muted this user.`,
+                    content: "You muted this user.",
                   }
                 : undefined,
           }}

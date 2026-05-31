@@ -1,6 +1,5 @@
 import { createSignal } from "solid-js";
 
-import { i18n } from "@lingui/core";
 import dayjs from "dayjs";
 import locale_en_GB from "dayjs/esm/locale/en-gb.js";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -17,13 +16,26 @@ dayjs.extend(relativeTime);
 dayjs.extend(advancedFormat);
 dayjs.extend(updateLocale);
 
-/**
- * Internal signal, don't try to use this unless you know what you're doing!
- */
-const [timeLocale, setTimeLocale] = createSignal<[string, ILocale]>([
-  null!,
-  null!,
-]);
+const defaultLocale: ILocale = {
+  name: "en",
+  formats: {
+    LT: "h:mm A",
+    LTS: "h:mm:ss A",
+    L: "MM/DD/YYYY",
+    LL: "MMMM D, YYYY",
+    LLL: "MMMM D, YYYY h:mm A",
+    LLLL: "dddd, MMMM D, YYYY h:mm A",
+  },
+  relativeTime: {
+    future: "in %s", past: "%s ago", s: "a few seconds", m: "a minute",
+    mm: "%d minutes", h: "an hour", hh: "%d hours", d: "a day",
+    dd: "%d days", M: "a month", MM: "%d months", y: "a year", yy: "%d years",
+  },
+  weekdays: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+  months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+};
+
+const [timeLocale, setTimeLocale] = createSignal<[string, ILocale]>(["en", defaultLocale]);
 
 export { dayjs, timeLocale };
 
@@ -40,17 +52,16 @@ export async function loadTimeLocale(
       (module) => module.default,
     )) as ILocale);
 
-  // merge options for calendar
+  // merge options for calendar (hardcoded English)
   (locale as unknown as { calendar: Record<string, string> }).calendar = {
-    lastDay: i18n._(`[Yesterday at] LT`),
-    sameDay: i18n._(`[Today at] LT`),
-    nextDay: i18n._(`[Tomorrow at] LT`),
-    lastWeek: i18n._(`[Last] dddd [at] LT`),
-    nextWeek: i18n._(`dddd [at] LT`),
+    lastDay: "[Yesterday at] LT",
+    sameDay: "[Today at] LT",
+    nextDay: "[Tomorrow at] LT",
+    lastWeek: "[Last] dddd [at] LT",
+    nextWeek: "dddd [at] LT",
     sameElse: "L",
   };
 
-  // merge locale options
   const options = {
     ...language.localeOptions,
     ...localeOptions,
@@ -59,12 +70,6 @@ export async function loadTimeLocale(
   updateTimeLocaleOptions(options, target, locale);
 }
 
-/**
- * Update dayjs locale given locale options
- * @param options Options
- * @param target Target locale (uses current if none specified)
- * @param useLocale Override locale data
- */
 export function updateTimeLocaleOptions(
   options: LocaleOptions,
   target?: string,
@@ -86,25 +91,15 @@ export function updateTimeLocaleOptions(
   setTimeLocale([target, locale]);
 }
 
-/**
- * Initialisation function
- */
 export function initTime() {
   loadTimeLocale(Languages.en, {}, locale_en_GB);
 }
 
-/**
- * Create dayjs time objects with locale and extensions
- * @returns Dayjs creator
- */
 export function useTime() {
   // eslint-disable-next-line solid/reactivity
   return (date?: dayjs.ConfigType) => dayjs(date).locale(...timeLocale());
 }
 
-/**
- * Define a custom en_US locale because dayjs doesn't include an exhaustive definition
- */
 const locale_en_US: ILocale & { yearStart: number } = {
   name: "en",
   weekdays: locale_en_GB["weekdays"],

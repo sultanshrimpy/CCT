@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 
 import { Dialog, DialogProps } from "@revolt/ui";
@@ -23,17 +22,13 @@ export function SignOutSessionsModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Are you sure you want to clear your sessions?</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Accept</Trans>,
-          onClick: () => signOutSessions.mutateAsync(),
-        },
-      ]}
+      title={"Are you sure you want to clear your sessions?"}
+      actions={[{ text: "Cancel" }, {
+          text: "Accept",
+          onClick: () => signOutSessions.mutateAsync(), },]}
       isDisabled={signOutSessions.isPending}
     >
-      <Trans>You cannot undo this action.</Trans>
+      You cannot undo this action.
     </Dialog>
   );
 }

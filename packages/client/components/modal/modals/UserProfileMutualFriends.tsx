@@ -1,7 +1,5 @@
 import { For } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { Avatar, Dialog, DialogProps, List, OverflowingText } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -17,8 +15,8 @@ export function UserProfileMutualFriendsModal(
       minWidth={420}
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Mutual Friends</Trans>}
-      actions={[{ text: <Trans>Close</Trans> }]}
+      title={"Mutual Friends"}
+      actions={[{ text: "Close" }]}
     >
       <List>
         <For each={props.users}>

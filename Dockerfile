@@ -16,6 +16,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 # Copy all package.json files for workspace packages
 COPY packages/stoat.js/package.json packages/stoat.js/
 COPY packages/solid-livekit-components/package.json packages/solid-livekit-components/
+COPY packages/js-lingui-solid/packages/solid/package.json packages/js-lingui-solid/packages/solid/
 COPY packages/js-lingui-solid/packages/babel-plugin-lingui-macro/package.json packages/js-lingui-solid/packages/babel-plugin-lingui-macro/
 COPY packages/js-lingui-solid/packages/babel-plugin-extract-messages/package.json packages/js-lingui-solid/packages/babel-plugin-extract-messages/
 COPY packages/client/package.json packages/client/
@@ -26,21 +27,27 @@ COPY packages/client/panda.config.ts packages/client/
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
+# Patch @lingui-solid/solid to fix i18n.on() not returning unsubscribe function
+RUN find /build/node_modules -path "*lingui-solid*solid*dist/index.mjs" -exec sed -i 's/R(() => s())/R(() => typeof s === "function" \&\& s())/g' {} \;
+
 # Submodules:
 # In CI: actions/checkout@v4 with submodules: recursive handles this automatically.
 # Locally: run `git submodule update --init --recursive` before `docker build`.
 COPY packages/ packages/
 
-# Build sub-dependencies (stoat.js, livekit-components, lingui plugins, panda css etc)
+
+# Build sub-dependencies (stoat.js, livekit-components, panda css etc)
+# lingui compile is skipped since we've removed all translation calls
 RUN pnpm --filter stoat.js build && \
   pnpm --filter solid-livekit-components build && \
+  pnpm --filter @lingui-solid/solid build && \
   pnpm --filter @lingui-solid/babel-plugin-lingui-macro build && \
   pnpm --filter @lingui-solid/babel-plugin-extract-messages build && \
   pnpm --filter client exec lingui compile --typescript && \
   pnpm --filter client exec node scripts/copyAssets.mjs && \
-  pnpm --filter client exec panda codegen 
+  pnpm --filter client exec panda codegen
 
-# Build the client with placeholder env vars for runtime injection 
+# Build the client with placeholder env vars for runtime injection
 # these are replaced by inject.js at container run startup
 ENV VITE_API_URL=__VITE_API_URL__
 ENV VITE_WS_URL=__VITE_WS_URL__
@@ -50,6 +57,13 @@ ENV VITE_HCAPTCHA_SITEKEY=__VITE_HCAPTCHA_SITEKEY__
 ENV VITE_CFG_ENABLE_VIDEO=__VITE_CFG_ENABLE_VIDEO__
 ENV VITE_CFG_MAX_FILE_SIZE=__VITE_CFG_MAX_FILE_SIZE__
 ENV BASE_PATH=/
+
+# Copy clean versions of src/interface files (excluded from main COPY via .dockerignore)
+COPY clean_src_interface/ packages/client/src/interface/
+
+# Fix any remaining duplicate directive imports in components/
+COPY dedup_directives.py dedup_directives.py
+RUN python3 dedup_directives.py
 
 RUN pnpm --filter client exec vite build
 

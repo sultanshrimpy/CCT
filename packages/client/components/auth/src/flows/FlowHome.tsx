@@ -1,6 +1,5 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { css } from "styled-system/css";
 
 import { useClientLifecycle } from "@revolt/client";
@@ -60,14 +59,14 @@ export default function FlowHome() {
               <a href="/login/auth">
                 <Column>
                   <Button>
-                    <Trans>Log In</Trans>
+                    Log In
                   </Button>
                 </Column>
               </a>
               <a href="/login/create">
                 <Column>
                   <Button variant="tonal">
-                    <Trans>Sign Up</Trans>
+                    Sign Up
                   </Button>
                 </Column>
               </a>
@@ -80,7 +79,7 @@ export default function FlowHome() {
         <Switch fallback={"an unknown error occurred"}>
           <Match when={lifecycle.permanentError === "InvalidSession"}>
             <h1>
-              <Trans>You were logged out!</Trans>
+              You were logged out!
             </h1>
           </Match>
         </Switch>
@@ -93,7 +92,7 @@ export default function FlowHome() {
             })
           }
         >
-          <Trans>OK</Trans>
+          OK
         </Button>
       </Match>
     </Switch>

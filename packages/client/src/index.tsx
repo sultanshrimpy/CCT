@@ -157,8 +157,8 @@ render(
   () => (
     <DeviceContext>
       <StateContext>
-        <Router root={MountContext}>
-          <Route path="/login" component={AuthPage as never}>
+        <Router root={MountContext} >
+          <Route path="/login" component={AuthPage as never} >
             <Route path="/delete/:token" component={FlowDeleteAccount} />
             <Route path="/check" component={FlowCheck} />
             <Route path="/create" component={FlowCreate} />
@@ -170,7 +170,7 @@ render(
             <Route path="/reset/:token" component={FlowConfirmReset} />
             <Route path="/*" component={FlowHome} />
           </Route>
-          <Route path="/" component={Interface as never}>
+          <Route path="/" component={Interface as never} >
             <Route path="/pwa" component={PWARedirect} />
             <Route path="/dev" component={DevelopmentPage} />
             <Route path="/discover/*" component={Discover} />

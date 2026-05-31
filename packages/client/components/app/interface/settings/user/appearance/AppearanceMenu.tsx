@@ -1,6 +1,5 @@
 import { For, Match, Show, Switch, createSignal } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -31,7 +30,6 @@ import {
   MonospaceFonts,
 } from "@revolt/ui/themes/fonts";
 
-import { t } from "@lingui/core/macro";
 import MDPalette from "@material-design-icons/svg/outlined/palette.svg?component-solid";
 
 /**
@@ -63,21 +61,21 @@ export function AppearanceMenu() {
             groupActive={state.theme.mode === "light"}
             onPress={() => state.theme.setMode("light")}
           >
-            <Trans>Light</Trans>
+            Light
           </Button>
           <Button
             group="connected"
             groupActive={state.theme.mode === "dark"}
             onPress={() => state.theme.setMode("dark")}
           >
-            <Trans>Dark</Trans>
+            Dark
           </Button>
           <Button
             group="connected-end"
             groupActive={state.theme.mode === "system"}
             onPress={() => state.theme.setMode("system")}
           >
-            <Trans>System</Trans>
+            System
           </Button>
         </Row>
 
@@ -87,14 +85,14 @@ export function AppearanceMenu() {
             groupActive={state.theme.preset === "stoat"}
             onPress={() => state.theme.setPreset("stoat")}
           >
-            <Trans>Stoat</Trans>
+            Stoat
           </Button>
           <Button
             group="connected-end"
             groupActive={state.theme.preset === "you"}
             onPress={() => state.theme.setPreset("you")}
           >
-            <Trans>Material You</Trans>
+            Material You
           </Button>
         </Row> */}
 
@@ -127,15 +125,7 @@ export function AppearanceMenu() {
               }}
             />
             <For
-              each={[
-                "#FF5733",
-                "#ffdc2f",
-                "#9bf088",
-                "#54ecc1",
-                "#549bec",
-                "#5470ec",
-                "#8C5FD3",
-              ]}
+              each={["#FF5733", "#ffdc2f", "#9bf088", "#54ecc1", "#549bec", "#5470ec", "#8C5FD3", ]}
             >
               {(colour) => (
                 <Button
@@ -176,7 +166,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Contrast.toFixed(1) === "-1.0"}
               onPress={() => state.theme.setM3Contrast(-1.0)}
             >
-              <Trans>Reduced</Trans>
+              Reduced
             </Button>
             <Button
               size="xs"
@@ -184,7 +174,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Contrast.toFixed(1) === "0.0"}
               onPress={() => state.theme.setM3Contrast(0)}
             >
-              <Trans>Normal</Trans>
+              Normal
             </Button>
             <Button
               size="xs"
@@ -192,7 +182,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Contrast.toFixed(1) === "0.5"}
               onPress={() => state.theme.setM3Contrast(0.5)}
             >
-              <Trans>More Contrast</Trans>
+              More Contrast
             </Button>
             <Button
               size="xs"
@@ -200,7 +190,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Contrast.toFixed(1) === "1.0"}
               onPress={() => state.theme.setM3Contrast(1.0)}
             >
-              <Trans>High Contrast</Trans>
+              High Contrast
             </Button>
           </Row>
 
@@ -211,7 +201,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Variant === "monochrome"}
               onPress={() => state.theme.setM3Variant("monochrome")}
             >
-              <Trans>Monochrome</Trans>
+              Monochrome
             </Button>
             <Button
               size="xs"
@@ -219,7 +209,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Variant === "neutral"}
               onPress={() => state.theme.setM3Variant("neutral")}
             >
-              <Trans>Neutral</Trans>
+              Neutral
             </Button>
             <Button
               size="xs"
@@ -227,7 +217,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Variant === "tonal_spot"}
               onPress={() => state.theme.setM3Variant("tonal_spot")}
             >
-              <Trans>Tonal Spot</Trans>
+              Tonal Spot
             </Button>
             {/* <Button
             size="xs"
@@ -235,7 +225,7 @@ export function AppearanceMenu() {
             groupActive={state.theme.m3Variant === "vibrant"}
             onPress={() => state.theme.setM3Variant("vibrant")}
           >
-            <Trans>Vibrant</Trans>
+            Vibrant
           </Button>
           <Button
             size="xs"
@@ -243,7 +233,7 @@ export function AppearanceMenu() {
             groupActive={state.theme.m3Variant === "expressive"}
             onPress={() => state.theme.setM3Variant("expressive")}
           >
-            <Trans>Expressive</Trans>
+            Expressive
           </Button>
           <Button
             size="xs"
@@ -251,7 +241,7 @@ export function AppearanceMenu() {
             groupActive={state.theme.m3Variant === "fidelity"}
             onPress={() => state.theme.setM3Variant("fidelity")}
           >
-            <Trans>Fidelity</Trans>
+            Fidelity
           </Button>
           <Button
             size="xs"
@@ -259,7 +249,7 @@ export function AppearanceMenu() {
             groupActive={state.theme.m3Variant === "content"}
             onPress={() => state.theme.setM3Variant("content")}
           >
-            <Trans>Content</Trans>
+            Content
           </Button>
           <Button
             size="xs"
@@ -267,7 +257,7 @@ export function AppearanceMenu() {
             groupActive={state.theme.m3Variant === "rainbow"}
             onPress={() => state.theme.setM3Variant("rainbow")}
           >
-            <Trans>Rainbow</Trans>
+            Rainbow
           </Button> */}
             <Button
               size="xs"
@@ -275,7 +265,7 @@ export function AppearanceMenu() {
               groupActive={state.theme.m3Variant === "fruit_salad"}
               onPress={() => state.theme.setM3Variant("fruit_salad")}
             >
-              <Trans>Fruit Salad</Trans>
+              Fruit Salad
             </Button>
           </Row>
         </Show>
@@ -283,13 +273,11 @@ export function AppearanceMenu() {
 
       <Column>
         <Text class="title" size="small">
-          <Trans>Display & Text</Trans>
+          Display & Text
         </Text>
 
         <Checkbox checked={state.theme.blur} onChange={state.theme.toggleBlur}>
-          <Trans>
-            Enable transparency glass/blur effects (slow on older machines)
-          </Trans>
+          Enable transparency glass/blur effects (slow on older machines)
         </Checkbox>
 
         <Preview>
@@ -322,7 +310,7 @@ export function AppearanceMenu() {
         </Preview>
 
         <Text class="label">
-          <Trans>Message Size</Trans>
+          Message Size
         </Text>
         <Slider
           min={12}
@@ -335,7 +323,7 @@ export function AppearanceMenu() {
       </Column>
 
       <Text class="label">
-        <Trans>Message Group Spacing</Trans>
+        Message Group Spacing
       </Text>
       <Slider
         min={0}
@@ -347,7 +335,7 @@ export function AppearanceMenu() {
       />
 
       <FloatingSelect
-        label={t`Interface Font`}
+        label={"Interface Font"}
         value={state.theme.interfaceFont}
         onChange={(e) =>
           state.theme.setInterfaceFont(e.currentTarget.value as Fonts)
@@ -359,7 +347,7 @@ export function AppearanceMenu() {
       </FloatingSelect>
 
       <FloatingSelect
-        label={t`Monospace Font`}
+        label={"Monospace Font"}
         value={state.theme.monospaceFont}
         onChange={(e) =>
           state.theme.setMonospaceFont(e.currentTarget.value as MonospaceFonts)
@@ -372,7 +360,7 @@ export function AppearanceMenu() {
 
       <Column>
         <Text class="title" size="small">
-          <Trans>Chat Input</Trans>
+          Chat Input
         </Text>
 
         <Checkbox
@@ -384,11 +372,11 @@ export function AppearanceMenu() {
             )
           }
         >
-          <Trans>Show send message button</Trans>
+          Show send message button
         </Checkbox>
 
         <FloatingSelect
-          label={t`Emoji Pack (affects your messages only)`}
+          label={"Emoji Pack (affects your messages only)"}
           value={state.settings.getValue("appearance:unicode_emoji")}
           onChange={(e) =>
             state.settings.setValue(

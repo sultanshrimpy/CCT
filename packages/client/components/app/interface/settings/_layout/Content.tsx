@@ -9,6 +9,7 @@ import MdClose from "@material-design-icons/svg/outlined/close.svg?component-sol
 
 import { SettingsList } from "..";
 import { useSettingsNavigation } from "../Settings";
+import { scrollable } from "@revolt/ui/directives";
 
 /**
  * Content portion of the settings menu

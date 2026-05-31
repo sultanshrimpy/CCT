@@ -1,7 +1,5 @@
 import { Match, Show, Switch, createSignal, onMount } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useApi, useClientLifecycle } from "@revolt/client";
 import { useModals } from "@revolt/modal";
 import { useNavigate, useParams } from "@revolt/routing";
@@ -81,13 +79,13 @@ export default function FlowVerify() {
     <Switch>
       <Match when={state().state === "verifying"}>
         <FlowTitle>
-          <Trans>Verifying your account…</Trans>
+          Verifying your account…
         </FlowTitle>
         <CircularProgress />
       </Match>
       <Match when={state().state === "error"}>
         <FlowTitle>
-          <Trans>Failed to verify!</Trans>
+          Failed to verify!
         </FlowTitle>
         {/* <Text class="body" size="small">
           {t(
@@ -98,22 +96,22 @@ export default function FlowVerify() {
         </Text> TODO */}
         <a href="/login/auth">
           <Button variant="text">
-            <Trans>Go back to login</Trans>
+            Go back to login
           </Button>
         </a>
       </Match>
       <Match when={state().state === "success"}>
         <FlowTitle>
-          <Trans>Your account has been verified!</Trans>
+          Your account has been verified!
         </FlowTitle>
         <Show when={"mfa_ticket" in state()}>
           <Button onPress={performLogin}>
-            <Trans>Continue to app</Trans>
+            Continue to app
           </Button>
         </Show>
         <a href="/login/auth">
           <Button variant="text">
-            <Trans>Go back to login</Trans>
+            Go back to login
           </Button>
         </a>
       </Match>

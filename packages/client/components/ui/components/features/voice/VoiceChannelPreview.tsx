@@ -1,10 +1,9 @@
-import { For, Show, splitProps } from "solid-js";
+import { For, Show, createMemo, splitProps } from "solid-js";
 import {
   TrackLoop,
   useEnsureParticipant,
   useIsMuted,
   useIsSpeaking,
-  useTracks,
 } from "solid-livekit-components";
 
 import { Track } from "livekit-client";
@@ -14,12 +13,13 @@ import { styled } from "styled-system/jsx";
 
 import { UserContextMenu } from "@revolt/app";
 import { useUser } from "@revolt/markdown/users";
-import { InRoom } from "@revolt/rtc";
+import { InRoom, useVoice } from "@revolt/rtc";
 
 import { Avatar, Ripple, typography } from "../../design";
 import { Row } from "../../layout";
 
 import { VoiceStatefulUserIcons } from "./VoiceStatefulUserIcons";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * Render a preview of users (or the active participants) for a given channel
@@ -41,14 +41,11 @@ export function VoiceChannelPreview(props: { channel: Channel }) {
  * Use API as the source of truth
  */
 function VariantLive() {
-  const tracks = useTracks(
-    [{ source: Track.Source.Camera, withPlaceholder: true }],
-    { onlySubscribed: false },
-  );
+  const voice = useVoice();
 
   return (
     <Base>
-      <TrackLoop tracks={tracks}>{() => <ParticipantLive />}</TrackLoop>
+      <TrackLoop tracks={voice.vidTracks()}>{() => <ParticipantLive />}</TrackLoop>
     </Base>
   );
 }
@@ -57,10 +54,13 @@ function VariantLive() {
  * Use LiveKit as the source of truth
  */
 function VariantPreview(props: { channel: Channel }) {
+  // Access voiceParticipants as an array for Solid reactivity
+  const participants = () => [...props.channel.voiceParticipants.values()];
+  
   return (
-    <Show when={props.channel.voiceParticipants.size}>
+    <Show when={participants().length > 0}>
       <Base>
-        <For each={[...props.channel.voiceParticipants.values()]}>
+        <For each={participants()}>
           {(participant) => <ParticipantPreview participant={participant} />}
         </For>
       </Base>

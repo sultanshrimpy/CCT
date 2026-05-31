@@ -1,7 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { Button } from "@revolt/ui";
 
 interface Props {
@@ -125,7 +123,7 @@ export function MailProvider(props: Props) {
     <Show when={provider()}>
       <a href={provider()![1]} target="_blank" rel="noreferrer">
         <Button>
-          <Trans>Open {provider()![0]}</Trans>
+          Open {provider()![0]}
         </Button>
       </a>
     </Show>

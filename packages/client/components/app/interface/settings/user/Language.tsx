@@ -1,5 +1,3 @@
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Language, Languages, browserPreferredLanguage } from "@revolt/i18n";
 import type { LanguageEntry } from "@revolt/i18n/Languages";
 import { timeLocale } from "@revolt/i18n/dayjs";
@@ -49,8 +47,6 @@ const RE_LANG = /_/g;
  */
 function PickLanguage() {
   const { locale } = useState();
-  const { i18n } = useLingui();
-
   //@ts-expect-error unfilled object
   const langOpts: { [k in Language]: CategorySelectOption } = {};
   const langIds = Object.keys(Languages) as Language[];
@@ -95,8 +91,8 @@ function PickLanguage() {
   return (
     <CategoryButton.Select
       icon={<MdLanguage {...iconSize(22)} />}
-      title={<Trans>Select your language</Trans>}
-      value={i18n().locale as Language}
+      title={"Select your language"}
+      value={"en" as Language}
       options={langOpts}
       onUpdate={(id) => locale.switch(id)}
     />
@@ -114,19 +110,19 @@ function PickDateFormat() {
   return (
     <CategoryButton.Select
       icon={<MdCalendarMonth {...iconSize(22)} />}
-      title={<Trans>Date format</Trans>}
-      value={timeLocale()[1].formats.L}
+      title={"Date format"}
+      value={timeLocale()[1]?.formats?.L ?? "MM/DD/YYYY"}
       options={{
         "DD/MM/YYYY": {
-          shortDesc: <Trans>Traditional (DD/MM/YYYY)</Trans>,
+          shortDesc: "Traditional (DD/MM/YYYY)",
           description: <Time format="date" value={LastWeek} />,
         },
         "MM/DD/YYYY": {
-          shortDesc: <Trans>American (MM/DD/YYYY)</Trans>,
+          shortDesc: "American (MM/DD/YYYY)",
           description: <Time format="dateAmerican" value={LastWeek} />,
         },
         "YYYY-MM-DD": {
-          shortDesc: <Trans>ISO Standard (YYYY-MM-DD)</Trans>,
+          shortDesc: "ISO Standard (YYYY-MM-DD)",
           description: <Time format="iso8601" value={LastWeek} />,
         },
       }}
@@ -144,15 +140,15 @@ function PickTimeFormat() {
   return (
     <CategoryButton.Select
       icon={<MdSchedule {...iconSize(22)} />}
-      title={<Trans>Time format</Trans>}
-      value={timeLocale()[1].formats.LT}
+      title={"Time format"}
+      value={timeLocale()[1]?.formats?.LT ?? "h:mm A"}
       options={{
         "HH:mm": {
-          shortDesc: <Trans>24 hours</Trans>,
+          shortDesc: "24 hours",
           description: <Time format="time24" value={new Date()} />,
         },
         "h:mm A": {
-          shortDesc: <Trans>12 hours</Trans>,
+          shortDesc: "12 hours",
           description: <Time format="time12" value={new Date()} />,
         },
       }}
@@ -175,22 +171,22 @@ function PickTimeFormat() {
 //       fallback={
 //         <CategoryButton
 //           icon={<MdKeyboardTabRtl {...iconSize(22)} />}
-//           description={<Trans>Flip the user interface right to left</Trans>}
+//           description={"Flip the user interface right to left"}
 //           action={<Checkbox />}
 //           onClick={() => void 0}
 //         >
-//           <Trans>Enable RTL layout</Trans>
+//           Enable RTL layout
 //         </CategoryButton>
 //       }
 //     >
 //       <Match when={currentLanguage().rtl}>
 //         <CategoryButton
 //           icon={<MdKeyboardTab {...iconSize(22)} />}
-//           description={<Trans>Keep the user interface left to right</Trans>}
+//           description={"Keep the user interface left to right"}
 //           action={<Checkbox />}
 //           onClick={() => void 0}
 //         >
-//           <Trans>Force LTR layout</Trans>
+//           Force LTR layout
 //         </CategoryButton>
 //       </Match>
 //     </Switch>
@@ -208,10 +204,10 @@ function ContributeLanguageLink() {
         icon={<MdTranslate {...iconSize(22)} />}
         onClick={() => void 0}
         description={
-          <Trans>Help contribute to an existing or new language</Trans>
+          "Help contribute to an existing or new language"
         }
       >
-        <Trans>Contribute a language</Trans>
+        Contribute a language
       </CategoryButton>
     </a>
   );

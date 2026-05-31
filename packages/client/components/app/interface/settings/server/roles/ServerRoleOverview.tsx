@@ -1,7 +1,6 @@
 import { BiRegularListUl } from "solid-icons/bi";
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 import { Server } from "stoat.js";
 import { styled } from "styled-system/jsx";
@@ -51,27 +50,27 @@ export function ServerRoleOverview(props: { context: Server }) {
         <CategoryButton
           icon={<BiRegularListUl size={20} />}
           action="chevron"
-          description={<Trans>Affects all roles and users</Trans>}
+          description={"Affects all roles and users"}
           onClick={() => navigate("roles/default")}
         >
-          <Trans>Default Permissions</Trans>
+          Default Permissions
         </CategoryButton>
         <CategoryButton
           icon={<MdGroupAdd {...iconSize(20)} />}
           action="chevron"
-          description={<Trans>Create a new role</Trans>}
+          description={"Create a new role"}
           onClick={createRole}
         >
-          <Trans>Create Role</Trans>
+          Create Role
         </CategoryButton>
       </Column>
 
       <Column gap="sm">
         <Text class="label">
-          <Trans>Server Roles</Trans>
+          Server Roles
           <Show when={change.isPending}>
             {" "}
-            <Trans>(changes are being saved…)</Trans>
+            (changes are being saved…)
           </Show>
         </Text>
         <Draggable

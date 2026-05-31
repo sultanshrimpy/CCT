@@ -1,6 +1,5 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useNavigate } from "@solidjs/router";
 import { useMutation } from "@tanstack/solid-query";
 import { ServerPublicInvite } from "stoat.js";
@@ -45,9 +44,7 @@ export function InviteModal(props: DialogProps & Modals & { type: "invite" }) {
           </Match>
         </Switch>
       }
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
+      actions={[{ text: "Cancel" }, {
           text: (
             <Show
               when={
@@ -55,14 +52,13 @@ export function InviteModal(props: DialogProps & Modals & { type: "invite" }) {
                   ? !(props.invite as ServerPublicInvite).server
                   : true
               }
-              fallback={<Trans>Open</Trans>}
+              fallback={"Open"}
             >
-              <Trans>Join</Trans>
+              Join
             </Show>
           ),
           onClick: join.mutateAsync,
-        },
-      ]}
+        }, ]}
       isDisabled={join.isPending}
       scrimBackground={
         props.invite instanceof ServerPublicInvite
@@ -74,13 +70,9 @@ export function InviteModal(props: DialogProps & Modals & { type: "invite" }) {
         <Match when={props.invite.type === "Server"}>
           <Show
             when={!(props.invite as ServerPublicInvite).server}
-            fallback={<Trans>You're already part of this server.</Trans>}
+            fallback={"You're already part of this server."}
           >
-            <Trans>
-              You've been invited to join this server.
-              <br />
-              Would you like to join?
-            </Trans>
+            You've been invited to join this server. <br /> Would you like to join?
           </Show>
         </Match>
       </Switch>

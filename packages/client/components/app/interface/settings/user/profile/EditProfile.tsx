@@ -1,7 +1,5 @@
 import { For } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useClient } from "@revolt/client";
 import { createOwnProfileResource } from "@revolt/client/resources";
 import { useModals } from "@revolt/modal";
@@ -31,8 +29,8 @@ export function EditProfile() {
       <CategoryButton.Group>
         <CategoryButton.Collapse
           icon={<MdGroups {...iconSize(22)} />}
-          title={<Trans>Server Identities</Trans>}
-          description={<Trans>Change your profile per-server</Trans>}
+          title={"Server Identities"}
+          description={"Change your profile per-server"}
           scrollable
         >
           <For each={client().servers.toList()}>
@@ -61,7 +59,7 @@ export function EditProfile() {
 
       <Column>
         <Text class="title" size="large">
-          <Trans>Edit Global Profile</Trans>
+          Edit Global Profile
         </Text>
         <UserProfileEditor user={client().user!} />
       </Column>

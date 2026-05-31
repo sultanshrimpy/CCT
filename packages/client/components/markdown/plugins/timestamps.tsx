@@ -8,6 +8,7 @@ import { visit } from "unist-util-visit";
 import { dayjs, timeLocale } from "@revolt/i18n/dayjs";
 
 import { time as Time } from "../elements";
+import { floating } from "@revolt/ui/directives";
 
 export function RenderTimestamp(props: { format: string; date: Dayjs }) {
   /**

@@ -1,7 +1,5 @@
 import { Match, Show, Switch, createMemo, createSignal } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useClient, useClientLifecycle } from "@revolt/client";
 import {
   createMfaResource,
@@ -66,7 +64,7 @@ function EditAccount() {
         icon={<MdAlternateEmail {...iconSize(22)} />}
         description={client().user?.username}
       >
-        <Trans>Username</Trans>
+        Username
       </CategoryButton>
       <CategoryButton
         action="chevron"
@@ -93,7 +91,7 @@ function EditAccount() {
           </Row>
         }
       >
-        <Trans>Email</Trans>
+        Email
       </CategoryButton>
       <CategoryButton
         action="chevron"
@@ -106,7 +104,7 @@ function EditAccount() {
         icon={<MdPassword {...iconSize(22)} />}
         description={"•••••••••"}
       >
-        <Trans>Password</Trans>
+        Password
       </CategoryButton>
     </CategoryButton.Group>
   );
@@ -183,12 +181,9 @@ function MultiFactorAuth() {
     <CategoryButton.Group>
       <CategoryButton.Collapse
         icon={<MdVerifiedUser {...iconSize(22)} />}
-        title={<Trans>Recovery Codes</Trans>}
+        title={"Recovery Codes"}
         description={
-          <Trans>
-            Configure a way to get back into your account in case your 2FA is
-            lost
-          </Trans>
+          "Configure a way to get back into your account in case your 2FA is lost"
         }
       >
         <Switch
@@ -197,34 +192,34 @@ function MultiFactorAuth() {
               icon="blank"
               disabled={mfa.isLoading}
               onClick={generateRecoveryCodes}
-              description={<Trans>Setup recovery codes</Trans>}
+              description={"Setup recovery codes"}
             >
-              <Trans>Generate Recovery Codes</Trans>
+              Generate Recovery Codes
             </CategoryButton>
           }
         >
           <Match when={!mfa.isLoading && mfa.data?.recoveryEnabled}>
             <CategoryButton
               icon="blank"
-              description={<Trans>Get active recovery codes</Trans>}
+              description={"Get active recovery codes"}
               onClick={showRecoveryCodes}
             >
-              <Trans>View Recovery Codes</Trans>
+              View Recovery Codes
             </CategoryButton>
             <CategoryButton
               icon="blank"
-              description={<Trans>Get a new set of recovery codes</Trans>}
+              description={"Get a new set of recovery codes"}
               onClick={generateRecoveryCodes}
             >
-              <Trans>Reset Recovery Codes</Trans>
+              Reset Recovery Codes
             </CategoryButton>
           </Match>
         </Switch>
       </CategoryButton.Collapse>
       <CategoryButton.Collapse
         icon={<MdLock {...iconSize(22)} />}
-        title={<Trans>Authenticator App</Trans>}
-        description={<Trans>Configure one-time password authentication</Trans>}
+        title={"Authenticator App"}
+        description={"Configure one-time password authentication"}
       >
         <Switch
           fallback={
@@ -232,9 +227,9 @@ function MultiFactorAuth() {
               icon="blank"
               disabled={mfa.isLoading}
               onClick={setupAuthenticatorApp}
-              description={<Trans>Setup one-time password authenticator</Trans>}
+              description={"Setup one-time password authenticator"}
             >
-              <Trans>Enable Authenticator</Trans>
+              Enable Authenticator
             </CategoryButton>
           }
         >
@@ -242,11 +237,11 @@ function MultiFactorAuth() {
             <CategoryButton
               icon="blank"
               description={
-                <Trans>Disable one-time password authenticator</Trans>
+                "Disable one-time password authenticator"
               }
               onClick={disableAuthenticatorApp}
             >
-              <Trans>Remove Authenticator</Trans>
+              Remove Authenticator
             </CategoryButton>
           </Match>
         </Switch>
@@ -296,13 +291,10 @@ function ManageAccount() {
         onClick={disableAccount}
         icon={<MdBlock {...iconSize(22)} fill="var(--md-sys-color-error)" />}
         description={
-          <Trans>
-            You won't be able to access your account unless you contact support
-            - however, your data will not be deleted.
-          </Trans>
+          "You won't be able to access your account unless you contact support - however, your data will not be deleted."
         }
       >
-        <Trans>Disable Account</Trans>
+        Disable Account
       </CategoryButton>
       <CategoryButton
         action={stillOwnServers() ? undefined : "chevron"}
@@ -310,18 +302,12 @@ function ManageAccount() {
         onClick={deleteAccount}
         icon={<MdDelete {...iconSize(22)} fill="var(--md-sys-color-error)" />}
         description={
-          <Trans>
-            Your account and all of your data (including your messages and
-            friends list) will be queued for deletion. A confirmation email will
-            be sent - you can cancel this within 7 days by contacting support.
-          </Trans>
+          "Your account and all of your data (including your messages and friends list) will be queued for deletion. A confirmation email will be sent - you can cancel this within 7 days by contacting support."
         }
       >
-        <Switch fallback={<Trans>Delete Account</Trans>}>
+        <Switch fallback={"Delete Account"}>
           <Match when={stillOwnServers()}>
-            <Trans>
-              Cannot delete account until servers are deleted or transferred
-            </Trans>
+            Cannot delete account until servers are deleted or transferred
           </Match>
         </Switch>
       </CategoryButton>

@@ -1,7 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { For, Match, Switch } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { Server } from "stoat.js";
 import { css } from "styled-system/css";
 
@@ -24,7 +23,6 @@ import {
  */
 export function EmojiList(props: { server: Server }) {
   const err = useError();
-  const { t } = useLingui();
   const client = useClient();
   const { openModal } = useModals();
 
@@ -92,19 +90,16 @@ export function EmojiList(props: { server: Server }) {
                 counter
                 name="name"
                 control={editGroup.controls.name}
-                label={t`Emoji Name`}
+                label={"Emoji Name"}
               />
 
               <Row align>
                 <Form2.Submit group={editGroup}>
-                  <Trans>Create</Trans>
+                  Create
                 </Form2.Submit>
                 <Switch
                   fallback={
-                    <Trans>
-                      {CONFIGURATION.MAX_EMOJI - props.server.emojis.length}{" "}
-                      emoji slots remaining
-                    </Trans>
+                    <>{CONFIGURATION.MAX_EMOJI - props.server.emojis.length}{" "}emoji slots remaining</>
                   }
                 >
                   <Match when={editGroup.errors?.error}>

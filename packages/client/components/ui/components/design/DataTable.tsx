@@ -7,7 +7,6 @@ import {
   on,
 } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import MdChevronLeft from "@material-design-icons/svg/outlined/chevron_left.svg?component-solid";
@@ -70,7 +69,7 @@ export function DataTable(props: Props) {
               <Cell colspan={props.columns.length}>
                 <Pagination>
                   {/* <Row align>
-                    <Trans>Rows per page:</Trans>
+                    Rows per page:
                     <TextField.Select
                       value="12"
                       variant="outlined"
@@ -86,14 +85,7 @@ export function DataTable(props: Props) {
                     </TextField.Select>
                   </Row> */}
 
-                  <Trans>
-                    {page() * itemsPerPage() + 1}-
-                    {Math.min(
-                      props.itemCount!,
-                      page() * itemsPerPage() + itemsPerPage(),
-                    )}{" "}
-                    of {props.itemCount}
-                  </Trans>
+                  {page() * itemsPerPage() + 1}- {Math.min( props.itemCount!, page() * itemsPerPage() + itemsPerPage(), )}{" "} of {props.itemCount}
 
                   <Row>
                     <Button

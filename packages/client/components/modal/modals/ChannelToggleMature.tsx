@@ -1,6 +1,5 @@
 import { Match, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 
 import { Dialog, DialogProps } from "@revolt/ui";
@@ -23,41 +22,30 @@ export function ChannelToggleMatureModal(
       show={props.show}
       onClose={props.onClose}
       title={
-        <Switch fallback={<Trans>Mark this channel as mature?</Trans>}>
+        <Switch fallback={"Mark this channel as mature?"}>
           <Match when={props.channel.mature}>
-            <Trans>Unmark this channel as mature?</Trans>
+            Unmark this channel as mature?
           </Match>
         </Switch>
       }
-      actions={[
-        { text: <Trans>Keep as is</Trans> },
-        {
+      actions={[{ text: "Keep as is" }, {
           text: (
-            <Switch fallback={<Trans>Mark as mature</Trans>}>
+            <Switch fallback={"Mark as mature"}>
               <Match when={props.channel.mature}>
-                <Trans>Unmark as mature</Trans>
+                Unmark as mature
               </Match>
             </Switch>
           ),
-          onClick: () => change.mutateAsync(!props.channel.mature),
-        },
-      ]}
+          onClick: () => change.mutateAsync(!props.channel.mature), },]}
       isDisabled={change.isPending}
     >
       <Switch
         fallback={
-          <Trans>
-            Users will be asked to confirm their age before joining this
-            channel.
-          </Trans>
+          "Users will be asked to confirm their age before joining this channel."
         }
       >
         <Match when={props.channel.mature}>
-          <Trans>
-            Users will no longer be asked to confirm their age before joining
-            this channel.
-            <wbr /> Please ensure the content is appropriate for all ages.
-          </Trans>
+          Users will no longer be asked to confirm their age before joining this channel. <wbr /> Please ensure the content is appropriate for all ages.
         </Match>
       </Switch>
     </Dialog>

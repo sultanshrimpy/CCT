@@ -1,4 +1,3 @@
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { createFormControl, createFormGroup } from "solid-forms";
 
 import { useState } from "@revolt/state";
@@ -13,8 +12,6 @@ export function ScreenShareSettingsModal(
   props: DialogProps & Modals & { type: "screen_share_settings" },
 ) {
   const { voice } = useState();
-  const { t } = useLingui();
-
   const group = createFormGroup({
     qualityName: createFormControl<ScreenShareQualityName>(
       voice.screenShareQuality || "low",
@@ -52,23 +49,19 @@ export function ScreenShareSettingsModal(
       minWidth={420}
       show={props.show}
       onClose={onCancel}
-      title={t`Screen Share Settings`}
-      actions={[
-        {
-          text: <Trans>Cancel</Trans>,
+      title={"Screen Share Settings"}
+      actions={[{
+          text: "Cancel",
           onClick: () => {
             onCancel();
             return false;
-          },
-        },
+          }, },
         {
-          text: <Trans>Go</Trans>,
-          onClick: () => {
+          text: "Go", onClick: () => {
             onSubmit();
             return false;
           },
-        },
-      ]}
+        },]}
     >
       <VideoTrack
         trackRef={props.trackReference}
@@ -92,15 +85,15 @@ export function ScreenShareSettingsModal(
           />
           <Show when={props.audio}>
             <Form2.Checkbox control={group.controls.audio}>
-              <Trans>Share audio</Trans>
+              Share audio
             </Form2.Checkbox>
           </Show>
           <Form2.Checkbox control={group.controls.dontAsk}>
-            <Trans>Don't ask me again</Trans>
+            Don't ask me again
           </Form2.Checkbox>
           <Show when={!props.audio}>
             <small>
-              <Trans>Audio disabled by browser</Trans>
+              Audio disabled by browser
             </small>
           </Show>
         </Column>

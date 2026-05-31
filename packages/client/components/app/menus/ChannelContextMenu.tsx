@@ -1,6 +1,5 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { Channel } from "stoat.js";
 
 import { useModals } from "@revolt/modal";
@@ -113,14 +112,13 @@ export function ChannelContextMenu(props: { channel: Channel }) {
     <ContextMenu>
       <Show when={props.channel.isVoice}>
         <ContextMenuButton
-          icon={MdChat}
-          onClick={() =>
+          icon={MdChat} onClick={() =>
             navigate(
               `/server/${props.channel.serverId}/channel/${props.channel.id}`,
             )
           }
         >
-          <Trans>Open Chat</Trans>
+          Open Chat
         </ContextMenuButton>
         <ContextMenuDivider />
       </Show>
@@ -131,12 +129,12 @@ export function ChannelContextMenu(props: { channel: Channel }) {
       >
         <Show when={props.channel.unread}>
           <ContextMenuButton icon={MdMarkChatRead} onClick={markAsRead}>
-            <Trans>Mark as read</Trans>
+            Mark as read
           </ContextMenuButton>
         </Show>
         <Show when={props.channel.havePermission("InviteOthers")}>
           <ContextMenuButton icon={MdGroupAdd} onClick={createInvite}>
-            <Trans>Create invite</Trans>
+            Create invite
           </ContextMenuButton>
         </Show>
         <ContextMenuDivider />
@@ -148,21 +146,21 @@ export function ChannelContextMenu(props: { channel: Channel }) {
 
       <Show when={props.channel.server?.havePermission("ManageChannel")}>
         <ContextMenuButton icon={MdLibraryAdd} onClick={createChannel}>
-          <Trans>Create channel</Trans>
+          Create channel
         </ContextMenuButton>
       </Show>
       <Show when={props.channel.havePermission("ManageChannel")}>
         <ContextMenuButton icon={MdSettings} onClick={editChannel}>
-          <Trans>Open channel settings</Trans>
+          Open channel settings
         </ContextMenuButton>
         <ContextMenuButton
           icon={props.channel.type === "Group" ? MdLogout : MdDelete}
           onClick={deleteChannel}
           destructive
         >
-          <Switch fallback={<Trans>Delete channel</Trans>}>
+          <Switch fallback={"Delete channel"}>
             <Match when={props.channel.type === "Group"}>
-              <Trans>Leave group</Trans>
+              Leave group
             </Match>
           </Switch>
         </ContextMenuButton>
@@ -179,15 +177,15 @@ export function ChannelContextMenu(props: { channel: Channel }) {
 
       <Show when={state.settings.getValue("advanced:admin_panel")}>
         <ContextMenuButton icon={MdShield} onClick={openAdminPanel}>
-          <Trans>Admin Panel</Trans>
+          Admin Panel
         </ContextMenuButton>
       </Show>
       <ContextMenuButton icon={MdShare} onClick={copyLink}>
-        <Trans>Copy link</Trans>
+        Copy link
       </ContextMenuButton>
       <Show when={state.settings.getValue("advanced:copy_id")}>
         <ContextMenuButton icon={MdBadge} onClick={copyId}>
-          <Trans>Copy channel ID</Trans>
+          Copy channel ID
         </ContextMenuButton>
       </Show>
     </ContextMenu>

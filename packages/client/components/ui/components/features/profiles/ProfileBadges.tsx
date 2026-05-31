@@ -1,7 +1,6 @@
 import { BiSolidShield } from "solid-icons/bi";
 import { Show } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { User, UserBadges } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -18,15 +17,14 @@ import badgeTranslator from "../../../../../public/assets/badges/translator.svg"
 import { Text } from "../../design";
 
 import { ProfileCard } from "./ProfileCard";
+import { floating } from "@revolt/ui/directives";
 
 export function ProfileBadges(props: { user: User }) {
-  const { t } = useLingui();
-
   return (
     <Show when={props.user.badges}>
       <ProfileCard>
         <Text class="title" size="large">
-          <Trans>Badges</Trans>
+          Badges
         </Text>
 
         <BadgeRow>
@@ -35,7 +33,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`Stoat Founder`,
+                  content: "Stoat Founder",
                 },
               }}
               src={badgeFounder}
@@ -46,7 +44,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`Stoat Developer`,
+                  content: "Stoat Developer",
                 },
               }}
               src={badgeDeveloper}
@@ -57,7 +55,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`Donated to Stoat`,
+                  content: "Donated to Stoat",
                 },
               }}
               src={badgeSupporter}
@@ -68,7 +66,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`Helped translate Stoat`,
+                  content: "Helped translate Stoat",
                 },
               }}
               src={badgeTranslator}
@@ -79,7 +77,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`One of the first 1000 users!`,
+                  content: "One of the first 1000 users!",
                 },
               }}
               src={badgeEarlyAdopter}
@@ -90,7 +88,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`Platform Moderator`,
+                  content: "Platform Moderator",
                 },
               }}
             >
@@ -102,7 +100,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`Responsibly disclosed security issues`,
+                  content: "Responsibly disclosed security issues",
                 },
               }}
             >
@@ -116,7 +114,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`irrelevant joke badge 1`,
+                  content: "irrelevant joke badge 1",
                 },
               }}
               src={badgeJoke1}
@@ -129,7 +127,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`irrelevant joke badge 2`,
+                  content: "irrelevant joke badge 2",
                 },
               }}
               src={badgeJoke2}

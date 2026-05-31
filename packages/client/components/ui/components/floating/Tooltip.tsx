@@ -3,6 +3,7 @@ import { JSX, splitProps } from "solid-js";
 import { styled } from "styled-system/jsx";
 
 import { typography } from "../design";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * Base element for the tooltip

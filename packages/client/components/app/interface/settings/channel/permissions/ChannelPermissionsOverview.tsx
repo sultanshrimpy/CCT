@@ -1,6 +1,5 @@
 import { For, createMemo } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { Channel } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -52,10 +51,10 @@ export function ChannelPermissionsOverview(props: { context: Channel }) {
       <CategoryButton
         icon="blank"
         action="chevron"
-        description={<Trans>Affects all roles and users</Trans>}
+        description={"Affects all roles and users"}
         onClick={() => navigate("permissions/default")}
       >
-        <Trans>Default Permissions</Trans>
+        Default Permissions
       </CategoryButton>
 
       <Column gap="sm">
@@ -74,12 +73,7 @@ export function ChannelPermissionsOverview(props: { context: Channel }) {
               action="chevron"
               onClick={() => navigate(`permissions/${role.id}`)}
               description={
-                <Trans>
-                  Grants {countBits(props.context.rolePermissions![role.id].a)}{" "}
-                  permissions and denies{" "}
-                  {countBits(props.context.rolePermissions![role.id].d)}{" "}
-                  permissions
-                </Trans>
+                <>Grants {countBits(props.context.rolePermissions![role.id].a)}{" "} permissions and denies{" "} {countBits(props.context.rolePermissions![role.id].d)}{" "} permissions</>
               }
             >
               {role.name}
@@ -103,7 +97,7 @@ export function ChannelPermissionsOverview(props: { context: Channel }) {
               }
               action="chevron"
               onClick={() => navigate(`permissions/${role.id}`)}
-              description={<Trans>No permissions set yet</Trans>}
+              description={"No permissions set yet"}
             >
               {role.name}
             </CategoryButton>

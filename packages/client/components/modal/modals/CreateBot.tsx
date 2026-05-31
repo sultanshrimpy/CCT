@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Column, Dialog, DialogProps, Form2, Text } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -13,7 +11,6 @@ import { Modals } from "../types";
 export function CreateBotModal(
   props: DialogProps & Modals & { type: "create_bot" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   const group = createFormGroup({
@@ -39,30 +36,19 @@ export function CreateBotModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Create a new bot</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Create</Trans>,
+      title={"Create a new bot"}
+      actions={[{ text: "Close" }, {
+          text: "Create",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
         <Column>
           <Text>
-            <Trans>
-              By creating this bot, you agree to the{" "}
-              <a href="https://stoat.chat/aup" target="_blank" rel="noreferrer">
-                <Trans>Acceptable Use Policy</Trans>
-              </a>
-              .
-            </Trans>
+            By creating this bot, you agree to the{" "} <a href="https://stoat.chat/aup" target="_blank" rel="noreferrer"> Acceptable Use Policy </a> .
           </Text>
           <Form2.TextField
             minlength={2}
@@ -70,7 +56,7 @@ export function CreateBotModal(
             counter
             name="username"
             control={group.controls.username}
-            label={t`Username`}
+            label={"Username"}
           />
         </Column>
       </form>

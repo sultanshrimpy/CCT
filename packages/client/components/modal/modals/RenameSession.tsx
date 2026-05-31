@@ -1,7 +1,5 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
 
 import { useModals } from "..";
@@ -13,7 +11,6 @@ import { Modals } from "../types";
 export function RenameSessionModal(
   props: DialogProps & Modals & { type: "rename_session" },
 ) {
-  const { t } = useLingui();
   const { showError } = useModals();
 
   const group = createFormGroup({
@@ -36,18 +33,13 @@ export function RenameSessionModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Rename Session</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Rename</Trans>,
+      title={"Rename Session"}
+      actions={[{ text: "Cancel" }, {
+          text: "Rename",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -56,8 +48,8 @@ export function RenameSessionModal(
             //TODO: the length should probably be limited here, I couldn't find the server-side validator
             name="name"
             control={group.controls.name}
-            label={t`Name`}
-            placeholder={t`Enter a new name for this session`}
+            label={"Name"}
+            placeholder={"Enter a new name for this session"}
           />
         </Column>
       </form>

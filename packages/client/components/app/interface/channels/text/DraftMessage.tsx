@@ -1,6 +1,5 @@
 import { For, Match, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import type { Channel } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -43,11 +42,11 @@ export function DraftMessage(props: Props) {
       avatar={<Avatar src={userInfo().avatar} size={36} />}
       timestamp={
         props.draft.status === "sending" ? (
-          <Trans>Sending...</Trans>
+          "Sending..."
         ) : props.draft.status === "failed" ? (
-          <Trans>Failed to send</Trans>
+          "Failed to send"
         ) : (
-          <Trans>Unsent message</Trans>
+          "Unsent message"
         )
       }
       sendStatus={props.draft.status === "sending" ? "sending" : "failed"}

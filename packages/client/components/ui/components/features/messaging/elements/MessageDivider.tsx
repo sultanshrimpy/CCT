@@ -1,6 +1,5 @@
 import { Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 /**
@@ -78,7 +77,7 @@ export function MessageDivider(props: Props) {
     <Base unread={props.unread}>
       <Show when={props.unread}>
         <Unread>
-          <Trans>NEW</Trans>
+          NEW
         </Unread>
       </Show>
       <Show when={props.date}>

@@ -8,6 +8,7 @@ import { Avatar, CategoryButton, IconButton, iconSize } from "@revolt/ui";
 
 import MdCakeFill from "@material-design-icons/svg/filled/cake.svg?component-solid";
 import MdEdit from "@material-design-icons/svg/outlined/edit.svg?component-solid";
+import { floating } from "@revolt/ui/directives";
 
 export function UserSummary(props: {
   user: User;

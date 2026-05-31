@@ -35,11 +35,11 @@ export function invisibleScrollable(
   el: HTMLDivElement,
   accessor: Accessor<JSX.Directives["invisibleScrollable"] & object>,
 ) {
-  const props = accessor();
+  const props = accessor?.() ?? {};
 
   el.classList.add(...baseStyles().split(" "));
 
-  if (props.class) {
-    props.class.split(" ").forEach((cls) => el.classList.add(cls));
+  if (props && (props as any).class) {
+    (props as any).class.split(" ").forEach((cls: string) => el.classList.add(cls));
   }
 }

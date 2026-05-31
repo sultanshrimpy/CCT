@@ -1,4 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 
 import { useClient } from "@revolt/client";
@@ -29,17 +28,13 @@ export function DeleteBotModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Delete {props.bot.user!.displayName}?</Trans>}
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
-          text: <Trans>Delete</Trans>,
-          onClick: () => deleteBot.mutateAsync(),
-        },
-      ]}
+      title={<>Delete {props.bot.user!.displayName}?</>}
+      actions={[{ text: "Cancel" }, {
+          text: "Delete",
+          onClick: () => deleteBot.mutateAsync(), },]}
       isDisabled={deleteBot.isPending}
     >
-      <Trans>Once it's deleted, there's no going back.</Trans>
+      Once it's deleted, there's no going back.
     </Dialog>
   );
 }

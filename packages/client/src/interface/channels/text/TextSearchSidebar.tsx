@@ -1,6 +1,5 @@
 import { For, Show, Suspense, createSignal } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useQuery } from "@tanstack/solid-query";
 import { API, Channel } from "stoat.js";
 
@@ -40,21 +39,21 @@ export function TextSearchSidebar(props: {
             groupActive={sort() === "Relevance"}
             onPress={() => setSort("Relevance")}
           >
-            <Trans>Relevance</Trans>
+            Relevance
           </Button>
           <Button
             group="connected"
             groupActive={sort() === "Latest"}
             onPress={() => setSort("Latest")}
           >
-            <Trans>Latest</Trans>
+            Latest
           </Button>
           <Button
             group="connected-end"
             groupActive={sort() === "Oldest"}
             onPress={() => setSort("Oldest")}
           >
-            <Trans>Oldest</Trans>
+            Oldest
           </Button>
         </Row>
       </Show>

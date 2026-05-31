@@ -1,6 +1,5 @@
 import { For, Match, Show, Switch, createSignal, onMount } from "solid-js";
 
-import { useLingui } from "@lingui-solid/solid/macro";
 import { Message as MessageInterface, WebsiteEmbed } from "stoat.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
@@ -34,6 +33,7 @@ import {
 import { startsWithPackPUA } from "@revolt/markdown/emoji/UnicodeEmoji";
 import { MediaPickerProps } from "@revolt/ui/components/features/messaging/composition/picker/CompositionMediaPicker";
 import { EditMessage } from "./EditMessage";
+import { floating } from "@revolt/ui/directives";
 
 /**
  * Regex for matching URLs
@@ -74,7 +74,6 @@ interface Props {
 export function Message(props: Props) {
   const dayjs = useTime();
   const state = useState();
-  const { t } = useLingui();
   const client = useClient();
 
   const [isHovering, setIsHovering] = createSignal(false);
@@ -204,33 +203,33 @@ export function Message(props: Props) {
             }
           >
             <Tooltip
-              content={t`Message was sent on another platform`}
+              content={"Message was sent on another platform"}
               placement="top"
             >
               <Symbol size={16}>link</Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.author?.privileged}>
-            <Tooltip content={t`Official Communication`} placement="top">
+            <Tooltip content={"Official Communication"} placement="top">
               <Symbol size={16}>brightness_alert</Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.author?.bot}>
-            <Tooltip content={t`Bot`} placement="top">
+            <Tooltip content={"Bot"} placement="top">
               <Symbol size={16} fill>
                 smart_toy
               </Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.webhook}>
-            <Tooltip content={t`Webhook`} placement="top">
+            <Tooltip content={"Webhook"} placement="top">
               <Symbol size={16} fill>
                 cloud
               </Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.isSuppressed}>
-            <Tooltip content={t`Silent`} placement="top">
+            <Tooltip content={"Silent"} placement="top">
               <Symbol size={16} fill>
                 notifications_off
               </Symbol>
@@ -243,7 +242,7 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t`New to Stoat`} placement="top">
+              <Tooltip content={"New to Stoat"} placement="top">
                 <Symbol size={16} fill>
                   spa
                 </Symbol>
@@ -257,7 +256,7 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t`New to the server`} placement="top">
+              <Tooltip content={"New to the server"} placement="top">
                 <Symbol size={16}>spa</Symbol>
               </Tooltip>
             </NewUser>

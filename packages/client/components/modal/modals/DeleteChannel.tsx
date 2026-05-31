@@ -1,6 +1,5 @@
 import { Match, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
 
 import { Dialog, DialogProps } from "@revolt/ui";
@@ -26,45 +25,37 @@ export function DeleteChannelModal(
       show={props.show}
       onClose={props.onClose}
       title={
-        <Switch fallback={<Trans>Delete {props.channel.name}?</Trans>}>
+        <Switch fallback={<>{"Delete "}{props.channel.name}{"?"}</>}>
           <Match when={props.channel.type === "Group"}>
-            <Trans>Leave {props.channel.name}?</Trans>
+            Leave {props.channel.name}?
           </Match>
           <Match when={props.channel.type === "DirectMessage"}>
-            <Trans>
-              Close conversation with {props.channel.recipient?.displayName}?
-            </Trans>
+            Close conversation with {props.channel.recipient?.displayName}?
           </Match>
         </Switch>
       }
-      actions={[
-        { text: <Trans>Cancel</Trans> },
-        {
+      actions={[{ text: "Cancel" }, {
           text: (
-            <Switch fallback={<Trans>Delete</Trans>}>
+            <Switch fallback={"Delete"}>
               <Match when={props.channel.type === "Group"}>
-                <Trans>Leave</Trans>
+                Leave
               </Match>
               <Match when={props.channel.type === "DirectMessage"}>
-                <Trans>Close</Trans>
+                Close
               </Match>
             </Switch>
           ),
-          onClick: () => deleteChannel.mutateAsync(),
-        },
-      ]}
+          onClick: () => deleteChannel.mutateAsync(), },]}
       isDisabled={deleteChannel.isPending}
     >
       <Switch
-        fallback={<Trans>Once it's deleted, there's no going back.</Trans>}
+        fallback={"Once it's deleted, there's no going back."}
       >
         <Match when={props.channel.type === "Group"}>
-          <Trans>You won't be able to rejoin unless you are re-invited.</Trans>
+          You won't be able to rejoin unless you are re-invited.
         </Match>
         <Match when={props.channel.type === "DirectMessage"}>
-          <Trans>
-            You can re-open it later, but it will disappear on both sides.
-          </Trans>
+          You can re-open it later, but it will disappear on both sides.
         </Match>
       </Switch>
     </Dialog>

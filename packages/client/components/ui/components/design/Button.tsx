@@ -6,6 +6,7 @@ import { cva } from "styled-system/css/cva";
 
 import { Ripple } from "./Ripple";
 import { typography } from "./Text";
+import { floating } from "@revolt/ui/directives";
 
 type Props = Omit<
   Parameters<typeof button>[0] &
@@ -144,7 +145,7 @@ export function Button(props: Props) {
       style={{
         "background-color": style.bg,
       }}
-      // @codegen directives props=rest include=floating
+      use:floating={rest["use:floating"] as never}
     >
       <Show when={!buttonProps.disabled}>
         <Ripple />

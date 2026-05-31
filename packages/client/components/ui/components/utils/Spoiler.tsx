@@ -1,6 +1,5 @@
 import { Show, createSignal } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { Text } from "../design";
@@ -45,7 +44,7 @@ export function Spoiler(props: Props) {
         onClick={() => setShown(false)}
       >
         <Text>
-          <Trans>Click to show spoiler</Trans>
+          Click to show spoiler
         </Text>
       </Base>
     </Show>

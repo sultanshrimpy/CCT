@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { CategoryButton, Checkbox, Column, Time, iconSize } from "@revolt/ui";
 
 import MdBrush from "@material-design-icons/svg/outlined/brush.svg?component-solid";
@@ -18,38 +16,33 @@ export default function Sync() {
           onClick={() => void 0}
           icon={<MdPalette {...iconSize(22)} />}
           description={
-            <Trans>
-              Sync appearance options, such as chosen emoji pack and message
-              density.
-            </Trans>
+            "Sync appearance options, such as chosen emoji pack and message density."
           }
         >
-          <Trans>Appearance</Trans>
+          Appearance
         </CategoryButton>
         <CategoryButton
           action={<Checkbox checked onChange={(value) => void value} />}
           onClick={() => void 0}
           icon={<MdBrush {...iconSize(22)} />}
           description={
-            <Trans>Sync your chosen theme, colours, and any custom CSS.</Trans>
+            "Sync your chosen theme, colours, and any custom CSS."
           }
         >
-          <Trans>Theme</Trans>
+          Theme
         </CategoryButton>
         <CategoryButton
           action={<Checkbox checked onChange={(value) => void value} />}
           onClick={() => void 0}
           icon={<MdLanguage {...iconSize(22)} />}
-          description={<Trans>Sync your currently chosen language.</Trans>}
+          description={"Sync your currently chosen language."}
         >
-          <Trans>Language</Trans>
+          Language
         </CategoryButton>
       </CategoryButton.Group>
       <CategoryButton.Group>
         <CategoryButton>
-          <Trans>
-            Last sync <Time format="relative" value={0} />
-          </Trans>
+          Last sync <Time format="relative" value={0} />
         </CategoryButton>
       </CategoryButton.Group>
     </Column>

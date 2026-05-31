@@ -1,6 +1,5 @@
 import { Accessor, Show } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 import { decodeTime } from "ulid";
@@ -51,12 +50,10 @@ export function NewMessages(props: Props) {
       <FloatingIndicator position="top" onClick={props.jumpBack}>
         <Ripple />
         <span class={css({ flexGrow: 1 })}>
-          <Trans>
-            New messages since {dayjs(decodeTime(props.lastId()!)).fromNow()}
-          </Trans>
+          New messages since {dayjs(decodeTime(props.lastId()!)).fromNow()}
         </span>
         <span>
-          <Trans>Jump to the beginning</Trans>
+          Jump to the beginning
         </span>
         <CancelIcon onClick={onCancel}>
           <MdClose {...iconSize(16)} />

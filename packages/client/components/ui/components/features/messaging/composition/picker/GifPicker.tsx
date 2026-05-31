@@ -8,7 +8,6 @@ import {
   useContext,
 } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { VirtualContainer } from "@minht11/solid-virtual-container";
 import { useQuery } from "@tanstack/solid-query";
 import { styled } from "styled-system/jsx";
@@ -23,6 +22,7 @@ import {
 
 import { useState } from "@revolt/state";
 import { CompositionMediaPickerContext } from "./CompositionMediaPicker";
+import { invisibleScrollable } from "@revolt/ui/directives";
 
 type GifCategory = { title: string; image: string };
 
@@ -138,7 +138,7 @@ function Categories() {
   });
 
   return (
-    <div ref={targetElement} use:invisibleScrollable>
+    <div ref={targetElement} use:invisibleScrollable={{}}>
       <VirtualContainer
         items={items()}
         scrollTarget={targetElement}
@@ -178,7 +178,7 @@ const CategoryItem = (props: {
         e.stopImmediatePropagation();
       }}
     >
-      <Switch fallback={<Trans>Trending GIFs</Trans>}>
+      <Switch fallback={"Trending GIFs"}>
         <Match when={props.item.t === 0}>
           {(props.item as CategoryItem & { t: 0 }).category.title}
         </Match>
@@ -236,7 +236,7 @@ function GifSearch(props: { query: string }) {
   }));
 
   return (
-    <div ref={targetElement} use:invisibleScrollable>
+    <div ref={targetElement} use:invisibleScrollable={{}}>
       <VirtualContainer
         items={search.data as never /* resource */}
         scrollTarget={targetElement}

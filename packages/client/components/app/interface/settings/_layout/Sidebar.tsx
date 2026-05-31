@@ -14,6 +14,7 @@ import {
   SidebarButtonContent,
   SidebarButtonTitle,
 } from "./SidebarButton";
+import { invisibleScrollable } from "@revolt/ui/directives";
 
 /**
  * Settings Sidebar Layout
@@ -37,7 +38,7 @@ export function SettingsSidebar(props: {
 
   return (
     <Base class="settings_sidebar">
-      <div use:invisibleScrollable>
+      <div use:invisibleScrollable={{}}>
         <Content class="content">
           <Column gap="lg">
             {list.prepend}

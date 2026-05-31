@@ -3,6 +3,7 @@ import type { JSX } from "solid-js";
 import "mdui/components/select.js";
 import "mdui/components/text-field.js";
 import { cva } from "styled-system/css";
+import { autoComplete } from "@revolt/ui/directives";
 
 type Props = JSX.HTMLAttributes<HTMLInputElement> & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,7 +95,7 @@ export function TextField(props: Props) {
     <mdui-text-field
       {...props}
       class={field()}
-      // @codegen directives props=props include=autoComplete
+      use:autoComplete={props["use:autoComplete"] as never}
     />
   );
 }

@@ -1,4 +1,3 @@
-import { useLingui } from "@lingui-solid/solid/macro";
 import { createResizeObserver } from "@solid-primitives/resize-observer";
 import { createEffect, For, Match, onMount, Show, Switch } from "solid-js";
 import {
@@ -28,6 +27,7 @@ import { VoiceStatefulUserIcons } from "../VoiceStatefulUserIcons";
 
 import { VoiceCallCardActions } from "./VoiceCallCardActions";
 import { VoiceCallCardStatus } from "./VoiceCallCardStatus";
+import { floating } from "@revolt/ui/directives";
 /**
  * Call card (active)
  */
@@ -70,8 +70,6 @@ const TILE_MIN_WIDTH = "250px",
  */
 function Participants() {
   const voice = useVoice();
-  const { t } = useLingui();
-
   // Modify this value to get test tracks
   const testTrackCount = 0;
 
@@ -112,7 +110,7 @@ function Participants() {
                 use:floating={{
                   tooltip: {
                     placement: "top",
-                    content: voice.showBar() ? t`Hide Others` : t`Show Others`,
+                    content: voice.showBar() ? "Hide Others" : "Show Others",
                   },
                 }}
               >

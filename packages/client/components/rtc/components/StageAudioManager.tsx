@@ -59,7 +59,7 @@ function StageAudioTracks() {
         {(track) => (
           <AudioTrack
             trackRef={track()}
-            volume={state.voice.outputVolume}
+            volume={() => state.voice.outputVolume}
             muted={false}
             enableBoosting
           />

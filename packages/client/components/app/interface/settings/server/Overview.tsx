@@ -1,7 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { For, Show, createEffect, on } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import type { API } from "stoat.js";
 
 import { useClient } from "@revolt/client";
@@ -22,7 +21,6 @@ import { ServerSettingsProps } from "../ServerSettings";
  * Server overview
  */
 export default function ServerOverview(props: ServerSettingsProps) {
-  const { t } = useLingui();
   const client = useClient();
 
   /* eslint-disable solid/reactivity */
@@ -222,13 +220,13 @@ export default function ServerOverview(props: ServerSettingsProps) {
           <Form2.FileInput
             control={editGroup.controls.icon}
             accept="image/*"
-            label={t`Server Icon`}
+            label={"Server Icon"}
             imageJustify={false}
           />
           <Form2.FileInput
             control={editGroup.controls.banner}
             accept="image/*"
-            label={t`Server Banner`}
+            label={"Server Banner"}
             imageAspect="232/100"
             imageRounded={false}
             imageJustify={false}
@@ -239,7 +237,7 @@ export default function ServerOverview(props: ServerSettingsProps) {
             counter
             name="name"
             control={editGroup.controls.name}
-            label={t`Server Name`}
+            label={"Server Name"}
           />
           <Form2.TextField
             autosize
@@ -248,19 +246,19 @@ export default function ServerOverview(props: ServerSettingsProps) {
             counter
             name="description"
             control={editGroup.controls.description}
-            label={t`Server Description`}
-            placeholder={t`This server is about...`}
+            label={"Server Description"}
+            placeholder={"This server is about..."}
           />
           <Text class="title" size="small">
-            <Trans>System message channels</Trans>
+            System message channels
           </Text>
           <Column>
             <ControlSelect
-              label={t`User Joined`}
+              label={"User Joined"}
               control={editGroup.controls.sys_user_joined}
             >
               <MenuItem value="none">
-                <Trans>Disabled</Trans>
+                Disabled
               </MenuItem>
               <For each={channels()}>
                 {(element) => (
@@ -271,11 +269,11 @@ export default function ServerOverview(props: ServerSettingsProps) {
           </Column>
           <Column>
             <ControlSelect
-              label={t`User Left`}
+              label={"User Left"}
               control={editGroup.controls.sys_user_left}
             >
               <MenuItem value="none">
-                <Trans>Disabled</Trans>
+                Disabled
               </MenuItem>
               <For each={channels()}>
                 {(element) => (
@@ -286,11 +284,11 @@ export default function ServerOverview(props: ServerSettingsProps) {
           </Column>
           <Column>
             <ControlSelect
-              label={t`User Kicked`}
+              label={"User Kicked"}
               control={editGroup.controls.sys_user_kicked}
             >
               <MenuItem value="none">
-                <Trans>Disabled</Trans>
+                Disabled
               </MenuItem>
               <For each={channels()}>
                 {(element) => (
@@ -301,11 +299,11 @@ export default function ServerOverview(props: ServerSettingsProps) {
           </Column>
           <Column>
             <ControlSelect
-              label={t`User Banned`}
+              label={"User Banned"}
               control={editGroup.controls.sys_user_banned}
             >
               <MenuItem value="none">
-                <Trans>Disabled</Trans>
+                Disabled
               </MenuItem>
               <For each={channels()}>
                 {(element) => (
@@ -317,7 +315,7 @@ export default function ServerOverview(props: ServerSettingsProps) {
           <Row>
             <Form2.Reset group={editGroup} onReset={onReset} />
             <Form2.Submit group={editGroup} requireDirty>
-              <Trans>Save</Trans>
+              Save
             </Form2.Submit>
             <Show when={editGroup.isPending}>
               <CircularProgress />

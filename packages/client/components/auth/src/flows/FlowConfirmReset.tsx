@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useApi } from "@revolt/client";
 import { useNavigate, useParams } from "@revolt/routing";
 import { Button } from "@revolt/ui";
@@ -35,17 +33,17 @@ export default function FlowConfirmReset() {
   return (
     <>
       <FlowTitle>
-        <Trans>Reset password</Trans>
+        Reset password
       </FlowTitle>
       <Form onSubmit={reset}>
         <Fields fields={["new-password", "log-out"]} />
         <Button type="submit">
-          <Trans>Reset</Trans>
+          Reset
         </Button>
       </Form>
       <a href="/login/auth">
         <Button variant="text">
-          <Trans>Go back to login</Trans>
+          Go back to login
         </Button>
       </a>
     </>

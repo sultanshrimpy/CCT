@@ -1,5 +1,3 @@
-import { Trans } from "@lingui-solid/solid/macro";
-
 import { useVoice } from "@revolt/rtc";
 import { useState } from "@revolt/state";
 import { ScreenShareQualityName } from "@revolt/state/stores/Voice";
@@ -21,12 +19,12 @@ export function ScreenShareOptions() {
   return (
     <Column>
       <Text class="title">
-        <Trans>Screen Share Settings</Trans>
+        Screen Share Settings
       </Text>
       <CategoryButton.Group>
         <CategoryButton.Select
           icon={<Symbol>screen_share</Symbol>}
-          title={<Trans>Select screen share quality</Trans>}
+          title={"Select screen share quality"}
           options={
             Object.fromEntries(
               Object.keys(qualities).map((name) => [
@@ -47,7 +45,7 @@ export function ScreenShareOptions() {
             (voice.screenShareQualityAsk = !voice.screenShareQualityAsk)
           }
         >
-          <Trans>Always Ask for Screen Share Quality</Trans>
+          Always Ask for Screen Share Quality
         </CategoryButton>
       </CategoryButton.Group>
     </Column>

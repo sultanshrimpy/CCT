@@ -11,6 +11,7 @@ import { OverflowingText, iconSize } from "@revolt/ui/components/utils";
 import MdAdd from "@material-design-icons/svg/outlined/add.svg?component-solid";
 import MdCancel from "@material-design-icons/svg/outlined/cancel.svg?component-solid";
 import MdFile from "@material-design-icons/svg/outlined/description.svg?component-solid";
+import { scrollable } from "@revolt/ui/directives";
 
 interface Props {
   /**

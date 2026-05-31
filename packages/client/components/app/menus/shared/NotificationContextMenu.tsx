@@ -1,6 +1,5 @@
 import { For, Match, Show, Switch } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import dayjs from "dayjs";
 import { Channel } from "stoat.js";
 
@@ -31,24 +30,15 @@ export function NotificationContextMenu(props: { channel: Channel }) {
             onClick={() =>
               state.notifications.setChannelMute(props.channel, undefined)
             }
-            symbol={MdDoNotDisturbOff}
-            _titleCase={false}
+            symbol={MdDoNotDisturbOff} _titleCase={false}
           >
             <Column gap="none">
-              <Trans>Unmute Channel</Trans>
+              Unmute Channel
               <Show
                 when={state.notifications.getChannelMute(props.channel)?.until}
               >
                 <Text class="label" size="small">
-                  <Trans>
-                    Muted until{" "}
-                    <Time
-                      format="datetime"
-                      value={
-                        state.notifications.getChannelMute(props.channel)!.until
-                      }
-                    />
-                  </Trans>
+                  Muted until{" "} <Time format="datetime" value={ state.notifications.getChannelMute(props.channel)!.until } />
                 </Text>
               </Show>
             </Column>
@@ -57,18 +47,17 @@ export function NotificationContextMenu(props: { channel: Channel }) {
       >
         <ContextMenuSubMenu
           onClick={() => state.notifications.setChannelMute(props.channel, {})}
-          buttonContent={<Trans>Mute Channel</Trans>}
-          symbol={MdDoNotDisturbOn}
-        >
+          buttonContent={"Mute Channel"}
+          symbol={MdDoNotDisturbOn} >
           <For
             each={
               [
-                [15, <Trans>For 15 minutes</Trans>],
-                [60, <Trans>For 1 hour</Trans>],
-                [180, <Trans>For 3 hours</Trans>],
-                [480, <Trans>For 8 hours</Trans>],
-                [1440, <Trans>For 24 hours</Trans>],
-                [undefined, <Trans>Until I turn it back on</Trans>],
+                [15, "For 15 minutes"],
+                [60, "For 1 hour"],
+                [180, "For 3 hours"],
+                [480, "For 8 hours"],
+                [1440, "For 24 hours"],
+                [undefined, "Until I turn it back on"],
               ] as const
             }
           >
@@ -91,8 +80,7 @@ export function NotificationContextMenu(props: { channel: Channel }) {
       </Show>
 
       <ContextMenuSubMenu
-        symbol={MdNotificationSettings}
-        buttonContent={<Trans>Notifications</Trans>}
+        symbol={MdNotificationSettings} buttonContent={"Notifications"}
       >
         <ContextMenuButton
           onClick={() =>
@@ -105,11 +93,11 @@ export function NotificationContextMenu(props: { channel: Channel }) {
           }
         >
           <Column gap="none">
-            <Show when={props.channel.server} fallback={<Trans>Default</Trans>}>
-              <Trans>Server Default</Trans>
+            <Show when={props.channel.server} fallback={"Default"}>
+              Server Default
             </Show>
             <Text class="label" size="small">
-              <Switch fallback={<Trans>None</Trans>}>
+              <Switch fallback={"None"}>
                 <Match
                   when={
                     props.channel.server
@@ -119,7 +107,7 @@ export function NotificationContextMenu(props: { channel: Channel }) {
                       : true
                   }
                 >
-                  <Trans>All Messages</Trans>
+                  All Messages
                 </Match>
                 <Match
                   when={
@@ -129,7 +117,7 @@ export function NotificationContextMenu(props: { channel: Channel }) {
                     ) === "mention"
                   }
                 >
-                  <Trans>Mentions Only</Trans>
+                  Mentions Only
                 </Match>
               </Switch>
             </Text>
@@ -137,19 +125,17 @@ export function NotificationContextMenu(props: { channel: Channel }) {
         </ContextMenuButton>
 
         <ContextMenuButton
-          icon={MdNotificationsActive}
-          onClick={() => state.notifications.setChannel(props.channel, "all")}
+          icon={MdNotificationsActive} onClick={() => state.notifications.setChannel(props.channel, "all")}
           actionSymbol={
             state.notifications.getChannel(props.channel) === "all"
               ? MdRadioButtonChecked
               : MdRadioButtonUnchecked
           }
         >
-          <Trans>All Messages</Trans>
+          All Messages
         </ContextMenuButton>
         <ContextMenuButton
-          icon={MdAlternateEmail}
-          onClick={() =>
+          icon={MdAlternateEmail} onClick={() =>
             state.notifications.setChannel(props.channel, "mention")
           }
           actionSymbol={
@@ -158,18 +144,17 @@ export function NotificationContextMenu(props: { channel: Channel }) {
               : MdRadioButtonUnchecked
           }
         >
-          <Trans>Mentions Only</Trans>
+          Mentions Only
         </ContextMenuButton>
         <ContextMenuButton
-          icon={MdNotificationsOff}
-          onClick={() => state.notifications.setChannel(props.channel, "none")}
+          icon={MdNotificationsOff} onClick={() => state.notifications.setChannel(props.channel, "none")}
           actionSymbol={
             state.notifications.getChannel(props.channel) === "none"
               ? MdRadioButtonChecked
               : MdRadioButtonUnchecked
           }
         >
-          <Trans>None</Trans>
+          None
         </ContextMenuButton>
       </ContextMenuSubMenu>
     </>

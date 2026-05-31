@@ -15,7 +15,6 @@ import {
   onMount,
 } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { Session } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
@@ -74,7 +73,7 @@ function ManageCurrentSession(props: { otherSessions: Accessor<Session[]> }) {
   return (
     <CategoryButton.Group>
       <CategoryButton.Collapse
-        title={<Trans>Current Session</Trans>}
+        title={"Current Session"}
         description={currentSession()?.name}
         icon={<SessionIcon session={currentSession()} />}
       >
@@ -89,7 +88,7 @@ function ManageCurrentSession(props: { otherSessions: Accessor<Session[]> }) {
             })
           }
         >
-          <Trans>Rename</Trans>
+          Rename
         </CategoryButton>
       </CategoryButton.Collapse>
       {/* <CategoryButton
@@ -115,10 +114,10 @@ function ManageCurrentSession(props: { otherSessions: Accessor<Session[]> }) {
           }
           icon={<MdLogout {...iconSize(24)} fill="var(--md-sys-color-error)" />}
           description={
-            <Trans>Logs you out of all sessions except this device.</Trans>
+            "Logs you out of all sessions except this device."
           }
         >
-          <Trans>Log Out Other Sessions</Trans>
+          Log Out Other Sessions
         </CategoryButton>
       </Show>
     </CategoryButton.Group>
@@ -141,9 +140,7 @@ function ListOtherSessions(props: { otherSessions: Accessor<Session[]> }) {
                 icon={<SessionIcon session={session} />}
                 title={<Capitalise>{session.name}</Capitalise>}
                 description={
-                  <Trans>
-                    Created <Time value={session.createdAt} format="relative" />
-                  </Trans>
+                  <>{"Created "}<Time value={session.createdAt} format="relative" /></>
                 }
               >
                 <CategoryButton
@@ -156,14 +153,14 @@ function ListOtherSessions(props: { otherSessions: Accessor<Session[]> }) {
                     })
                   }
                 >
-                  <Trans>Rename</Trans>
+                  Rename
                 </CategoryButton>
                 <CategoryButton
                   icon="blank"
                   action="chevron"
                   onClick={() => session.delete()}
                 >
-                  <Trans>Log Out</Trans>
+                  Log Out
                 </CategoryButton>
               </CategoryButton.Collapse>
             )}

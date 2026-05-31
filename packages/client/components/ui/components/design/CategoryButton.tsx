@@ -25,6 +25,7 @@ import { OverflowingText, iconSize } from "../utils";
 import { Radio2 } from "./Radio";
 import { Ripple } from "./Ripple";
 import { typography } from "./Text";
+import { scrollable } from "@revolt/ui/directives";
 
 /**
  * Permissible actions
@@ -88,9 +89,9 @@ export function CategoryButton(props: Props) {
           <Description>{props.description}</Description>
         </Show>
       </Content>
-      <For each={Array.isArray(props.action) ? props.action : [props.action]}>
+      <For each={Array.isArray(props.action) ? props.action : props.action != null ? [props.action] : []}>
         {(action) => (
-          <Switch fallback={action}>
+          <Switch fallback={null}>
             <Match when={action === "chevron"}>
               <Action>
                 <MdChevronRight {...iconSize(18)} />

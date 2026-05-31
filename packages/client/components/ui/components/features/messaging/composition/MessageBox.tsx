@@ -1,7 +1,6 @@
 import { BiRegularBlock } from "solid-icons/bi";
 import { Accessor, JSX, Match, Show, Switch, onMount } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { Row } from "@revolt/ui";
@@ -257,9 +256,7 @@ export function MessageBox(props: Props) {
         >
           <Match when={!props.sendingAllowed}>
             <Blocked align noPad>
-              <Trans>
-                You don't have permission to send messages in this channel.
-              </Trans>
+              You don't have permission to send messages in this channel.
             </Blocked>
           </Match>
         </Switch>

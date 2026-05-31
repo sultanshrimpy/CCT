@@ -1,8 +1,6 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 import { createMemo, createSignal } from "solid-js";
 
-import { Trans, useLingui } from "@lingui-solid/solid/macro";
-
 import { useClient } from "@revolt/client";
 import {
   Avatar,
@@ -24,7 +22,6 @@ import { Modals } from "../types";
 export function CreateGroupModal(
   props: DialogProps & Modals & { type: "create_group" },
 ) {
-  const { t } = useLingui();
   const client = useClient();
   const { showError } = useModals();
 
@@ -67,18 +64,13 @@ export function CreateGroupModal(
       minWidth={420}
       show={props.show}
       onClose={props.onClose}
-      title={<Trans>Create a new group</Trans>}
-      actions={[
-        { text: <Trans>Close</Trans> },
-        {
-          text: <Trans>Create</Trans>,
+      title={"Create a new group"}
+      actions={[{ text: "Close" }, {
+          text: "Create",
           onClick: () => {
             onSubmit();
             return false;
-          },
-          isDisabled: !Form2.canSubmit(group),
-        },
-      ]}
+          }, isDisabled: !Form2.canSubmit(group), },]}
       isDisabled={group.isPending}
     >
       <form onSubmit={submit}>
@@ -89,17 +81,17 @@ export function CreateGroupModal(
             counter
             name="name"
             control={group.controls.name}
-            label={t`Group Name`}
+            label={"Group Name"}
           />
 
           <Text class="label">
-            <Trans>Select members to add</Trans>
+            Select members to add
           </Text>
 
           <TextField
             value={filter()}
             variant="filled"
-            placeholder={t`Search for users...`}
+            placeholder={"Search for users..."}
             onKeyUp={(e) => setFilter(e.currentTarget.value)}
           />
 
