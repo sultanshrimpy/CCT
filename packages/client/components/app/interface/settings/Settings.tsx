@@ -8,7 +8,6 @@ import {
   untrack,
   useContext,
 } from "solid-js";
-import { Motion, Presence } from "solid-motionone";
 
 import { Rerun } from "@solid-primitives/keyed";
 
@@ -107,50 +106,11 @@ export function Settings(props: SettingsProps & SettingsConfiguration<never>) {
               title={props.title}
               onClose={props.onClose}
             >
-              <Presence exitBeforeEnter>
-                <Rerun on={page}>
-                  <Motion.div
-                    style={
-                      untrack(transition) === "normal"
-                        ? {}
-                        : { visibility: "hidden" }
-                    }
-                    ref={(el) =>
-                      untrack(transition) !== "normal" &&
-                      setTimeout(() => (el.style.visibility = "visible"), 250)
-                    }
-                    initial={
-                      transition() === "normal"
-                        ? { opacity: 0, y: 50 }
-                        : transition() === "to-child"
-                          ? {
-                              x: "100vw",
-                            }
-                          : { x: "-100vw" }
-                    }
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                      y: 0,
-                    }}
-                    exit={
-                      transition() === "normal"
-                        ? undefined
-                        : transition() === "to-child"
-                          ? {
-                              x: "-100vw",
-                            }
-                          : { x: "100vw" }
-                    }
-                    transition={{
-                      duration: 0.2,
-                      easing: [0.17, 0.67, 0.58, 0.98],
-                    }}
-                  >
-                    {props.render({ page }, props.context)}
-                  </Motion.div>
-                </Rerun>
-              </Presence>
+              <Rerun on={page}>
+                <div>
+                  {props.render({ page }, props.context)}
+                </div>
+              </Rerun>
             </SettingsContent>
           </>
         )}

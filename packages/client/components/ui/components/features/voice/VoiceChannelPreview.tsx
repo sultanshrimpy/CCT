@@ -45,7 +45,7 @@ function VariantLive() {
 
   return (
     <Base>
-      <TrackLoop tracks={voice.vidTracks()}>{() => <ParticipantLive />}</TrackLoop>
+      <TrackLoop tracks={() => voice.vidTracks()}>{() => <ParticipantLive />}</TrackLoop>
     </Base>
   );
 }
@@ -54,9 +54,17 @@ function VariantLive() {
  * Use LiveKit as the source of truth
  */
 function VariantPreview(props: { channel: Channel }) {
-  // Access voiceParticipants as an array for Solid reactivity
-  const participants = () => [...props.channel.voiceParticipants.values()];
-  
+  const voice = useVoice();
+
+  // Re-derive participants when voice state changes (join/leave events update
+  // channel.voiceParticipants but stoat.js Map may not be a Solid reactive store).
+  // Accessing voice.channel() here creates a reactive dependency that fires
+  // whenever anyone joins or leaves any voice channel, forcing this to re-evaluate.
+  const participants = createMemo(() => {
+    void voice.channel(); // reactive dependency to force re-evaluation on voice changes
+    return [...props.channel.voiceParticipants.values()];
+  });
+
   return (
     <Show when={participants().length > 0}>
       <Base>
