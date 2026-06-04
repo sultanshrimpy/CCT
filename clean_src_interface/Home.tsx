@@ -18,11 +18,7 @@ import {
 } from "@revolt/ui";
 
 import MdAddCircle from "@material-design-icons/svg/filled/add_circle.svg?component-solid";
-import MdExplore from "@material-design-icons/svg/filled/explore.svg?component-solid";
-import MdGroups3 from "@material-design-icons/svg/filled/groups_3.svg?component-solid";
 import MdHome from "@material-design-icons/svg/filled/home.svg?component-solid";
-import MdPayments from "@material-design-icons/svg/filled/payments.svg?component-solid";
-import MdRateReview from "@material-design-icons/svg/filled/rate_review.svg?component-solid";
 import MdSettings from "@material-design-icons/svg/filled/settings.svg?component-solid";
 
 import Wordmark from "../../public/assets/web/wordmark.svg?component-solid";
@@ -98,9 +94,6 @@ export function HomePage() {
   const client = useClient();
 
   // check if we're stoat.chat; if so, check if the user is in the Lounge
-  const showLoungeButton = CONFIGURATION.IS_STOAT;
-  const isInLounge =
-    client()!.servers.get("01F7ZSBSFHQ8TA81725KQCSDDP") !== undefined;
 
   return (
     <Base>
@@ -134,75 +127,6 @@ export function HomePage() {
               icon={<MdAddCircle />}
             >
               Create a group or server
-            </CategoryButton>
-            <Switch fallback={null}>
-              <Match when={showLoungeButton && isInLounge}>
-                <CategoryButton
-                  onClick={() => navigate("/server/01F7ZSBSFHQ8TA81725KQCSDDP")}
-                  description={
-                    "You can report issues and discuss improvements with us directly here."
-                  }
-                  icon={<MdGroups3 />}
-                >
-                  Go to the Stoat Lounge
-                </CategoryButton>
-              </Match>
-              <Match when={showLoungeButton && !isInLounge}>
-                <CategoryButton
-                  onClick={() => {
-                    client()
-                      .api.get("/invites/Testers")
-                      .then((invite) =>
-                        PublicChannelInvite.from(client(), invite),
-                      )
-                      .then((invite) => openModal({ type: "invite", invite }));
-                  }}
-                  description={
-                    "You can report issues and discuss improvements with us directly here."
-                  }
-                  icon={<MdGroups3 />}
-                >
-                  Join the Stoat Lounge
-                </CategoryButton>
-              </Match>
-            </Switch>
-            <CategoryButton
-              variant="tertiary"
-              onClick={() => window.open("https://ko-fi.com/stoatchat")}
-              description={
-                "Support the project by donating - thank you!"
-              }
-              icon={<MdPayments />}
-            >
-              Donate to Stoat
-            </CategoryButton>
-          </SeparatedColumn>
-          <SeparatedColumn>
-            <Show when={CONFIGURATION.IS_STOAT}>
-              <CategoryButton
-                onClick={() => navigate("/discover")}
-                description={
-                  "Find a community based on your hobbies or interests."
-                }
-                icon={<MdExplore />}
-              >
-                Discover Stoat
-              </CategoryButton>
-            </Show>
-            <CategoryButton
-              onClick={() =>
-                openModal({
-                  type: "settings",
-                  config: "user",
-                  context: { page: "feedback" },
-                })
-              }
-              description={
-                "Let us know how we can improve our app by giving us feedback."
-              }
-              icon={<MdRateReview {...iconSize(22)} />}
-            >
-              Give feedback on Stoat
             </CategoryButton>
             <CategoryButton
               onClick={() => openModal({ type: "settings", config: "user" })}

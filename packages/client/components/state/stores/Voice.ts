@@ -581,10 +581,6 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
     this.set("autoReconnect", v);
   }
 
-  set outputVolume(v: number) {
-    this.set("outputVolume", v);
-  }
-
   get pushToTalkEnabled(): boolean { return this.get().pushToTalkEnabled; }
   set pushToTalkEnabled(v: boolean) { this.set("pushToTalkEnabled", v); }
 

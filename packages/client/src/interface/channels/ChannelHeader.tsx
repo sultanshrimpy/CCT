@@ -6,6 +6,7 @@ import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";
 import { TextWithEmoji } from "@revolt/markdown";
+import { stripChannelLimit } from "@revolt/common/lib/channelLimit";
 import { useModals } from "@revolt/modal";
 import { useVoice } from "@revolt/rtc";
 import { useState } from "@revolt/state";
@@ -109,7 +110,7 @@ export function ChannelHeader(props: Props) {
                 class={typography({ class: "title", size: "small" })}
               >
                 <TextWithEmoji
-                  content={props.channel.description?.split("\n").shift()}
+                  content={stripChannelLimit(props.channel.description).split("\n").shift()}
                 />
               </OverflowingText>
             </a>

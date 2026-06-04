@@ -8,6 +8,8 @@ import MdMarkUnreadChatAlt from "@material-design-icons/svg/outlined/mark_unread
 import MdNotifications from "@material-design-icons/svg/outlined/notifications.svg?component-solid";
 import MdSpeaker from "@material-design-icons/svg/outlined/speaker.svg?component-solid";
 
+import { NotificationSoundsSettings } from "./voice/NotificationSoundsSettings";
+
 /**
  * Notifications Page
  */
@@ -18,7 +20,7 @@ export default function Notifications(props: { isDesktop: boolean }) {
     useNotifications();
 
   return (
-    <CategoryButton.Group>
+    <>
       <Show when={settings.desktopNotificationsState !== "unsupported"}>
         <CategoryButton
           action={
@@ -90,6 +92,7 @@ export default function Notifications(props: { isDesktop: boolean }) {
           </CategoryButton>
         </CategoryButton.Collapse>
       </Show>
-    </CategoryButton.Group>
+    <NotificationSoundsSettings />
+    </>
   );
 }

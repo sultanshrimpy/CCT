@@ -296,7 +296,8 @@ function Entry(
           ? "selected"
           : local.channel.muted
             ? "muted"
-            : local.channel.unread
+            : local.channel.unread &&
+              !(client().channelUnreads?.get(local.channel.id)?.userId === client().user?.id)
               ? "active"
               : "normal"
       }

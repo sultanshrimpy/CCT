@@ -36,7 +36,7 @@ export function ChannelContextMenu(props: { channel: Channel }) {
    * Mark channel as read
    */
   function markAsRead() {
-    props.channel.ack();
+    props.channel.ack(undefined, true);
   }
 
   /**

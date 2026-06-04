@@ -16,6 +16,8 @@ import { KeybindAction, createKeybind } from "@revolt/keybinds";
 import { TextWithEmoji } from "@revolt/markdown";
 import { useModals } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
+import { useClient } from "@revolt/client";
+import { parseChannelLimit } from "@revolt/common/lib/channelLimit";
 import { useVoice } from "@revolt/rtc";
 import { useState } from "@revolt/state";
 import {
@@ -450,8 +452,9 @@ function Entry(
 ) {
   const state = useState();
   const voice = useVoice();
+  const client = useClient();
   const navigate = useNavigate();
-  const { openModal } = useModals();
+  const { openModal, showError } = useModals();
 
   const canEditChannel = createMemo(() =>
     (["ManageChannel", "ManagePermissions", "ManageWebhooks"] as const).some(
@@ -472,6 +475,16 @@ function Entry(
 
   const inCall = () => props.channel.id === voice.channel()?.id;
 
+  // True when the channel is unread but only because of own messages (no mentions)
+  const selfOnlyUnread = createMemo(() => {
+    if (!props.channel.unread) return false;
+    if ((props.channel.mentions?.size ?? 0) > 0) return false;
+    const unreads = client().channelUnreads?.get(props.channel.id);
+    if (!unreads) return false;
+    // If the last message author matches current user, suppress the dot
+    return unreads.userId === client().user?.id;
+  });
+
   const attentionState = createMemo(() =>
     props.active
       ? "selected"
@@ -479,7 +492,7 @@ function Entry(
         ? "active"
         : state.notifications.isChannelMuted(props.channel)
           ? "muted"
-          : props.channel.unread
+          : props.channel.unread && !selfOnlyUnread()
             ? "active"
             : "normal",
   );
@@ -489,7 +502,9 @@ function Entry(
       href={`/server/${props.channel.serverId}/channel/${props.channel.id}`}
       onClick={() => {
         if (props.channel.isVoice && !inCall()) {
-          voice.connect(props.channel);
+          voice.connect(props.channel).catch((e: Error) => {
+            showError(e);
+          });
         }
       }}
     >
@@ -582,6 +597,12 @@ function Entry(
         >
           <OverflowingText>
             <TextWithEmoji content={props.channel.name!} />
+            <Show when={parseChannelLimit(props.channel.description) > 0}>
+              {" "}
+              <span style={{ "font-size": "0.8em", opacity: "0.7" }}>
+                {props.channel.voiceParticipants?.size ?? 0}/{parseChannelLimit(props.channel.description)}
+              </span>
+            </Show>
           </OverflowingText>
         </MenuButton>
 

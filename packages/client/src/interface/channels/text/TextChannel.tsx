@@ -150,7 +150,7 @@ export function TextChannel(props: ChannelPageProps) {
         if (unread) {
           if (document.hasFocus()) {
             // acknowledge the message
-            props.channel.ack();
+            console.log("[ACK] Acking channel", props.channel.id, "lastMsg:", props.channel.lastMessageId); props.channel.ack(undefined, true);
           } else {
             // otherwise mark this location as the last read location
             if (!lastId()) {
@@ -163,21 +163,46 @@ export function TextChannel(props: ChannelPageProps) {
     ),
   );
 
-  // Mark as read on re-focus
+  // Also ack when new messages arrive if we are at the end of the channel.
+  // This covers: own messages sent from another device, and fast-arriving
+  // messages where the unread effect fires before atEndRef is ready.
+  createEffect(
+    on(
+      () => props.channel.lastMessageId,
+      () => {
+        if (atEndRef?.() && document.hasFocus()) {
+          console.log("[ACK] Acking channel", props.channel.id, "lastMsg:", props.channel.lastMessageId); props.channel.ack(undefined, true);
+        }
+      },
+      { defer: true },
+    ),
+  );
+
+  // Mark as read on re-focus or tab becoming visible
   function onFocus() {
     if (props.channel.unread && (atEndRef ? atEndRef() : true)) {
-      props.channel.ack();
+      console.log("[ACK] Acking channel", props.channel.id, "lastMsg:", props.channel.lastMessageId); props.channel.ack(undefined, true);
+    }
+  }
+
+  function onVisibility() {
+    if (!document.hidden && props.channel.unread && (atEndRef ? atEndRef() : true)) {
+      console.log("[ACK] Acking channel", props.channel.id, "lastMsg:", props.channel.lastMessageId); props.channel.ack(undefined, true);
     }
   }
 
   document.addEventListener("focus", onFocus);
-  onCleanup(() => document.removeEventListener("focus", onFocus));
+  document.addEventListener("visibilitychange", onVisibility);
+  onCleanup(() => {
+    document.removeEventListener("focus", onFocus);
+    document.removeEventListener("visibilitychange", onVisibility);
+  });
 
   // Register ack/jump latest
   createKeybind(KeybindAction.CHAT_JUMP_END, () => {
     // Mark channel as read if not already
     if (props.channel.unread) {
-      props.channel.ack();
+      console.log("[ACK] Acking channel", props.channel.id, "lastMsg:", props.channel.lastMessageId); props.channel.ack(undefined, true);
     }
 
     // Clear the last unread id

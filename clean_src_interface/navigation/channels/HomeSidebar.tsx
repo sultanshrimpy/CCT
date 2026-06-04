@@ -289,14 +289,15 @@ function Entry(
       alert={
         !local.active &&
         local.channel.unread &&
-        (local.channel.mentions?.size || true)
+        (local.channel.mentions?.size ?? 0)
       }
       attention={
         local.active
           ? "selected"
           : local.channel.muted
             ? "muted"
-            : local.channel.unread
+            : local.channel.unread &&
+              !(client().channelUnreads?.get(local.channel.id)?.userId === client().user?.id)
               ? "active"
               : "normal"
       }

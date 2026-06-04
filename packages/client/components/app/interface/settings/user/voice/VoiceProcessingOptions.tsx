@@ -21,8 +21,8 @@ export function VoiceProcessingOptions() {
           icon={"blank"}
           title={"Select noise suppression"}
           options={{
-            disabled: { title: Disabled },
-            browser: { title: Browser },
+            disabled: { title: "Disabled" },
+            browser: { title: "Browser" },
             enhanced: {
               title: "Enhanced",
               description: "Powered by RNNoise",

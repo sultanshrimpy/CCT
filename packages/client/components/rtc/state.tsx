@@ -302,6 +302,18 @@ class Voice {
   async connect(channel: Channel, auth?: { url: string; token: string }) {
     debugLog("PTT-WEB", "Voice.connect() called for channel:", channel.id);
 
+    // Check user limit before connecting
+    const limit = parseChannelLimit(channel.description);
+    if (limit > 0) {
+      const current = channel.voiceParticipants?.size ?? 0;
+      if (current >= limit) {
+        // Show error via a thrown error - the UI will catch and display this
+        throw new Error(
+          `This voice channel is full (${current}/${limit} users). Please try again later.`
+        );
+      }
+    }
+
     // Reset reconnect state on new connection attempt
     this.#isManualDisconnect = false;
     this.#reconnectAttempts = 0;

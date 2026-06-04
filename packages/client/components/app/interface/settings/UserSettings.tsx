@@ -13,15 +13,11 @@ import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import MdAccountCircle from "@material-design-icons/svg/outlined/account_circle.svg?component-solid";
 import MdCampaign from "@material-design-icons/svg/outlined/campaign.svg?component-solid";
-import MdCoffee from "@material-design-icons/svg/outlined/coffee.svg?component-solid";
-import MdLanguage from "@material-design-icons/svg/outlined/language.svg?component-solid";
 import MdLogout from "@material-design-icons/svg/outlined/logout.svg?component-solid";
 import MdMemory from "@material-design-icons/svg/outlined/memory.svg?component-solid";
 import MdMic from "@material-design-icons/svg/outlined/mic.svg?component-solid";
 import MdNotifications from "@material-design-icons/svg/outlined/notifications.svg?component-solid";
 import MdPalette from "@material-design-icons/svg/outlined/palette.svg?component-solid";
-import MdRateReview from "@material-design-icons/svg/outlined/rate_review.svg?component-solid";
-import MdRecordVoiceOver from "@material-design-icons/svg/outlined/record_voice_over.svg?component-solid";
 import MdScience from "@material-design-icons/svg/outlined/science.svg?component-solid";
 import MdSmartToy from "@material-design-icons/svg/outlined/smart_toy.svg?component-solid";
 import MdVerifiedUser from "@material-design-icons/svg/outlined/verified_user.svg?component-solid";
@@ -32,7 +28,6 @@ import pkg from "../../../../../../package.json";
 import { SettingsConfiguration } from ".";
 import { MyAccount } from "./user/Account";
 import AdvancedSettings from "./user/Advanced";
-import { Feedback } from "./user/Feedback";
 import { LanguageSettings } from "./user/Language";
 import Native from "./user/Native";
 import Notifications from "./user/Notifications";
@@ -42,8 +37,6 @@ import { AppearanceMenu } from "./user/appearance";
 import { MyBots, ViewBot } from "./user/bots";
 import { EditProfile } from "./user/profile";
 import { EditSubscription } from "./user/subscriptions";
-import { NotificationSoundsSettings } from "./user/voice/NotificationSoundsSettings";
-import { PushToTalkSettings } from "./user/voice/PushToTalkSettings";
 import { VoiceSettings } from "./user/voice/VoiceSettings";
 
 const Config: SettingsConfiguration<{ server: Server }> = {
@@ -92,18 +85,12 @@ const Config: SettingsConfiguration<{ server: Server }> = {
         return <MyBots />;
       case "language":
         return <LanguageSettings />;
-      case "feedback":
-        return <Feedback />;
       case "subscribe":
         return <EditSubscription />;
       case "native":
         return <Native />;
       case "voice":
         return <VoiceSettings />;
-      case "push_to_talk":
-        return <PushToTalkSettings />;
-      case "notification_sounds":
-        return <NotificationSoundsSettings />;
       case "notifications":
         return <Notifications isDesktop={!!window.native} />;
       default:
@@ -188,11 +175,6 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               icon: <MdSmartToy {...iconSize(20)} />,
               title: "My Bots",
             },
-            {
-              id: "feedback",
-              icon: <MdRateReview {...iconSize(20)} />,
-              title: "Feedback",
-            },
           ],
         },
         {
@@ -251,11 +233,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             //   icon: <MdKeybinds {...iconSize(20)} />,
             //   title: t("app.settings.pages.keybinds.title"),
             // },
-            {
-              id: "language",
-              icon: <MdLanguage {...iconSize(20)} />,
-              title: "Language",
-            },
+
             // {
             //   id: "sync",
             //   icon: <MdSync {...iconSize(20)} />,
@@ -274,23 +252,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
           ],
         },
-        {
-          title: "CCT Settings",
-          entries: [
-            {
-              id: "push_to_talk",
-              icon: <MdRecordVoiceOver {...iconSize(20)} />,
-              title: "Push to Talk",
-            },
-            {
-              id: "notification_sounds",
-              icon: <MdNotifications {...iconSize(20)} />,
-              title: (
-                "Notification Sounds"
-              ),
-            },
-          ],
-        },
+
         {
           entries: [
             {
@@ -311,11 +273,6 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               id: "advanced",
               icon: <MdScience {...iconSize(20)} />,
               title: "Advanced",
-            },
-            {
-              href: "https://ko-fi.com/stoatchat",
-              icon: <MdCoffee {...iconSize(20)} />,
-              title: "Donate",
             },
             {
               id: "logout",

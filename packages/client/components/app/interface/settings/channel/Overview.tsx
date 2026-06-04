@@ -3,6 +3,8 @@ import { Match, Show, Switch } from "solid-js";
 
 import type { API } from "stoat.js";
 
+import { encodeChannelLimit, parseChannelLimit, stripChannelLimit } from "@revolt/common/lib/channelLimit";
+
 import { useClient } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { useModals } from "@revolt/modal";
@@ -19,9 +21,14 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
 
   /* eslint-disable solid/reactivity */
   // we want to take the initial value only
+  const isVoice = () => props.channel.isVoice;
+
   const editGroup = createFormGroup({
     name: createFormControl(props.channel.name),
-    description: createFormControl(props.channel.description || ""),
+    description: createFormControl(stripChannelLimit(props.channel.description)),
+    userLimit: createFormControl(
+      String(parseChannelLimit(props.channel.description) || ""),
+    ),
     icon: createFormControl<string | File[] | null>(
       props.channel.animatedIconURL,
     ),
@@ -30,7 +37,8 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
 
   function onReset() {
     editGroup.controls.name.setValue(props.channel.name);
-    editGroup.controls.description.setValue(props.channel.description || "");
+    editGroup.controls.description.setValue(stripChannelLimit(props.channel.description));
+    editGroup.controls.userLimit.setValue(String(parseChannelLimit(props.channel.description) || ""));
     editGroup.controls.icon.setValue(props.channel.animatedIconURL ?? null);
   }
 
@@ -43,11 +51,13 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
       changes.name = editGroup.controls.name.value.trim();
     }
 
-    if (editGroup.controls.description.isDirty) {
-      const description = editGroup.controls.description.value.trim();
+    if (editGroup.controls.description.isDirty || editGroup.controls.userLimit.isDirty) {
+      const rawDesc = editGroup.controls.description.value.trim();
+      const limit = parseInt(editGroup.controls.userLimit.value || "0", 10) || 0;
+      const encoded = encodeChannelLimit(limit, rawDesc);
 
-      if (description) {
-        changes.description = description;
+      if (encoded) {
+        changes.description = encoded;
       } else {
         changes.remove!.push("Description");
       }
@@ -107,6 +117,14 @@ export default function ChannelOverview(props: ChannelSettingsProps) {
             label={"Channel Description"}
             placeholder={"This channel is about..."}
           />
+          <Show when={isVoice()}>
+            <Form2.TextField
+              name="userLimit"
+              control={editGroup.controls.userLimit}
+              label={"Max Users (0 or blank = unlimited)"}
+              placeholder={"e.g. 4"}
+            />
+          </Show>
           <Row>
             <Form2.Reset group={editGroup} onReset={onReset} />
             <Form2.Submit group={editGroup} requireDirty>
