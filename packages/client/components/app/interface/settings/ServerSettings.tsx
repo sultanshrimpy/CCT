@@ -6,6 +6,7 @@ import {
   BiSolidInfoCircle,
   BiSolidTrash,
   BiSolidUserX,
+  BiSolidSortAlt,
 } from "solid-icons/bi";
 
 import { Server } from "stoat.js";
@@ -18,6 +19,7 @@ import { ColouredText } from "@revolt/ui";
 import { SettingsConfiguration } from ".";
 import { ChannelPermissionsEditor } from "./channel/permissions/ChannelPermissionsEditor";
 import Overview from "./server/Overview";
+import { ChannelManagement } from "./server/ChannelManagement";
 import { ListServerBans } from "./server/bans/ListBans";
 import { EmojiList } from "./server/emojis/EmojiList";
 import { ListServerInvites } from "./server/invites/ListServerInvites";
@@ -148,6 +150,17 @@ const Config: SettingsConfiguration<Server> = {
               id: "bans",
               icon: <BiSolidUserX size={20} />,
               title: "Bans",
+            },
+          ],
+        },
+        {
+          hidden: !server.havePermission("ManageChannel"),
+          title: "Channel Management",
+          entries: [
+            {
+              id: "channels",
+              icon: <BiSolidSortAlt size={20} />,
+              title: "Channel Management",
             },
           ],
         },

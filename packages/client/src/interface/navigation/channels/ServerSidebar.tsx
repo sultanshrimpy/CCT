@@ -147,7 +147,7 @@ export const ServerSidebar = (props: Props) => {
     }
   });
 
-  const noOrdering = () => !props.server.havePermission("ManageChannel");
+  const noOrdering = () => true;
 
   let heldEvent: OrderingEvent & { type: "category" } = null!;
   function handleOrdering(event: OrderingEvent) {

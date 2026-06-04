@@ -25,7 +25,7 @@ const ADMIN_USER = process.env.ADMIN_USERNAME || "admin";
 const ADMIN_PASS_HASH = process.env.ADMIN_PASSWORD_HASH || bcrypt.hashSync("admin123", 10);
 const MONGO_URL = process.env.MONGO_URL || process.env.DATABASE_URL || "mongodb://localhost:27017/revolt";
 // Delta API URL — used to validate Revolt session tokens
-const DELTA_URL = (process.env.VITE_API_URL || process.env.REVOLT_PUBLIC_URL || "http://delta:8000").replace(/\/$/, "");
+const DELTA_URL = (process.env.DELTA_URL || process.env.VITE_API_URL || process.env.REVOLT_PUBLIC_URL || "http://delta:8000").replace(/\/$/, "");
 
 const SOUNDS_DIR = path.join(__dirname, "dist_injected", "sounds");
 const STATIC_DIR = path.join(__dirname, "dist_injected");
