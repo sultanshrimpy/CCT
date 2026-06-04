@@ -1,0 +1,341 @@
+diff --git a/docker/server.js b/docker/server.js
+new file mode 100644
+index 0000000..65252b1
+--- /dev/null
++++ b/docker/server.js
+@@ -0,0 +1,335 @@
++/**
++ * CCT Admin Panel - Express Server
++ * Replaces sirv-cli as the static file server.
++ * Serves the built Revolt frontend + /admin panel + /api/admin/* routes.
++ *
++ * Supports two admin login methods:
++ *   1. Username + password (env ADMIN_USERNAME / ADMIN_PASSWORD_HASH)
++ *   2. Revolt session token — validates against delta, checks user.privileged in MongoDB
++ *      OR checks cct_admin_users collection for manually promoted users
++ */
++
++const express = require("express");
++const path = require("path");
++const fs = require("fs");
++const multer = require("multer");
++const bcrypt = require("bcryptjs");
++const jwt = require("jsonwebtoken");
++const mongoose = require("mongoose");
++
++const app = express();
++const PORT = process.env.PORT || 5000;
++const JWT_SECRET = process.env.ADMIN_JWT_SECRET || "cct-admin-secret-change-me";
++const ADMIN_USER = process.env.ADMIN_USERNAME || "admin";
++const ADMIN_PASS_HASH = process.env.ADMIN_PASSWORD_HASH || bcrypt.hashSync("admin123", 10);
++const MONGO_URL = process.env.MONGO_URL || process.env.DATABASE_URL || "mongodb://localhost:27017/revolt";
++// Delta API URL — used to validate Revolt session tokens
++const DELTA_URL = (process.env.VITE_API_URL || process.env.REVOLT_PUBLIC_URL || "http://delta:8000").replace(/\/$/, "");
++
++const SOUNDS_DIR = path.join(__dirname, "dist_injected", "sounds");
++const STATIC_DIR = path.join(__dirname, "dist_injected");
++const ADMIN_DIR = path.join(__dirname, "admin");
++
++fs.mkdirSync(SOUNDS_DIR, { recursive: true });
++fs.mkdirSync(ADMIN_DIR, { recursive: true });
++
++app.use(express.json());
++app.use(express.urlencoded({ extended: true }));
++
++// ─── Multer ──────────────────────────────────────────────────────────────────
++const soundStorage = multer.diskStorage({
++  destination: SOUNDS_DIR,
++  filename: (req, file, cb) => cb(null, file.originalname),
++});
++const uploadSound = multer({
++  storage: soundStorage,
++  fileFilter: (req, file, cb) => cb(null, /\.(mp3|ogg|wav|flac)$/i.test(file.originalname)),
++  limits: { fileSize: 5 * 1024 * 1024 },
++});
++
++// ─── MongoDB ─────────────────────────────────────────────────────────────────
++let db = null;
++mongoose.connect(MONGO_URL).then(() => {
++  db = mongoose.connection;
++  console.log("[CCT Admin] MongoDB connected:", MONGO_URL);
++}).catch((e) => {
++  console.warn("[CCT Admin] MongoDB unavailable:", e.message);
++});
++
++// ─── Auth middleware ──────────────────────────────────────────────────────────
++function requireAdmin(req, res, next) {
++  const auth = req.headers.authorization;
++  if (!auth?.startsWith("Bearer ")) return res.status(401).json({ error: "Unauthorized" });
++  try {
++    const payload = jwt.verify(auth.slice(7), JWT_SECRET);
++    if (payload.role !== "admin") throw new Error();
++    req.admin = payload;
++    next();
++  } catch {
++    res.status(401).json({ error: "Invalid or expired token" });
++  }
++}
++
++// ─── Validate a Revolt session token against delta ───────────────────────────
++async function validateRevoltToken(sessionToken) {
++  try {
++    const res = await fetch(`${DELTA_URL}/users/@me`, {
++      headers: { "X-Session-Token": sessionToken },
++    });
++    if (!res.ok) return null;
++    return await res.json(); // { _id, username, privileged, ... }
++  } catch (e) {
++    console.warn("[CCT Admin] Delta validation failed:", e.message);
++    return null;
++  }
++}
++
++// ─── Check if user is an authorised admin ────────────────────────────────────
++// A user is an admin if:
++//   a) They have privileged: true in the users collection (instance owner), OR
++//   b) They appear in the cct_admin_users collection (manually promoted)
++async function isAdminUser(userId) {
++  if (!db) return false;
++  try {
++    // Revolt uses ULID strings as _id, not MongoDB ObjectIds
++    const user = await db.collection("users").findOne({ _id: userId }, { projection: { privileged: 1 } });
++    if (user?.privileged) return true;
++
++    // Check the CCT admin users table
++    const adminEntry = await db.collection("cct_admin_users").findOne({ userId: userId.toString() });
++    return !!adminEntry;
++  } catch (e) {
++    console.warn("[CCT Admin] isAdminUser check failed:", e.message);
++    return false;
++  }
++}
++
++// ─── Helpers ──────────────────────────────────────────────────────────────────
++function getSoundsManifest() {
++  const p = path.join(SOUNDS_DIR, "manifest.json");
++  return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf-8")) : { sounds: [] };
++}
++function saveSoundsManifest(data) {
++  fs.writeFileSync(path.join(SOUNDS_DIR, "manifest.json"), JSON.stringify(data, null, 2));
++}
++function getMotd() {
++  const p = path.join(__dirname, "motd.json");
++  return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf-8")) : { text: "Welcome to CCT!", enabled: true };
++}
++function saveMotd(data) {
++  fs.writeFileSync(path.join(__dirname, "motd.json"), JSON.stringify(data, null, 2));
++}
++function getSettingsFile() {
++  const p = path.join(__dirname, "instance_settings.json");
++  return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf-8")) : { openRegistration: true, inviteOnly: false, stageChannels: true, maintenanceMode: false, instanceName: "CCT" };
++}
++
++// ─── Public routes ────────────────────────────────────────────────────────────
++
++/**
++ * Login — two modes:
++ *
++ * Mode A: username + password (env credentials)
++ *   { username, password }
++ *
++ * Mode B: Revolt session token (for privileged/promoted users)
++ *   { sessionToken }
++ *   Server validates the token against delta, then checks MongoDB for admin status.
++ *   Returns the same JWT so the panel works identically either way.
++ */
++app.post("/api/admin/login", async (req, res) => {
++  const { username, password, sessionToken } = req.body;
++
++  // ── Mode B: Revolt session token ──────────────────────────────────────────
++  if (sessionToken) {
++    const user = await validateRevoltToken(sessionToken);
++    if (!user) return res.status(401).json({ error: "Invalid or expired session token" });
++
++    const admin = await isAdminUser(user._id);
++    if (!admin) return res.status(403).json({ error: "This account does not have admin access. Ask a server owner to promote you." });
++
++    const token = jwt.sign(
++      { username: user.username, userId: user._id, role: "admin", method: "revolt_session" },
++      JWT_SECRET,
++      { expiresIn: "24h" }
++    );
++    return res.json({ token, username: user.username, method: "revolt_session" });
++  }
++
++  // ── Mode A: username + password ───────────────────────────────────────────
++  if (!username || !password) return res.status(400).json({ error: "Provide username+password or sessionToken" });
++  if (username !== ADMIN_USER) return res.status(401).json({ error: "Invalid credentials" });
++  const ok = await bcrypt.compare(password, ADMIN_PASS_HASH);
++  if (!ok) return res.status(401).json({ error: "Invalid credentials" });
++
++  const token = jwt.sign({ username, role: "admin", method: "password" }, JWT_SECRET, { expiresIn: "24h" });
++  res.json({ token, username, method: "password" });
++});
++
++// Public config endpoints (read by the frontend at runtime)
++app.get("/api/config/motd", (req, res) => res.json(getMotd()));
++app.get("/api/config/sounds", (req, res) => res.json(getSoundsManifest()));
++
++// ─── Protected: stats ─────────────────────────────────────────────────────────
++app.get("/api/admin/stats", requireAdmin, async (req, res) => {
++  if (!db) return res.json({ users: 0, servers: 0, messages: 0, reports: 0 });
++  try {
++    const [users, servers, messages, reports] = await Promise.all([
++      db.collection("users").countDocuments(),
++      db.collection("servers").countDocuments(),
++      db.collection("messages").countDocuments(),
++      db.collection("reports").countDocuments({ status: { $ne: "Resolved" } }),
++    ]);
++    res.json({ users, servers, messages, reports });
++  } catch (e) { res.status(500).json({ error: e.message }); }
++});
++
++// ─── Protected: users ─────────────────────────────────────────────────────────
++app.get("/api/admin/users", requireAdmin, async (req, res) => {
++  if (!db) return res.json([]);
++  const users = await db.collection("users").find({}, { projection: { password: 0, tokens: 0 } }).limit(100).toArray();
++  // Annotate with CCT admin status
++  const adminIds = new Set((await db.collection("cct_admin_users").find({}).toArray()).map(a => a.userId));
++  res.json(users.map(u => ({ ...u, cctAdmin: adminIds.has(u._id.toString()) || !!u.privileged })));
++});
++
++app.patch("/api/admin/users/:id", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  const { banned } = req.body;
++  const update = {};
++  if (banned !== undefined) update.banned = banned;
++  await db.collection("users").updateOne({ _id: req.params.id }, { $set: update });
++  res.json({ ok: true });
++});
++
++app.post("/api/admin/users/:id/reset-password", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  const { password } = req.body;
++  if (!password || password.length < 6) return res.status(400).json({ error: "Password too short" });
++  const hash = await bcrypt.hash(password, 12);
++  await db.collection("users").updateOne(
++    { _id: req.params.id },
++    { $set: { password: hash } }
++  );
++  res.json({ ok: true });
++});
++
++app.delete("/api/admin/users/:id", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  await db.collection("users").deleteOne({ _id: req.params.id });
++  res.json({ ok: true });
++});
++
++// Promote / demote a user to CCT admin
++app.post("/api/admin/users/:id/promote", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  const userId = req.params.id;
++  const user = await db.collection("users").findOne(
++    { _id: userId },
++    { projection: { username: 1 } }
++  );
++  if (!user) return res.status(404).json({ error: "User not found" });
++  await db.collection("cct_admin_users").updateOne(
++    { userId },
++    { $set: { userId, username: user.username, promotedAt: new Date(), promotedBy: req.admin.username } },
++    { upsert: true }
++  );
++  res.json({ ok: true, message: `${user.username} can now log into the admin panel` });
++});
++
++app.post("/api/admin/users/:id/demote", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  await db.collection("cct_admin_users").deleteOne({ userId: req.params.id });
++  res.json({ ok: true });
++});
++
++// ─── Protected: servers ───────────────────────────────────────────────────────
++app.get("/api/admin/servers", requireAdmin, async (req, res) => {
++  if (!db) return res.json([]);
++  res.json(await db.collection("servers").find({}).limit(100).toArray());
++});
++app.delete("/api/admin/servers/:id", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  await db.collection("servers").deleteOne({ _id: req.params.id });
++  res.json({ ok: true });
++});
++
++// ─── Protected: MOTD ─────────────────────────────────────────────────────────
++app.get("/api/admin/motd", requireAdmin, (req, res) => res.json(getMotd()));
++app.put("/api/admin/motd", requireAdmin, (req, res) => {
++  saveMotd({ text: req.body.text || "", enabled: req.body.enabled !== false });
++  res.json({ ok: true });
++});
++
++// ─── Protected: sounds ───────────────────────────────────────────────────────
++app.get("/api/admin/sounds", requireAdmin, (req, res) => res.json(getSoundsManifest()));
++app.post("/api/admin/sounds", requireAdmin, uploadSound.single("file"), (req, res) => {
++  if (!req.file) return res.status(400).json({ error: "No file" });
++  const manifest = getSoundsManifest();
++  const entry = { filename: req.file.originalname, event: req.body.event || "message", url: `/sounds/${req.file.originalname}`, size: req.file.size, active: true, uploadedAt: new Date().toISOString() };
++  manifest.sounds = manifest.sounds.filter(s => s.filename !== entry.filename);
++  manifest.sounds.push(entry);
++  saveSoundsManifest(manifest);
++  res.json(entry);
++});
++app.patch("/api/admin/sounds/:filename", requireAdmin, (req, res) => {
++  const manifest = getSoundsManifest();
++  const sound = manifest.sounds.find(s => s.filename === req.params.filename);
++  if (!sound) return res.status(404).json({ error: "Not found" });
++  if (req.body.active !== undefined) sound.active = req.body.active;
++  if (req.body.event !== undefined) sound.event = req.body.event;
++  saveSoundsManifest(manifest);
++  res.json(sound);
++});
++app.delete("/api/admin/sounds/:filename", requireAdmin, (req, res) => {
++  const manifest = getSoundsManifest();
++  const fp = path.join(SOUNDS_DIR, req.params.filename);
++  if (fs.existsSync(fp)) fs.unlinkSync(fp);
++  manifest.sounds = manifest.sounds.filter(s => s.filename !== req.params.filename);
++  saveSoundsManifest(manifest);
++  res.json({ ok: true });
++});
++
++// ─── Protected: MongoDB passthrough ─────────────────────────────────────────
++const ALLOWED_COLLECTIONS = ["users","servers","channels","messages","sessions","reports","cct_admin_users"];
++app.get("/api/admin/db/:collection", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  if (!ALLOWED_COLLECTIONS.includes(req.params.collection)) return res.status(403).json({ error: "Not allowed" });
++  const page = parseInt(req.query.page) || 0;
++  const limit = Math.min(parseInt(req.query.limit) || 20, 100);
++  const docs = await db.collection(req.params.collection).find({}, { projection: { password: 0, tokens: 0 } }).skip(page * limit).limit(limit).toArray();
++  const total = await db.collection(req.params.collection).countDocuments();
++  res.json({ docs, total, page, limit });
++});
++
++// ─── Protected: reports ───────────────────────────────────────────────────────
++app.get("/api/admin/reports", requireAdmin, async (req, res) => {
++  if (!db) return res.json([]);
++  res.json(await db.collection("reports").find({}).sort({ createdAt: -1 }).limit(50).toArray());
++});
++app.patch("/api/admin/reports/:id", requireAdmin, async (req, res) => {
++  if (!db) return res.status(503).json({ error: "DB not connected" });
++  await db.collection("reports").updateOne({ _id: req.params.id }, { $set: { status: req.body.status } });
++  res.json({ ok: true });
++});
++
++// ─── Protected: settings ─────────────────────────────────────────────────────
++app.get("/api/admin/settings", requireAdmin, (req, res) => res.json(getSettingsFile()));
++app.put("/api/admin/settings", requireAdmin, (req, res) => {
++  const merged = { ...getSettingsFile(), ...req.body };
++  fs.writeFileSync(path.join(__dirname, "instance_settings.json"), JSON.stringify(merged, null, 2));
++  res.json(merged);
++});
++
++// ─── Static serving ───────────────────────────────────────────────────────────
++app.use("/sounds", express.static(SOUNDS_DIR));
++app.use("/admin", express.static(ADMIN_DIR));
++app.get("/admin", (req, res) => res.sendFile(path.join(ADMIN_DIR, "index.html")));
++app.use(express.static(STATIC_DIR));
++app.get("*", (req, res) => res.sendFile(path.join(STATIC_DIR, "index.html")));
++
++app.listen(PORT, "0.0.0.0", () => {
++  console.log(`[CCT] Server on port ${PORT}`);
++  console.log(`[CCT] Delta API: ${DELTA_URL}`);
++  console.log(`[CCT] Admin panel: http://localhost:${PORT}/admin`);
++});

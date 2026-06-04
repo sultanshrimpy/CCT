@@ -22,6 +22,9 @@ import MdScience from "@material-design-icons/svg/outlined/science.svg?component
 import MdSmartToy from "@material-design-icons/svg/outlined/smart_toy.svg?component-solid";
 import MdVerifiedUser from "@material-design-icons/svg/outlined/verified_user.svg?component-solid";
 import MdWorkspacePremium from "@material-design-icons/svg/outlined/workspace_premium.svg?component-solid";
+import MdCoffee from "@material-design-icons/svg/outlined/coffee.svg?component-solid";
+import MdRateReview from "@material-design-icons/svg/outlined/rate_review.svg?component-solid";
+import MdAdminPanelSettings from "@material-design-icons/svg/outlined/admin_panel_settings.svg?component-solid";
 
 import pkg from "../../../../../../package.json";
 
@@ -174,6 +177,20 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               id: "bots",
               icon: <MdSmartToy {...iconSize(20)} />,
               title: "My Bots",
+            },
+            {
+              id: "feedback",
+              icon: <MdRateReview {...iconSize(20)} />,
+              title: "Feedback",
+            },
+            {
+              href: "/admin",
+              icon: <MdAdminPanelSettings {...iconSize(20)} fill="var(--md-sys-color-error)" />,
+              title: (
+                <ColouredText colour="var(--md-sys-color-error)">
+                  Admin Panel
+                </ColouredText>
+              ),
             },
           ],
         },

@@ -6,7 +6,8 @@ function getCtx(): AudioContext {
   return ctx;
 }
 
-function playTone(frequency: number, duraction: number, type: OscillatorType = "sine", volume: number = 0.3) {
+function playTone(frequency: number, duration: number, type: OscillatorType = "sine", volume: number = 0.3) {
+  const ctx = getCtx();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.connect(gain);
@@ -45,6 +46,6 @@ export function playIncomingCall() {
 export function stopIncomingCall() {
   if (callInterval) {
     clearInterval(callInterval);
-    callInternal = null;
+    callInterval = null;
   }
 }
