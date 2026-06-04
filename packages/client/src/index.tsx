@@ -1,3 +1,4 @@
+import "./mobileKeyboard";
 /**
  * Configure contexts and render App
  */

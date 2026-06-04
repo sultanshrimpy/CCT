@@ -200,3 +200,4 @@ body {
 .hljs-tag {
   /* purposely ignored */
 }
+@import "./mobile.css";

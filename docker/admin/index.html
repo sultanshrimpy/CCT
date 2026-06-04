@@ -215,7 +215,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
       <div class="page active" id="pgDash">
         <div class="stats">
-          <div class="sc"><div class="sc-lbl">Users</div><div class="sc-val" id="dUsers">—</div><div class="sc-sub"><span class="dot" style="background:var(--green)"></span>online now</div></div>
+          <div class="sc"><div class="sc-lbl">Users</div><div class="sc-val" id="dUsers">—</div><div class="sc-sub" id="dOnline"><span class="dot" style="background:var(--green)"></span>— online now</div></div>
           <div class="sc"><div class="sc-lbl">Servers</div><div class="sc-val" id="dServers">—</div><div class="sc-sub">total</div></div>
           <div class="sc"><div class="sc-lbl">Messages</div><div class="sc-val" id="dMessages">—</div><div class="sc-sub">all time</div></div>
           <div class="sc"><div class="sc-lbl">Reports</div><div class="sc-val" id="dReports" style="color:var(--red)">—</div><div class="sc-sub">open</div></div>
@@ -419,6 +419,8 @@ if (TOKEN) {
 async function initPanel() {
   loadStats(); loadMotd(); loadUsers(); loadServers(); loadReports(); loadSounds(); loadLogs(); loadSettings();
   loadMongo();
+  // Refresh presence every 30 seconds
+  setInterval(loadUsers, 30000);
 }
 
 async function loadStats() {
@@ -451,11 +453,28 @@ async function saveMotd() {
 }
 
 async function loadUsers() {
-  const d = await api('GET', '/users');
+  const [d, p] = await Promise.all([
+    api('GET', '/users'),
+    api('GET', '/presence'),
+  ]);
   allUsers = d || [];
-  renderUsers(allUsers);
+  const onlineSet = new Set((p && p.online) || []);
+  renderUsers(allUsers, onlineSet);
+  // Update dashboard stats
+  const onlineCount = allUsers.filter(u => onlineSet.has(u._id)).length;
+  const onlineEl = document.getElementById('dUsers');
+  if (onlineEl) onlineEl.textContent = allUsers.length;
+  const subEl = document.querySelector('.sc-sub');
+  // update sidebar count
+  document.getElementById('siUsers').textContent = allUsers.length;
 }
-function filterUsers(q) { renderUsers(allUsers.filter(u => (u.username||'').toLowerCase().includes(q.toLowerCase()) || (u.email||'').toLowerCase().includes(q.toLowerCase()))); }
+let lastOnlineSet = new Set();
+function filterUsers(q) {
+  renderUsers(
+    allUsers.filter(u => (u.username||'').toLowerCase().includes(q.toLowerCase()) || (u.email||'').toLowerCase().includes(q.toLowerCase())),
+    lastOnlineSet
+  );
+}
 function rc(r){return r==='admin'?'p-gold':r==='mod'?'p-blue':'p-gray';}
 function sc2(s){return s==='Online'?'p-green':s==='Idle'?'p-amber':'p-gray';}
 // Decode join date from Revolt ULID _id (first 10 chars = base32 encoded ms timestamp)
@@ -471,13 +490,15 @@ function ulidToDate(id) {
   } catch { return '—'; }
 }
 
-function renderUsers(list) {
+function renderUsers(list, onlineSet) {
+  if (onlineSet) lastOnlineSet = onlineSet;
+  else onlineSet = lastOnlineSet;
   document.getElementById('uBody').innerHTML = list.length === 0
     ? '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:20px;">No users found</td></tr>'
     : list.map(u => `<tr>
       <td><div class="uc"><div class="av" style="background:#c9b87822;color:var(--gold);">${(u.username||'?')[0].toUpperCase()}</div><div><div class="un">${u.username||'unknown'}</div><div class="uh">${u.email||''}</div></div></div></td>
       <td><span class="pill ${u.privileged?'p-gold':u.cctAdmin?'p-blue':'p-gray'}">${u.privileged?'owner':u.cctAdmin?'admin':'user'}</span></td>
-      <td><span class="pill p-gray">offline</span>${u.banned?'&nbsp;<span class="pill p-red">banned</span>':''}</td>
+      <td><span class="pill ${onlineSet.has(u._id)?'p-green':'p-gray'}">${onlineSet.has(u._id)?'online':'offline'}</span>${u.banned?'&nbsp;<span class="pill p-red">banned</span>':''}</td>
       <td style="color:var(--text3)">${ulidToDate(u._id)}</td>
       <td>
         <button class="ab" title="Reset password" onclick='openResetPw("${u._id}","${u.username}")'><i class="ti ti-key"></i></button>

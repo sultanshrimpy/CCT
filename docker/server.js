@@ -16,6 +16,7 @@ const multer = require("multer");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const Redis = require("ioredis");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -55,6 +56,21 @@ mongoose.connect(MONGO_URL).then(() => {
 }).catch((e) => {
   console.warn("[CCT Admin] MongoDB unavailable:", e.message);
 });
+
+// Redis for presence (read-only)
+const REDIS_URL = process.env.REDIS_URL || "redis://redis:6379";
+let redisClient = null;
+try {
+  redisClient = new Redis(REDIS_URL, { lazyConnect: true, enableOfflineQueue: false });
+  redisClient.connect().then(() => {
+    console.log("[CCT Admin] Redis connected:", REDIS_URL);
+  }).catch(e => {
+    console.warn("[CCT Admin] Redis unavailable:", e.message);
+    redisClient = null;
+  });
+} catch(e) {
+  console.warn("[CCT Admin] Redis init failed:", e.message);
+}
 
 // ─── Auth middleware ──────────────────────────────────────────────────────────
 function requireAdmin(req, res, next) {
@@ -182,6 +198,18 @@ app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     ]);
     res.json({ users, servers, messages, reports });
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ─── Protected: presence ──────────────────────────────────────────────────────
+// Returns set of online user IDs from Redis "online" key
+app.get("/api/admin/presence", requireAdmin, async (req, res) => {
+  if (!redisClient) return res.json({ online: [] });
+  try {
+    const members = await redisClient.smembers("online");
+    res.json({ online: members });
+  } catch(e) {
+    res.json({ online: [] });
+  }
 });
 
 // ─── Protected: users ─────────────────────────────────────────────────────────

@@ -1,0 +1,284 @@
+/* ============================================================
+   CCT Mobile Stylesheet
+   Targets: max-width 600px (phones) and 600–960px (tablets)
+   Strategy: all rules are additive — no desktop styles modified.
+   Import this at the END of styles.css.
+   ============================================================ */
+
+/* ── 1. VIEWPORT / SCROLL FIX ─────────────────────────────────
+   Use dvh (dynamic viewport height) so the layout doesn't break
+   when the mobile browser's address bar shows/hides.           */
+@media (max-width: 600px) {
+  #root {
+    height: 100dvh;
+  }
+
+  /* Prevent elastic overscroll bounce revealing the dark bg */
+  body {
+    overscroll-behavior: none;
+  }
+}
+
+/* ── 2. LAYOUT — MAIN BAR (sidebar panel) ─────────────────────
+   The .main_bar already goes position:absolute on mobile (styles.css).
+   We add z-index so it layers above content, and a smooth slide
+   transition for the SlideDrawer that's already wired in Interface.tsx */
+@media (max-width: 600px) {
+  .main_bar {
+    z-index: 20;
+    /* Smooth slide driven by the existing SlideDrawer JS */
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Ensure the sidebar has its own paint layer for GPU compositing */
+    will-change: transform;
+    /* Tighten safe-area on the left edge */
+    padding-left: env(safe-area-inset-left);
+  }
+
+  /* Dim overlay that appears behind the open sidebar drawer.
+     The SlideDrawer sets data-drawer-open on the app_root element. */
+  .app_root[data-drawer-open="true"]::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 19;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(1px);
+    pointer-events: all;
+    animation: fadeInScrim 0.2s ease forwards;
+  }
+
+  @keyframes fadeInScrim {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Main app body takes full width when sidebar is hidden */
+  .app_body {
+    width: 100vw !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* ── 3. LAYOUT — CHANNEL HEADER ───────────────────────────────
+   Shrink header height slightly, ensure the back-swipe handle
+   area is large enough. Add a hamburger-zone left padding.     */
+@media (max-width: 600px) {
+  /* Header strip: reduce padding, ensure 48px tap targets */
+  [data-component="header"],
+  .app_body > div > div[class*="Header"] {
+    padding: 0 8px;
+    min-height: 48px;
+  }
+
+  /* Member sidebar toggle button: hide on phone, no room for it */
+  /* (Users access members via a long-press or profile tap) */
+}
+
+/* ── 4. MESSAGE INPUT — KEYBOARD SAFE AREA ────────────────────
+   The single biggest mobile chat pain point: the virtual keyboard
+   pushes content up and the input gets trapped behind it.
+   We use env(keyboard-inset-height) where supported (Chrome 94+)
+   and fall back to a JS-driven CSS variable --keyboard-height
+   that we set in a small script (see section 8 notes).         */
+@media (max-width: 600px) {
+  /* Push the bottom of the main content up when keyboard opens */
+  .app_body {
+    padding-bottom: env(keyboard-inset-height, var(--keyboard-height, 0px));
+    transition: padding-bottom 0.15s ease;
+  }
+
+  /* The composition bar (message input row) should always be visible */
+  /* Target the ProseMirror editor wrapper and the file/emoji bar    */
+  [data-component="message-box"],
+  [class*="composition"],
+  [class*="Composition"] {
+    position: relative;
+    z-index: 5;
+  }
+
+  /* Remove excess bottom margin from the scrollable message list
+     so the composition bar sits flush at the bottom */
+  [class*="main"] {
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* ── 5. TOUCH TARGETS ─────────────────────────────────────────
+   Buttons and icon buttons need at least 44×44px tap area.    */
+@media (max-width: 600px) {
+  /* Icon buttons in headers and toolbars */
+  button,
+  [role="button"],
+  a[href],
+  [class*="IconButton"],
+  [class*="icon_button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* But don't force size on inline text links */
+  p a,
+  .markdown a {
+    min-height: unset;
+    min-width: unset;
+  }
+
+  /* Prevent the annoying double-tap-to-zoom on buttons */
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+/* ── 6. SERVER LIST (left icon rail) ──────────────────────────
+   On phone, the server icon column shrinks to save space.
+   The SlideDrawer swipe already hides it off-screen; these rules
+   tighten it while it's visible.                               */
+@media (max-width: 600px) {
+  /* Server icon column — slightly tighter on phone */
+  [class*="ServerList"],
+  [class*="server_list"] {
+    width: 56px !important;
+    min-width: 56px !important;
+  }
+
+  /* Server icon avatar size — smaller on phone */
+  [class*="ServerList"] [class*="Avatar"],
+  [class*="server_list"] [class*="Avatar"] {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* ── 7. MESSAGE LIST ──────────────────────────────────────────
+   Images and embeds shouldn't overflow the viewport width.    */
+@media (max-width: 600px) {
+  /* Constrain all embedded media */
+  [class*="attachment"] img,
+  [class*="embed"] img,
+  [class*="Embed"] img,
+  [class*="ImageEmbed"] img,
+  .message img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px;
+  }
+
+  /* Video embeds */
+  [class*="embed"] video,
+  .message video {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Tighten message padding so more messages fit */
+  [class*="message"],
+  [class*="Message"] {
+    padding-inline: 8px;
+  }
+
+  /* Code blocks scroll horizontally rather than overflowing */
+  pre, [class*="Codeblock"] {
+    overflow-x: auto;
+    max-width: calc(100vw - 32px);
+    -webkit-overflow-scrolling: touch;
+    white-space: pre;
+  }
+}
+
+/* ── 8. MODALS AND DIALOGS ────────────────────────────────────
+   Context menus and dialogs should go full-width sheet style.  */
+@media (max-width: 600px) {
+  /* Context menus: anchor to bottom like an action sheet */
+  [class*="context_menu"],
+  [class*="ContextMenu"],
+  [data-component="context-menu"] {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    border-radius: 16px 16px 0 0 !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+    z-index: 100;
+    animation: slideUpSheet 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  /* Dialog scrim — already has padding 30px from styles.css, fine */
+}
+
+/* ── 9. SCROLL BEHAVIOR ───────────────────────────────────────
+   Momentum scrolling on iOS, hide scrollbars on mobile.       */
+@media (max-width: 600px) {
+  [style*="overflow"],
+  [class*="scrollable"],
+  [class*="Scrollable"] {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide scrollbar chrome on mobile — content is still scrollable */
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+  }
+}
+
+/* ── 10. TABLET IMPROVEMENTS (600px–960px) ─────────────────────
+    Tablets get some of the same touch improvements but keep
+    the two-column layout visible.                              */
+@media (min-width: 601px) and (max-width: 960px) {
+  /* Tighten up padding a bit */
+  [class*="main"] {
+    padding-inline: var(--gap-sm);
+  }
+
+  /* Hide member sidebar by default on tablet — icon in header still works */
+  /* (Revolt's LAYOUT_SECTIONS.MEMBER_SIDEBAR default handles this in JS)  */
+
+  /* Larger tap targets */
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+
+  /* Code blocks */
+  pre, [class*="Codeblock"] {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Constrain image embeds */
+  [class*="attachment"] img,
+  [class*="embed"] img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ── 11. PWA STANDALONE MODE ───────────────────────────────────
+    When installed as a PWA (no browser chrome), apply extra
+    safe-area padding and tighten the look.                    */
+@media (display-mode: standalone) {
+  #root {
+    /* Extra top padding for the status bar notch */
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Bottom bar padding for home indicator */
+  .app_body {
+    padding-bottom: calc(
+      env(keyboard-inset-height, var(--keyboard-height, 0px)) +
+      env(safe-area-inset-bottom)
+    );
+  }
+}
