@@ -80,6 +80,7 @@ import { ModalController, useModals } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
 import { useState } from "@revolt/state";
 import { Voice as VoiceSettings } from "@revolt/state/stores/Voice";
+import { parseChannelLimit } from "@revolt/common/lib/channelLimit";
 import { VoiceCallCardContext } from "@revolt/ui/components/features/voice/callCard/VoiceCallCard";
 import { ScreenSharePresets, VideoResolution } from "livekit-client";
 

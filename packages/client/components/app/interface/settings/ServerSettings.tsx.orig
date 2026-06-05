@@ -4,9 +4,9 @@ import {
   BiSolidGroup,
   BiSolidHappyBeaming,
   BiSolidInfoCircle,
-  BiSolidSortAlt,
   BiSolidTrash,
   BiSolidUserX,
+  BiSolidSortAlt,
 } from "solid-icons/bi";
 
 import { Server } from "stoat.js";
@@ -78,8 +78,6 @@ const Config: SettingsConfiguration<Server> = {
         return <ListServerInvites server={server} />;
       case "bans":
         return <ListServerBans server={server} />;
-      case "channels":
-        return <ChannelManagement server={server} />;
 
       default:
         return null;

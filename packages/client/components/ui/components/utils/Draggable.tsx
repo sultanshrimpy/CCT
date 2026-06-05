@@ -59,7 +59,7 @@ export function Draggable<T>(props: Props<T>) {
     [],
   );
 
-  createEffect(() => setDragDisabled(props.dragHandles || false));
+  createEffect(() => setDragDisabled(props.disabled === true ? true : (props.dragHandles || false)));
 
   createEffect(() => {
     const newContainerItems = props.items.map((item) => ({
@@ -88,7 +88,7 @@ export function Draggable<T>(props: Props<T>) {
   }
 
   function isDisabled() {
-    return props.disabled || dragDisabled();
+    return props.disabled === true ? true : dragDisabled();
   }
 
   return (
@@ -96,7 +96,7 @@ export function Draggable<T>(props: Props<T>) {
       use:dndzone={{
         type: props.type,
         items: containerItems,
-        dragDisabled: isDisabled,
+        dragDisabled: isDisabled(),
         flipDurationMs: 0,
         // transformDraggedElement: (el?: HTMLElement) => {
         //   if (el) {

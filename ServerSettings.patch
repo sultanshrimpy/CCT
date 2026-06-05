@@ -1,0 +1,45 @@
+--- /tmp/CCT/CCT-main/packages/client/components/app/interface/settings/ServerSettings.tsx	2026-06-04 05:13:17.000000000 +0000
++++ /tmp/CCT/CCT-main/packages/client/components/app/interface/settings/ServerSettings.patched.tsx	2026-06-05 18:58:23.107735084 +0000
+@@ -4,6 +4,7 @@
+   BiSolidGroup,
+   BiSolidHappyBeaming,
+   BiSolidInfoCircle,
++  BiSolidSortAlt,
+   BiSolidTrash,
+   BiSolidUserX,
+ } from "solid-icons/bi";
+@@ -18,6 +19,7 @@
+ import { SettingsConfiguration } from ".";
+ import { ChannelPermissionsEditor } from "./channel/permissions/ChannelPermissionsEditor";
+ import Overview from "./server/Overview";
++import { ChannelManagement } from "./server/ChannelManagement";
+ import { ListServerBans } from "./server/bans/ListBans";
+ import { EmojiList } from "./server/emojis/EmojiList";
+ import { ListServerInvites } from "./server/invites/ListServerInvites";
+@@ -76,6 +78,8 @@
+         return <ListServerInvites server={server} />;
+       case "bans":
+         return <ListServerBans server={server} />;
++      case "channels":
++        return <ChannelManagement server={server} />;
+ 
+       default:
+         return null;
+@@ -151,6 +155,17 @@
+             },
+           ],
+         },
++        {
++          hidden: !server.havePermission("ManageChannel"),
++          title: "Channel Management",
++          entries: [
++            {
++              id: "channels",
++              icon: <BiSolidSortAlt size={20} />,
++              title: "Channel Management",
++            },
++          ],
++        },
+         {
+           hidden: !(server.ownerId === user()?.id),
+           entries: [

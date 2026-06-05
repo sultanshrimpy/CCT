@@ -1,0 +1,10 @@
+--- tmp/CCT/CCT-main/packages/client/components/app/interface/settings/ServerSettings.tsx	2026-06-04 05:13:17.000000000 +0000
++++ tmp/CCT/CCT-main/packages/client/components/app/interface/settings/ServerSettings.patched.tsx	2026-06-05 18:58:23.107735084 +0000
+@@ -19,6 +20,7 @@
+ import { SettingsConfiguration } from ".";
+ import { ChannelPermissionsEditor } from "./channel/permissions/ChannelPermissionsEditor";
+ import Overview from "./server/Overview";
++import { ChannelManagement } from "./server/ChannelManagement";
+ import { ListServerBans } from "./server/bans/ListBans";
+ import { EmojiList } from "./server/emojis/EmojiList";
+ import { ListServerInvites } from "./server/invites/ListServerInvites";
