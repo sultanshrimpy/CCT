@@ -20,6 +20,17 @@ interface Props {
 }
 
 /**
+ * Returns true if value produces a valid, non-NaN Date
+ */
+function isValidDate(value: number | Date | string): boolean {
+  try {
+    return !isNaN(new Date(value).getTime());
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Format a given date
  */
 export function formatTime(
@@ -27,9 +38,10 @@ export function formatTime(
   options: Props,
 ): JSX.Element | string | undefined | null {
   if (
-    options.value instanceof Date ||
-    typeof options.value === "number" ||
-    typeof options.value === "string"
+    (options.value instanceof Date ||
+      typeof options.value === "number" ||
+      typeof options.value === "string") &&
+    isValidDate(options.value as number | Date | string)
   ) {
     switch (options.format) {
       case "calendar":
@@ -79,9 +91,10 @@ export function Time(props: Props) {
   return (
     <time
       datetime={
-        props.value instanceof Date ||
-        typeof props.value === "number" ||
-        typeof props.value === "string"
+        (props.value instanceof Date ||
+          typeof props.value === "number" ||
+          typeof props.value === "string") &&
+        isValidDate(props.value as number | Date | string)
           ? new Date(props.value).toISOString()
           : undefined
       }

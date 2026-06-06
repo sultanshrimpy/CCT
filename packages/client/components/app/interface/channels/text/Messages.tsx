@@ -759,9 +759,11 @@ export function Messages(props: Props) {
           btime = +bdate;
 
         if (
-          adate.getFullYear() !== bdate.getFullYear() ||
-          adate.getMonth() !== bdate.getMonth() ||
-          adate.getDate() !== bdate.getDate()
+          !isNaN(atime) &&
+          !isNaN(btime) &&
+          (adate.getFullYear() !== bdate.getFullYear() ||
+            adate.getMonth() !== bdate.getMonth() ||
+            adate.getDate() !== bdate.getDate())
         ) {
           date = adate;
         }
@@ -893,6 +895,7 @@ export function Messages(props: Props) {
       // check if last message is authored by us
       lastMessage.message.author?.self &&
       // split up chains that are too far apart
+      !isNaN(+lastMessage.message.createdAt) &&
       Math.abs(+new Date() - +lastMessage.message.createdAt) < 420000
       ? true
       : false;
