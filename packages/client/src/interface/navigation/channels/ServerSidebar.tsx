@@ -1,6 +1,7 @@
 import { BiRegularCheckCircle, BiSolidCheckCircle } from "solid-icons/bi";
 import {
   Accessor,
+  For,
   JSX,
   Match,
   Setter,
@@ -231,26 +232,46 @@ export const ServerSidebar = (props: Props) => {
         style={{ "flex-grow": 1 }}
         use:floating={props.menuGenerator(props.server)}
       >
-        <Draggable
-          dragHandles
-          type="category"
-          disabled={noOrdering()}
-          items={props.server.orderedChannels}
-          onChange={(ids) => handleOrdering({ type: "categories", ids })}
+        <Show
+          when={!noOrdering()}
+          fallback={
+            <For each={props.server.orderedChannels}>
+              {(category) => (
+                <Category
+                  server={props.server}
+                  category={category}
+                  channelId={props.channelId}
+                  menuGenerator={props.menuGenerator}
+                  dragDisabled={() => true}
+                  setDragDisabled={() => void 0}
+                  noOrdering={noOrdering}
+                  handleOrdering={handleOrdering}
+                />
+              )}
+            </For>
+          }
         >
-          {(entry) => (
-            <Category
-              server={props.server}
-              category={entry.item}
-              channelId={props.channelId}
-              menuGenerator={props.menuGenerator}
-              dragDisabled={entry.dragDisabled}
-              setDragDisabled={entry.setDragDisabled}
-              noOrdering={noOrdering}
-              handleOrdering={handleOrdering}
-            />
-          )}
-        </Draggable>
+          <Draggable
+            dragHandles
+            type="category"
+            disabled={noOrdering()}
+            items={props.server.orderedChannels}
+            onChange={(ids) => handleOrdering({ type: "categories", ids })}
+          >
+            {(entry) => (
+              <Category
+                server={props.server}
+                category={entry.item}
+                channelId={props.channelId}
+                menuGenerator={props.menuGenerator}
+                dragDisabled={entry.dragDisabled}
+                setDragDisabled={entry.setDragDisabled}
+                noOrdering={noOrdering}
+                handleOrdering={handleOrdering}
+              />
+            )}
+          </Draggable>
+        </Show>
       </div>
       <SidebarVoicePanel />
     </SidebarBase>
@@ -356,36 +377,51 @@ function Category(
             onClick={() => {
               state.layout.toggleSectionState(props.category.id, true);
             }}
-            {...createDragHandle(props.dragDisabled, props.setDragDisabled)}
+            {...(props.noOrdering() ? {} : createDragHandle(props.dragDisabled, props.setDragDisabled))}
           >
             {props.category.title}
             <MdChevronRight {...iconSize(12)} />
           </CategoryBase>
         </div>
       </Show>
-      <Draggable
-        type="channels"
-        items={channels()}
-        onChange={(channelIds) => {
-          const current = channels();
-          props.handleOrdering({
-            type: "category",
-            id: props.category.id,
-            channelIds,
-            moved: channelIds.length !== current.length,
-          });
-        }}
-        disabled={props.noOrdering() || !isOpen()}
-        minimumDropAreaHeight="32px"
+      <Show
+        when={!props.noOrdering() && isOpen()}
+        fallback={
+          <For each={channels()}>
+            {(channel) => (
+              <Entry
+                channel={channel}
+                active={channel.id === props.channelId}
+                menuGenerator={props.menuGenerator}
+              />
+            )}
+          </For>
+        }
       >
-        {(entry) => (
-          <Entry
-            channel={entry.item}
-            active={entry.item.id === props.channelId}
-            menuGenerator={props.menuGenerator}
-          />
-        )}
-      </Draggable>
+        <Draggable
+          type="channels"
+          items={channels()}
+          onChange={(channelIds) => {
+            const current = channels();
+            props.handleOrdering({
+              type: "category",
+              id: props.category.id,
+              channelIds,
+              moved: channelIds.length !== current.length,
+            });
+          }}
+          disabled={props.noOrdering() || !isOpen()}
+          minimumDropAreaHeight="32px"
+        >
+          {(entry) => (
+            <Entry
+              channel={entry.item}
+              active={entry.item.id === props.channelId}
+              menuGenerator={props.menuGenerator}
+            />
+          )}
+        </Draggable>
+      </Show>
     </CategorySection>
   );
 }

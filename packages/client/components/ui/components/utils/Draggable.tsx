@@ -5,6 +5,7 @@ import {
   JSX,
   Setter,
   createEffect,
+  createMemo,
   createSignal,
 } from "solid-js";
 
@@ -59,7 +60,9 @@ export function Draggable<T>(props: Props<T>) {
     [],
   );
 
-  createEffect(() => setDragDisabled(props.disabled === true ? true : (props.dragHandles || false)));
+  createEffect(() =>
+    setDragDisabled(props.disabled === true ? true : props.dragHandles || false),
+  );
 
   createEffect(() => {
     const newContainerItems = props.items.map((item) => ({
@@ -75,35 +78,33 @@ export function Draggable<T>(props: Props<T>) {
    * @param e
    */
   function handleDndEvent(e: DragHandleEvent<T>) {
-    setDragDisabled(props.dragHandles || false);
+    // Respect props.disabled — never re-enable drag if the list is disabled
+    if (props.disabled !== true) {
+      setDragDisabled(props.dragHandles || false);
+    }
 
     const { items: newContainerItems } = e.detail;
     setContainerItems(newContainerItems);
 
-    if (e.type === "finalize") {
+    if (e.type === "finalize" && props.disabled !== true) {
       props.onChange(
         newContainerItems.map((containerItems) => containerItems.id),
       );
     }
   }
 
-  function isDisabled() {
+  const isDisabled = createMemo(() => {
     return props.disabled === true ? true : dragDisabled();
-  }
+  });
 
   return (
     <div
       use:dndzone={{
         type: props.type,
         items: containerItems,
-        dragDisabled: isDisabled(),
+        // Pass as accessor so dndzone reads it reactively
+        dragDisabled: isDisabled,
         flipDurationMs: 0,
-        // transformDraggedElement: (el?: HTMLElement) => {
-        //   if (el) {
-        //     el.style.cursor = "grabbing !important";
-        //     el.style.outline = "1px solid red";
-        //   }
-        // },
         dropTargetStyle: {
           outline:
             "2px solid color-mix(in srgb, 40% var(--md-sys-color-primary), transparent)",
