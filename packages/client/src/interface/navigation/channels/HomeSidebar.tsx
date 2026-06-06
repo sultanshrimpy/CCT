@@ -264,6 +264,7 @@ function Entry(
 ) {
   const [local, remote] = splitProps(props, ["channel", "active", "isMobile"]);
   const { openModal } = useModals();
+  const client = useClient();
 
   /**
    * Determine user status if present

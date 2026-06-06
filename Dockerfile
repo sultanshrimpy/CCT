@@ -58,13 +58,6 @@ ENV VITE_CFG_ENABLE_VIDEO=__VITE_CFG_ENABLE_VIDEO__
 ENV VITE_CFG_MAX_FILE_SIZE=__VITE_CFG_MAX_FILE_SIZE__
 ENV BASE_PATH=/
 
-# Copy clean versions of src/interface files (excluded from main COPY via .dockerignore)
-COPY clean_src_interface/ packages/client/src/interface/
-
-# Fix any remaining duplicate directive imports in components/
-COPY dedup_directives.py dedup_directives.py
-RUN python3 dedup_directives.py
-
 RUN pnpm --filter client exec vite build
 
 # ============================================

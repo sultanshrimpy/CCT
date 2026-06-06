@@ -165,7 +165,7 @@ export function Friends() {
           </NavigationRail>
 
           <Deferred>
-            <div class="FriendsList" ref={scrollTargetElement} use:scrollable={{}}>
+            <div class="FriendsList" ref={scrollTargetElement} use:scrollable>
               <Switch
                 fallback={
                   <People

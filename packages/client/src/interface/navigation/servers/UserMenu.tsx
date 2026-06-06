@@ -9,6 +9,7 @@ import {
   onMount,
 } from "solid-js";
 import { Portal } from "solid-js/web";
+import { Motion, Presence } from "solid-motionone";
 
 import { autoUpdate, offset, shift } from "@floating-ui/dom";
 import { API } from "stoat.js";
@@ -104,9 +105,20 @@ export function UserMenu(props: Props) {
 
   return (
     <Portal mount={document.getElementById("floating")!}>
-      
+      <Presence>
         <Show when={show()}>
-          <div>
+          <Motion
+            ref={setRef}
+            style={{
+              position: position.strategy,
+              top: `${position.y ?? 0}px`,
+              left: `${position.x ?? 0}px`,
+            }}
+            initial={{ opacity: 0, x: -24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, easing: [0.87, 0, 0.13, 1] }}
+          >
             <ContextMenu>
               <ContextMenuItem
                 onClick={() => openModal({ type: "settings", config: "user" })}
@@ -241,9 +253,9 @@ export function UserMenu(props: Props) {
                 </ContextMenuButton>
               </Show>
             </ContextMenu>
-          </div>
+          </Motion>
         </Show>
-      
+      </Presence>
     </Portal>
   );
 }

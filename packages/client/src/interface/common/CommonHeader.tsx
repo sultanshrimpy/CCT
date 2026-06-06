@@ -22,7 +22,7 @@ export function HeaderIcon(props: { children: JSX.Element }) {
       class={container}
       onClick={() => {
         const ad = state.appDrawer();
-        if (ad) ad.setShown(false);
+        if (ad) { ad.setShown(false); document.body.classList.remove("channel-open"); }
         else
           state.layout.toggleSectionState(
             LAYOUT_SECTIONS.PRIMARY_SIDEBAR,
