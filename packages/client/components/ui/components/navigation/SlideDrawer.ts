@@ -205,6 +205,11 @@ export class SlideDrawer {
     return this.ofs !== 0;
   }
 
+  forceClose() {
+    this.endTouch();
+    this.tfTimer(true, false);
+  }
+
   setShown(show: boolean) {
     if (!this.enabled || this.touch?.trig || this.tTmr) return false;
     if (this.isShown() !== show) {

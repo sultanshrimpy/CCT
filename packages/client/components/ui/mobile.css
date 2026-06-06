@@ -282,3 +282,19 @@
     );
   }
 }
+
+/* ── MOBILE: Hide sidebar when a channel is open ──────────────
+   When TextChannel mounts it sets data-channel-open on #root.
+   On mobile the .main_bar slides off to the left.             */
+@media (max-width: 600px) {
+  #root[data-channel-open="true"] .main_bar {
+    transform: translateX(-100vw);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  #root:not([data-channel-open="true"]) .main_bar {
+    transform: translateX(0);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

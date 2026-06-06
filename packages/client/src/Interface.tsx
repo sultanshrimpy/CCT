@@ -35,6 +35,10 @@ const Interface = (props: { children: JSX.Element }) => {
   const { openModal } = useModals();
   const { isLoggedIn, lifecycle } = useClientLifecycle();
   const { pathname } = useLocation();
+  createEffect(() => {
+    const isChannel = pathname.includes("/channel/");
+    document.getElementById("root")?.toggleAttribute("data-channel-open", isChannel);
+  });
 
   useBeforeLeave((e) => {
     if (!e.defaultPrevented) {
@@ -79,6 +83,7 @@ const Interface = (props: { children: JSX.Element }) => {
           if (en) rstLayout();
         }, 1);
       });
+      state.setAppDrawer(sDrawer);
     }),
   );
   onCleanup(() => {

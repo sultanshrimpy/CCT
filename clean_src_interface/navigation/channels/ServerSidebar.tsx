@@ -537,7 +537,7 @@ function Entry(
     <a
       href={`/server/${props.channel.serverId}/channel/${props.channel.id}`}
       onClick={() => {
-        setTimeout(() => state.appDrawer?.setShown(false), 50);
+        state.appDrawer?.forceClose();
         if (props.channel.isVoice && !inCall()) {
           voice.connect(props.channel).catch((e: Error) => {
             showError(e);
