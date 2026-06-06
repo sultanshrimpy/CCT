@@ -35,10 +35,7 @@ const Interface = (props: { children: JSX.Element }) => {
   const { openModal } = useModals();
   const { isLoggedIn, lifecycle } = useClientLifecycle();
   const { pathname } = useLocation();
-  createEffect(() => {
-    const isChannel = pathname.includes("/channel/");
-    document.getElementById("root")?.toggleAttribute("data-channel-open", isChannel);
-  });
+  document.body.classList.toggle("channel-open", pathname.includes("/channel/"));
 
   useBeforeLeave((e) => {
     if (!e.defaultPrevented) {
@@ -47,6 +44,7 @@ const Interface = (props: { children: JSX.Element }) => {
         openModal({ type: "settings", config: "user" });
       } else if (typeof e.to === "string") {
         state.layout.setLastActivePath(e.to);
+        document.body.classList.toggle("channel-open", e.to.includes("/channel/"));
       }
     }
   });
