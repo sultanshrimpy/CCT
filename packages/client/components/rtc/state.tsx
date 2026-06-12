@@ -446,7 +446,7 @@ class Voice {
 
     debugLog("PTT-WEB", "Connecting to room...");
     await room.connect(auth.url, auth.token, {
-      autoSubscribe: false,
+      autoSubscribe: true,
     });
     debugLog(
       "PTT-WEB",
@@ -485,7 +485,7 @@ class Voice {
 
       debugLog("PTT-WEB", "Attempting to reconnect with new token...");
       await room.connect(auth.url, auth.token, {
-        autoSubscribe: false,
+        autoSubscribe: true,
       });
 
       debugLog("PTT-WEB", "Reconnection successful!");

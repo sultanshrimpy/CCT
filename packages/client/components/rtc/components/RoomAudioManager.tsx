@@ -32,7 +32,11 @@ export function RoomAudioManager() {
       [Track.Source.Microphone, Track.Source.ScreenShareAudio, Track.Source.Unknown],
       { onlySubscribed: true }
     ).subscribe(({ trackReferences: refs }) => {
-      setTrackReferences(refs);
+      setTrackReferences(prev => {
+        const prevIds = prev.map(t => getTrackReferenceId(t)).join(",");
+        const nextIds = refs.map(t => getTrackReferenceId(t)).join(",");
+        return prevIds === nextIds ? prev : refs;
+      });
     });
 
     onCleanup(() => subscription.unsubscribe());
@@ -61,13 +65,13 @@ export function RoomAudioManager() {
         {(track) => (
           <AudioTrack
             trackRef={track()}
-            volume={() =>
+            volume={
               state.voice.outputVolume *
               (track().source === Track.Source.ScreenShareAudio
-                ? state.voice.getScreenShareVolume(track().participant.identity)
-                : state.voice.getUserVolume(track().participant.identity))
+                ? (state.voice.getScreenShareVolume(track().participant.identity) ?? 1)
+                : (state.voice.getUserVolume(track().participant.identity) ?? 1))
             }
-            muted={() =>
+            muted={
               (track().source === Track.Source.ScreenShareAudio
                 ? state.voice.getScreenShareMuted(track().participant.identity)
                 : state.voice.getUserMuted(track().participant.identity)) ||
