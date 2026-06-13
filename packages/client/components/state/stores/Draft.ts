@@ -379,7 +379,11 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
 
     // Send the message and clear the draft
     try {
-      await channel.sendMessage(data, idempotencyKey);
+      const message = await channel.sendMessage(data, idempotencyKey);
+
+      // Ack the channel so sender does not get unread dot for their own message
+      channel.ack(undefined, true);
+      setTimeout(() => channel.ack(undefined, true), 2000);
 
       if (files) {
         for (const file of files) {

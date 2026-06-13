@@ -192,7 +192,11 @@ export function MessageComposition(props: Props) {
         });
         return state.draft.sendDraft(client(), props.channel);
       }
-      return props.channel.sendMessage(useContent);
+      return props.channel.sendMessage(useContent).then((msg) => {
+        props.channel.ack(undefined, true);
+        setTimeout(() => props.channel.ack(undefined, true), 2000);
+        return msg;
+      });
     }
 
     state.draft.sendDraft(client(), props.channel);
